@@ -1,0 +1,62 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.9.3",
+    "@mdx-js/react": "^2.1.2",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "env-cmd": "^10.1.0",
+    "mobx": "6.6.1",
+    "mobx-keystone": "^0.69.8",
+    "mobx-react-lite": "^3.4.0",
+    "ol": "6.14.1",
+    "parse": "^3.4.2",
+    "proj4": "^2.8.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-intl": "^6.0.8",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "5.0.1",
+    "theme-ui": "^0.14.6",
+    "typescript": "^4.7.4",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "env-cmd -f .env.development react-scripts build",
+    "build:test": "env-cmd -f .env.test react-scripts build",
+    "build:prod": "env-cmd -f .env.prod react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "i18n-extract": "formatjs extract",
+    "i18n-compile": "formatjs compile"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@formatjs/cli": "^5.0.9",
+    "@types/parse": "^2.18.17",
+    "@types/proj4": "^2.5.2",
+    "babel-plugin-formatjs": "^10.3.27",
+    "eslint-config-prettier": "^8.5.0"
+  }
+}

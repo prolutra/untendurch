@@ -1,0 +1,29 @@
+.legendCircle {
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  padding-right: 2px;
+  padding-top: 2px;
+
+  background: #5793c5;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+
+  font-size: 24px;
+}
+
+input:disabled,
+.disabledLabel {
+  color: gray;
+}
+
+.removeFileContainer {
+  padding: 0.3rem;
+  border-radius: 0.2rem;
+  border-style: solid;
+  border-width: 0.1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  text-align: center;
+}

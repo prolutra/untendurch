@@ -1,0 +1,29 @@
+name: Build Frontend
+on:
+  workflow_call:
+  pull_request:
+  push:
+    paths:
+      - 'frontend/**'
+    branches:
+      - '**'
+    tags-ignore:
+      - '**'
+
+jobs:
+  Build-Frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: build frontend
+        working-directory: ./frontend
+        run: |
+          npm --version
+          npm install --global prettier
+          prettier --list-different "{src,public}/**/*.{ts,tsx,scss,json,html}"
+          node ./scripts/generateBuildId.js $CI_COMMIT_SHORT_SHA
+          npm install
+          npm run build
