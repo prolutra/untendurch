@@ -10,8 +10,6 @@ WORKDIR /app
 
 COPY ./frontend/ ./
 
-RUN ./scripts/ci-create-npmrc.sh
-
 RUN npm install -g http-server pm2
 
 RUN node ./scripts/generateBuildId.js $CI_COMMIT_SHORT_SHA && \
