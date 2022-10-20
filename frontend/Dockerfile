@@ -12,7 +12,7 @@ COPY ./frontend/ ./
 
 RUN ./scripts/ci-create-npmrc.sh
 
-RUN npm install -g http-server
+RUN npm install -g http-server pm2
 
 RUN node ./scripts/generateBuildId.js $CI_COMMIT_SHORT_SHA && \
     npm install && \
@@ -24,6 +24,6 @@ RUN node ./scripts/generateBuildId.js $CI_COMMIT_SHORT_SHA && \
 
 WORKDIR /app/build
 
-CMD http-server --proxy http://localhost:8080?
+CMD pm2 start --name http-server "$(which http-server) --port 8080 --proxy http://localhost:8080? ."
 
 EXPOSE 8080
