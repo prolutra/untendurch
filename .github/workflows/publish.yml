@@ -19,14 +19,22 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push frontend
+      - name: Build and push frontend for TEST
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./frontend/Dockerfile
+          push: true
+          tags: tegonal/untendurch-frontend:test-${{github.ref_name}}
+          build-args: "ENVIRONMENT=test"
+      - name: Build and push frontend for PROD
         uses: docker/build-push-action@v3
         with:
           context: .
           file: ./frontend/Dockerfile
           push: true
           tags: tegonal/untendurch-frontend:${{github.ref_name}}
-          build-args: "ENVIRONMENT=test"
+          build-args: "ENVIRONMENT=prod"
       - name: Build and push custom Parse-Server
         uses: docker/build-push-action@v3
         with:
