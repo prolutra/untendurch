@@ -8,7 +8,7 @@ on:
 jobs:
   Publish:
     runs-on: ubuntu-latest
-    steps:      
+    steps:
       - uses: actions/checkout@v3
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -26,6 +26,7 @@ jobs:
           file: ./frontend/Dockerfile
           push: true
           tags: tegonal/untendurch-frontend:${{github.ref_name}}
+          build-args: "ENVIRONMENT=test"
       - name: Build and push custom Parse-Server
         uses: docker/build-push-action@v3
         with:
