@@ -22,14 +22,14 @@ jobs:
       - name: Build and push frontend
         uses: docker/build-push-action@v3
         with:
-          context: "{{defaultContext}}"
-          file: "{{defaultContext}}/frontend/Dockerfile"
+          context: .
+          file: ./frontend/Dockerfile
           push: true
           tags: tegonal/untendurch-frontend:${{github.ref_name}}
       - name: Build and push custom Parse-Server
         uses: docker/build-push-action@v3
         with:
-          context: "{{defaultContext}}"
-          file: "{{defaultContext}}/docker/parse-server/Dockerfile"
+          context: .
+          file: ./docker/parse-server/Dockerfile
           push: true
           tags: tegonal/untendurch-parse-server:${{github.ref_name}}
