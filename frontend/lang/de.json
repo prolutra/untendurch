@@ -11,8 +11,14 @@
   "admin_label_username": {
     "defaultMessage": "Benutzername"
   },
+  "bridge_pin_info_bridge_averageDailyTraffic": {
+    "defaultMessage": "Durchschnittlicher Verkehr pro Tag"
+  },
   "bridge_pin_info_bridge_form": {
     "defaultMessage": "Brückenform"
+  },
+  "bridge_pin_info_bridge_traffic_situation": {
+    "defaultMessage": "Verkehrssituation"
   },
   "bridge_pin_info_button_approve": {
     "defaultMessage": "Brücke verifizieren"
