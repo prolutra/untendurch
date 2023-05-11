@@ -4,6 +4,7 @@ Parse.Cloud.beforeSave("Bridge", (request) => {
   const bridgeHeight = +request.object.get("bridgeHeight");
   const bridgeLength = +request.object.get("bridgeLength");
 
+  const shape = request.object.get("shape");
   const hasBanquet = request.object.get("hasBanquet");
   const hasMinimalBanquetWidth = request.object.get("hasMinimalBanquetWidth");
   const hasStones = request.object.get("hasStones");
@@ -24,9 +25,9 @@ Parse.Cloud.beforeSave("Bridge", (request) => {
     let safetyRisk;
 
     if (
+      (shape === 'a' || shape === 'b' || shape === 'c') ||
       bridgeIndex > 1.5 ||
-      (bridgeIndex <= 1.5 &&
-        ((hasBanquet && hasMinimalBanquetWidth) || hasStones))
+      (bridgeIndex <= 1.5 && ((hasBanquet && hasMinimalBanquetWidth) || hasStones))
     ) {
       otterFriendly = "FRIENDLY";
       safetyRisk = "NO_RISK";
