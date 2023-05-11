@@ -1,8 +1,8 @@
 Parse.Cloud.beforeSave("Bridge", (request) => {
   // calculate bridgeIndex
-  const bridgeWidth = +request.object.get("width");
-  const bridgeHeight = +request.object.get("height");
-  const bridgeLength = +request.object.get("length");
+  const bridgeWidth = +request.object.get("bridgeWidth");
+  const bridgeHeight = +request.object.get("bridgeHeight");
+  const bridgeLength = +request.object.get("bridgeLength");
 
   const hasBanquet = request.object.get("hasBanquet");
   const hasMinimalBanquetWidth = request.object.get("hasMinimalBanquetWidth");
