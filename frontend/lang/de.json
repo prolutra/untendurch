@@ -74,6 +74,9 @@
   "report_bridge_heading_varia": {
     "defaultMessage": "Sonstiges"
   },
+  "report_bridge_images_required": {
+    "defaultMessage": "Es muss mindestens ein Bild hochgeladen werden"
+  },
   "report_bridge_label_barriers": {
     "defaultMessage": "Barrieren, um auf die Strasse zu gelangen"
   },
@@ -184,6 +187,9 @@
   },
   "report_bridge_placeholder_bridgeWidth": {
     "defaultMessage": "breiteste Stelle in m"
+  },
+  "report_bridge_shape_required": {
+    "defaultMessage": "Bitte Brückenform wählen"
   },
   "safety_risk_HIGH_RISK": {
     "defaultMessage": "Sehr gefährlich"

@@ -18,6 +18,10 @@ input:disabled,
   color: gray;
 }
 
+input:required {
+  color: #bd7f56;
+}
+
 .removeFileContainer {
   padding: 0.3rem;
   border-radius: 0.2rem;

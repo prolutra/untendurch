@@ -332,6 +332,14 @@ const BridgeForm = observer(({ bridgeFormState }: BridgeFormProps) => {
                   <Image src={'/shape/f.png'} />
                 </Label>
               </Grid>
+              {!state.shape && (
+                <Box sx={{ fontStyle: 'italic' }} className="warningText">
+                  <FormattedMessage
+                    id="report_bridge_shape_required"
+                    defaultMessage={'Bitte Brückenform wählen'}
+                  />
+                </Box>
+              )}
               <Label htmlFor="hasBanquet" mt={3} mb={1}>
                 <FormattedMessage
                   id="report_bridge_label_hasBanquet"
@@ -383,25 +391,37 @@ const BridgeForm = observer(({ bridgeFormState }: BridgeFormProps) => {
               </Label>
               <Flex>
                 {hiddenFileInputRef && (
-                  <IconButton
-                    disabled={state.images.length >= 5}
-                    sx={{
-                      width: 50,
-                      height: 50,
-                      cursor: state.images.length < 5 ? 'pointer' : 'default',
-                      borderRadius: '50%',
-                      backgroundColor:
-                        state.images.length < 5 ? '#5694bd' : 'gray',
-                      filter: 'drop-shadow(2px 2px 4px gray)',
-                    }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      hiddenFileInputRef.current?.click();
-                    }}
-                    className="uploadFileIconButton"
-                  >
-                    <Image src={'/image-add-line.svg'} width={30} />
-                  </IconButton>
+                  <Box>
+                    <IconButton
+                      disabled={state.images.length >= 5}
+                      sx={{
+                        width: 50,
+                        height: 50,
+                        cursor: state.images.length < 5 ? 'pointer' : 'default',
+                        borderRadius: '50%',
+                        backgroundColor:
+                          state.images.length < 5 ? '#5694bd' : 'gray',
+                        filter: 'drop-shadow(2px 2px 4px gray)',
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        hiddenFileInputRef.current?.click();
+                      }}
+                      className="uploadFileIconButton"
+                    >
+                      <Image src={'/image-add-line.svg'} width={30} />
+                    </IconButton>
+                    {state.images.length === 0 && (
+                      <Box sx={{ fontStyle: 'italic' }} className="warningText">
+                        <FormattedMessage
+                          id="report_bridge_images_required"
+                          defaultMessage={
+                            'Es muss mindestens ein Bild hochgeladen werden'
+                          }
+                        />
+                      </Box>
+                    )}
+                  </Box>
                 )}
                 <Input
                   hidden
@@ -411,6 +431,7 @@ const BridgeForm = observer(({ bridgeFormState }: BridgeFormProps) => {
                   type={'file'}
                   accept=".jpg,.jpeg,.png"
                   sx={{ display: 'none' }}
+                  required={state.images.length === 0}
                 />
                 {state.images.length > 0 &&
                   state.images.map((file) => {
