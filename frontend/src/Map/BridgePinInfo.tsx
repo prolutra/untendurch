@@ -71,17 +71,27 @@ const BridgePinInfo = observer(() => {
               <Flex sx={{ gap: 4 }}>
                 <Box>
                   <FormattedMessage
-                    id={'safety_risk_' + bridgePin.safetyRisk}
-                    defaultMessage={bridgePin.safetyRisk}
-                  />
-                </Box>
-                <Box>
-                  <FormattedMessage
                     id={'otter_friendly_' + bridgePin.otterFriendly}
                     defaultMessage={bridgePin.otterFriendly}
                   />
                 </Box>
                 <Box>{bridgePin.bridgeIndex}</Box>
+              </Flex>
+            </Box>
+            <Box>
+              <Flex sx={{ gap: 4 }}>
+                <Box>
+                  <FormattedMessage
+                    id="bridge_pin_info_bridge_traffic_situation"
+                    defaultMessage={'Verkehrssituation'}
+                  />
+                </Box>
+                <Box>
+                  <FormattedMessage
+                    id={'safety_risk_' + bridgePin.safetyRisk}
+                    defaultMessage={bridgePin.safetyRisk}
+                  />
+                </Box>
               </Flex>
             </Box>
             {bridgePin.averageDailyTraffic && (
