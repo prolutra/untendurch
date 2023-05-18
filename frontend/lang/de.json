@@ -17,6 +17,9 @@
   "bridge_pin_info_bridge_form": {
     "defaultMessage": "Brückenform"
   },
+  "bridge_pin_info_bridge_index": {
+    "defaultMessage": "Brückenindex"
+  },
   "bridge_pin_info_bridge_traffic_situation": {
     "defaultMessage": "Verkehrssituation"
   },

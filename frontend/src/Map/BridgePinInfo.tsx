@@ -75,7 +75,15 @@ const BridgePinInfo = observer(() => {
                     defaultMessage={bridgePin.otterFriendly}
                   />
                 </Box>
-                <Box>{bridgePin.bridgeIndex}</Box>
+                {bridgePin.bridgeIndex && (
+                  <Box sx={{ fontStyle: 'italic' }}>
+                    <FormattedMessage
+                      id="bridge_pin_info_bridge_index"
+                      defaultMessage={'Brückenindex'}
+                    />
+                    : {bridgePin.bridgeIndex}
+                  </Box>
+                )}
               </Flex>
             </Box>
             <Box>
