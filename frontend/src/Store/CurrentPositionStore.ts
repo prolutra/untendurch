@@ -1,10 +1,11 @@
 import { computed } from 'mobx';
 import { getRootStore, model, Model, modelAction, prop } from 'mobx-keystone';
-import { Point } from 'ol/geom';
+import type { Point } from 'ol/geom';
 import { fetchPointInformation } from '../GeoAdmin/FetchPointInformation';
 import { latLonToPoint } from '../GeoAdmin/PointTransformations';
 import { LatLon } from './LatLon';
-import { RootStore, rootStore } from './Store';
+import type { RootStore } from './Store';
+import { rootStore } from './Store';
 
 @model('untendurch/CurrentPosition')
 export class CurrentPositionStore extends Model({
@@ -49,7 +50,7 @@ export class CurrentPositionStore extends Model({
             })
           );
         },
-        (_) => {
+        () => {
           this.setNavigatorWithoutLocationSupport(true);
         }
       );

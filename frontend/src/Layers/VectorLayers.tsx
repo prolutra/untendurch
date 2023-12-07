@@ -1,5 +1,5 @@
-import { Feature } from 'ol';
-import { Geometry, Point } from 'ol/geom';
+import type { Feature } from 'ol';
+import type { Geometry, Point } from 'ol/geom';
 import OLVectorLayer from 'ol/layer/Vector';
 import { Vector } from 'ol/source';
 import { Icon, Style } from 'ol/style';
@@ -27,8 +27,8 @@ const VectorLayer = observer(
     const overlayContext = useContext(OverlayContext);
 
     function addFeaturesToMap(): [
-      OLVectorLayer<Vector<Geometry>> | undefined,
-      Modify | undefined
+      OLVectorLayer<Vector<Feature<Geometry>>> | undefined,
+      Modify | undefined,
     ] {
       if (!mapContext || !overlayContext) return [undefined, undefined];
 
@@ -99,8 +99,8 @@ const VectorLayer = observer(
       if (!mapContext) return;
 
       let layerAndInteraction: [
-        OLVectorLayer<Vector<Geometry>> | undefined,
-        Modify | undefined
+        OLVectorLayer<Vector<Feature<Geometry>>> | undefined,
+        Modify | undefined,
       ];
 
       if (features.length > 0) {

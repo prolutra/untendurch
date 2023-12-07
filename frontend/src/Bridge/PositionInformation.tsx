@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { ReportBridgeStore } from '../Store/ReportBridgeStore';
+import type { ReportBridgeStore } from '../Store/ReportBridgeStore';
 
 import { Flex, Input } from 'theme-ui';
 

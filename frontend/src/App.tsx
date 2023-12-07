@@ -1,6 +1,7 @@
 import './App.css';
 import 'ol/ol.css';
 
+import type { FC } from 'react';
 import React, { useEffect, useState } from 'react';
 import Layers from './Layers/Layers';
 import TileLayer from './Layers/TileLayers';
@@ -8,11 +9,9 @@ import VectorLayer from './Layers/VectorLayers';
 import MapWrapper from './Map/MapWrapper';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ReportBridge from './Bridge/ReportBridge';
-import { Grid, Heading, NavLink, ThemeProvider } from 'theme-ui';
+import { Box, Grid, Heading, NavLink, ThemeUIProvider } from 'theme-ui';
 import Parse from 'parse';
 import { IntlProvider } from 'react-intl';
-
-import { Theme, Box } from 'theme-ui';
 import { Logo } from './Logo';
 import Overview from './Overview/Overview';
 import { StoreProvider, useStore } from './Store/Store';
@@ -26,25 +25,13 @@ import LocaleSelect from './i18n/LocaleSelect';
 
 import './extensions/ArrayExtensions';
 import { Feature } from 'ol';
-import { Point } from 'ol/geom';
+import type { Point } from 'ol/geom';
 import { SafetyRisk } from './Store/SafetyRisk';
 import EditBridge from './Bridge/EditBridge';
 import { latLonToPoint } from './GeoAdmin/PointTransformations';
+import { theme } from './theme';
 
-export const theme: Theme = {
-  fonts: {
-    body: 'system-ui, sans-serif',
-    heading: '"Avenir Next", sans-serif',
-    monospace: 'Menlo, monospace',
-  },
-  colors: {
-    text: '#000',
-    background: '#fff',
-    primary: '#33e',
-  },
-};
-
-const Map = observer(() => {
+const Map: FC = observer(() => {
   const store = useStore();
 
   function vectorLayersBySafety(): [Feature<Point>[], string, number][] {
@@ -98,7 +85,7 @@ const Map = observer(() => {
 function App() {
   Parse.initialize('untendurch');
   Parse.serverURL =
-    `${process.env.REACT_APP_PARSE_SERVER_URL}` ||
+    `${import.meta.env.REACT_APP_PARSE_SERVER_URL}` ||
     'http://localhost:1337/parse';
 
   const [lang, setLang] = useState(LocaleService.getDefaultLocale());
@@ -118,7 +105,7 @@ function App() {
     >
       <Router>
         <StoreProvider>
-          <ThemeProvider theme={theme}>
+          <ThemeUIProvider theme={theme}>
             <div className="App">
               <Grid as="nav" gap={0} columns={[3, '100px 1fr 1fr']}>
                 <Box sx={{ width: 100 }}>
@@ -159,7 +146,7 @@ function App() {
                 <Route path="/admin" element={<AdminLogin />} />
               </Routes>
             </div>
-          </ThemeProvider>
+          </ThemeUIProvider>
         </StoreProvider>
       </Router>
     </IntlProvider>

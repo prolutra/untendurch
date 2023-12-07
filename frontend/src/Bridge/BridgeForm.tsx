@@ -1,25 +1,26 @@
 import './ReportBridge.css';
 
-import { Point } from 'ol/geom';
+import type { Point } from 'ol/geom';
 import Parse, { GeoPoint } from 'parse';
+import type { FC } from 'react';
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toLonLat } from 'ol/proj';
 
 import {
   Box,
-  Label,
-  Input,
   Button,
-  Select,
-  Grid,
-  Flex,
-  Heading,
-  Radio,
-  Image,
   Checkbox,
-  Textarea,
+  Flex,
+  Grid,
+  Heading,
   IconButton,
+  Image,
+  Input,
+  Label,
+  Radio,
+  Select,
+  Textarea,
 } from 'theme-ui';
 
 import { fetchPointInformation } from '../GeoAdmin/FetchPointInformation';
@@ -27,15 +28,14 @@ import { useStore } from '../Store/Store';
 import { observer } from 'mobx-react-lite';
 import PositionInformation from './PositionInformation';
 import { uploadFiles } from './ReportBridgeImageUploader';
-import { FormattedMessage } from 'react-intl';
-import { useIntl } from 'react-intl';
-import { BridgeFormState } from './BridgeFormState';
+import { FormattedMessage, useIntl } from 'react-intl';
+import type { BridgeFormState } from './BridgeFormState';
 
-interface BridgeFormProps {
+type BridgeFormProps = {
   bridgeFormState: BridgeFormState;
-}
+};
 
-const BridgeForm = observer(({ bridgeFormState }: BridgeFormProps) => {
+const BridgeForm: FC<BridgeFormProps> = observer(({ bridgeFormState }) => {
   const store = useStore();
 
   const hiddenFileInputRef = useRef<HTMLInputElement>(null);
@@ -148,7 +148,7 @@ const BridgeForm = observer(({ bridgeFormState }: BridgeFormProps) => {
         ({
           ...previousState,
           [name]: value,
-        } as any)
+        }) as any
     );
     /* eslint-enable */
   }
@@ -164,7 +164,7 @@ const BridgeForm = observer(({ bridgeFormState }: BridgeFormProps) => {
             ({
               ...previousState,
               ['images']: [...state.images, file],
-            } as any)
+            }) as any
         );
       }
     }
@@ -180,7 +180,7 @@ const BridgeForm = observer(({ bridgeFormState }: BridgeFormProps) => {
         ({
           ...previousState,
           ['images']: updatedFiles,
-        } as any)
+        }) as any
     );
     /* eslint-enable */
   }
@@ -192,6 +192,14 @@ const BridgeForm = observer(({ bridgeFormState }: BridgeFormProps) => {
           <Flex></Flex>
           <Flex>
             <Box as="form" onSubmit={saveBridge} sx={{ padding: [2, 2, 3, 3] }}>
+              <Box>
+                <Button variant={'secondary'} onClick={() => navigate('/')}>
+                  <FormattedMessage
+                    id="report_bridge_button_cancel"
+                    defaultMessage={'Abbrechen'}
+                  />
+                </Button>
+              </Box>
               <Heading as="h4" sx={{ gridColumn: '1 / span 2' }}>
                 <FormattedMessage
                   id="report_bridge_heading_info"

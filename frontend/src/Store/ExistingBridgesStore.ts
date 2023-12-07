@@ -1,18 +1,20 @@
 import {
+  _async,
+  _await,
   getRootStore,
   model,
   Model,
   modelFlow,
   prop,
-  _async,
-  _await,
 } from 'mobx-keystone';
-import Parse, { GeoPoint } from 'parse';
+import type { GeoPoint } from 'parse';
+import Parse from 'parse';
 import { BridgePin } from './BridgePin';
 import { LatLon } from './LatLon';
-import { SafetyRisk } from './SafetyRisk';
-import { BridgeStatus } from './BridgeStatus';
-import { rootStore, RootStore } from './Store';
+import type { SafetyRisk } from './SafetyRisk';
+import type { BridgeStatus } from './BridgeStatus';
+import type { RootStore } from './Store';
+import { rootStore } from './Store';
 import { computed } from 'mobx';
 import { AllFilter } from './AllFilter';
 

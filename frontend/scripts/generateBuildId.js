@@ -1,4 +1,4 @@
-var fs = require('fs');
+import fs from 'fs';
 
 fs.readFile('./package.json', (err, data) => {
   if (err) throw err;

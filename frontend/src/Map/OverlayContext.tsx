@@ -1,5 +1,5 @@
 import React from 'react';
-import * as ol from 'ol';
+import type * as ol from 'ol';
 
 const OverlayContext = React.createContext<ol.Overlay | null>(null);
 

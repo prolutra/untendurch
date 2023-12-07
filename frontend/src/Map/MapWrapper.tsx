@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Map.css';
 import MapContext from './MapContext';
 import * as ol from 'ol';
@@ -8,7 +8,7 @@ import { observer } from 'mobx-react-lite';
 import { Box } from 'theme-ui';
 import OverlayContext from './OverlayContext';
 import { Select } from 'ol/interaction';
-import { Point } from 'ol/geom';
+import type { Point } from 'ol/geom';
 import BridgePinInfo from './BridgePinInfo';
 
 interface MapWrapperProps {

@@ -99,7 +99,7 @@ const OverviewFilters = observer(() => {
           ({
             ...previousState,
             [name]: value,
-          } as any)
+          }) as any
       );
       /* eslint-enable */
     }

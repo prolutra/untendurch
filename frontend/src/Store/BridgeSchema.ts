@@ -1,4 +1,4 @@
-import { GeoPoint } from 'parse';
+import type { GeoPoint } from 'parse';
 
 export interface BridgeSchema {
   objectId: string;
@@ -29,7 +29,7 @@ export interface BridgeSchema {
   status: string;
 }
 
-export const BridgeSchemaFields = [
+export const BridgeSchemaFields: (keyof BridgeSchema)[] = [
   'objectId',
   'position',
   'waterBodies',

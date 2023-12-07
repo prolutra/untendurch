@@ -1,11 +1,11 @@
-import { Point } from 'ol/geom';
-import { IdentityResponse } from './IdentityResponse';
-import { IdentityResultEntries } from './IdentityResultEntries';
-import { MunicipalityResultEntry } from './MunicipalityResultEntry';
-import { PointInformation } from './PointInformation';
-import { TrafficResultEntry } from './TrafficResultEntry';
-import { WaterBodiesResultEntry } from './WaterBodiesResultEntry';
-import { LayerBodIdType } from './LayerBodIdType';
+import type { Point } from 'ol/geom';
+import type { IdentityResponse } from './IdentityResponse';
+import type { IdentityResultEntries } from './IdentityResultEntries';
+import type { MunicipalityResultEntry } from './MunicipalityResultEntry';
+import type { PointInformation } from './PointInformation';
+import type { TrafficResultEntry } from './TrafficResultEntry';
+import type { WaterBodiesResultEntry } from './WaterBodiesResultEntry';
+import type { LayerBodIdType } from './LayerBodIdType';
 
 async function fetchAdditionalInformation<T>(
   point: Point,
