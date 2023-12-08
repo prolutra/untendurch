@@ -7,8 +7,7 @@ export function uploadFiles(
   return Promise.all(
     filesToUpload.map(async (file) => {
       const parseFile = new Parse.File(bridgeId, file);
-      const result = await parseFile.save();
-      return result;
+      return await parseFile.save();
     })
   );
 }

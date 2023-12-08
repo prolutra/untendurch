@@ -1,14 +1,13 @@
-import 'ol/ol.css';
-
+import type { FC } from 'react';
 import React from 'react';
 import ReportBridgeWrapper from './ReportBridgeWrapper';
 
-function ReportBridge() {
+const ReportBridge: FC = () => {
   return (
     <div className="ReportBridge">
       <ReportBridgeWrapper></ReportBridgeWrapper>
     </div>
   );
-}
+};
 
 export default ReportBridge;

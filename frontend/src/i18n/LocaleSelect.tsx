@@ -14,19 +14,12 @@ const LocaleSelect = ({ setLang }: LocaleSelectProps) => {
   }
 
   return (
-    <>
-      <Select
-        sx={{ width: 60 }}
-        name="locale"
-        value={intl.locale}
-        onChange={handleChange}
-      >
-        <option value={'de'}>DE</option>
-        <option value={'fr'}>FR</option>
-        <option value={'it'}>IT</option>
-        <option value={'en'}>EN</option>
-      </Select>
-    </>
+    <Select name="locale" value={intl.locale} onChange={handleChange}>
+      <option value={'de'}>DE</option>
+      <option value={'fr'}>FR</option>
+      <option value={'it'}>IT</option>
+      <option value={'en'}>EN</option>
+    </Select>
   );
 };
 

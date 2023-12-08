@@ -1,9 +1,9 @@
 import { Box } from 'theme-ui';
-import React from 'react';
+import type { FC } from 'react';
 
-export const Logo: React.FC = () => {
+export const Logo: FC = () => {
   return (
-    <Box sx={{ label: 'Logo', height: 100, marginLeft: '1rem' }}>
+    <Box sx={{ label: 'Logo', height: [60, 80], marginLeft: [3, 4] }}>
       <svg
         width="100%"
         height="100%"

@@ -6,12 +6,12 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@mdx-js/react": "^3.0.0",
-    "env-cmd": "^10.1.0",
     "mobx": "6.12.0",
     "mobx-keystone": "^1.7.1",
     "mobx-react-lite": "^4.0.5",
     "ol": "8.2.0",
     "parse": "^4.3.1",
+    "polished": "^4.2.2",
     "proj4": "^2.9.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -21,11 +21,12 @@
   },
   "scripts": {
     "start": "vite",
-    "build": "env-cmd -f .env.development vite build",
-    "build:test": "env-cmd -f .env.test vite build",
-    "build:prod": "env-cmd -f .env.prod vite build",
+    "build": "vite build --mode development",
+    "build:test": "vite build --mode test",
+    "build:prod": "vite build --mode prod",
     "i18n-extract": "formatjs extract",
-    "i18n-compile": "formatjs compile"
+    "i18n-compile": "formatjs compile",
+    "pretty": "prettier --write \"{src,public}/**/*.{ts,tsx,scss,json,html}\""
   },
   "eslintConfig": {
     "extends": [

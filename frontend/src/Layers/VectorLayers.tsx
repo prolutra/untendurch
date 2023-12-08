@@ -4,6 +4,7 @@ import OLVectorLayer from 'ol/layer/Vector';
 import { Vector } from 'ol/source';
 import { Icon, Style } from 'ol/style';
 import { Modify } from 'ol/interaction';
+import type { FC } from 'react';
 import React, { useContext, useEffect } from 'react';
 import MapContext from '../Map/MapContext';
 import { useStore } from '../Store/Store';
@@ -11,16 +12,18 @@ import { observer } from 'mobx-react-lite';
 import { toLonLat } from 'ol/proj';
 import { LatLon } from '../Store/LatLon';
 import OverlayContext from '../Map/OverlayContext';
+import type { StyleFunction } from 'ol/style/Style';
+import type { FeatureLike } from 'ol/Feature';
 
-export interface VectorLayerProps {
+type VectorLayerProps = {
   zIndex: number;
   features: Feature<Point>[];
   iconSrc: string;
   draggable: boolean;
-}
+};
 
-const VectorLayer = observer(
-  ({ zIndex, features, iconSrc, draggable }: VectorLayerProps) => {
+const VectorLayer: FC<VectorLayerProps> = observer(
+  ({ zIndex, features, iconSrc, draggable }) => {
     const store = useStore();
 
     const mapContext = useContext(MapContext);
@@ -38,27 +41,43 @@ const VectorLayer = observer(
 
       const style = new Style({
         image: new Icon({
+          anchor: [0.5, 107],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'pixels',
+          src: iconSrc,
+          scale: 0.45,
+        }),
+      });
+
+      const styleHovered = new Style({
+        image: new Icon({
           anchor: [0.5, 98],
           anchorXUnits: 'fraction',
           anchorYUnits: 'pixels',
           src: iconSrc,
+          scale: 0.55,
         }),
+        zIndex: 10000,
       });
+
+      const styleFunction: StyleFunction = (feature: FeatureLike) => {
+        return feature.get('hovered') ? styleHovered : style;
+      };
 
       const layer = new OLVectorLayer({
         source,
-        style,
+        style: styleFunction,
         zIndex,
       });
 
       mapContext.addLayer(layer);
 
-      if (draggable) {
-        const interaction = new Modify({
-          source: source,
-          hitDetection: layer,
-        });
+      const interaction = new Modify({
+        source: source,
+        hitDetection: layer,
+      });
 
+      if (draggable) {
         interaction.on('modifyend', (event) => {
           event.features.forEach((feature) => {
             const point = (feature.getGeometry() as Point).getCoordinates();

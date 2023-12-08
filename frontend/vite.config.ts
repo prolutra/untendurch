@@ -18,6 +18,9 @@ export default defineConfig(() => {
         }
       }
     },
+    optimizeDeps: {
+      include: ['parse', 'ol', 'react', 'react-dom'],
+    },
     plugins: [
       react({
       babel: {
