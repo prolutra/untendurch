@@ -756,22 +756,30 @@ const BridgeForm: FC<BridgeFormProps> = observer(({ bridgeFormState }) => {
                   />
                 </>
               )}
-              {state.objectId && (
-                <Button marginTop={'1.6181rem'}>
+              <Flex sx={{ gap: 3 }} marginTop={'1.6181rem'}>
+                {state.objectId && (
+                  <Button type={'submit'}>
+                    <FormattedMessage
+                      id="report_bridge_button_save"
+                      defaultMessage={'Speichern'}
+                    />
+                  </Button>
+                )}
+                {!state.objectId && (
+                  <Button type={'submit'}>
+                    <FormattedMessage
+                      id="report_bridge_button_report"
+                      defaultMessage={'Erfassen'}
+                    />
+                  </Button>
+                )}
+                <Button variant={'secondary'} onClick={() => navigate('/')}>
                   <FormattedMessage
-                    id="report_bridge_button_save"
-                    defaultMessage={'Speichern'}
+                    id="report_bridge_button_cancel"
+                    defaultMessage={'Abbrechen'}
                   />
                 </Button>
-              )}
-              {!state.objectId && (
-                <Button marginTop={'1.6181rem'}>
-                  <FormattedMessage
-                    id="report_bridge_button_report"
-                    defaultMessage={'Erfassen'}
-                  />
-                </Button>
-              )}
+              </Flex>
             </Box>
           </Flex>
         </Grid>
