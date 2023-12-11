@@ -1,6 +1,6 @@
 name: Build and publish docker images
 
-on: 
+on:
   push:
     tags:
       - '**'
@@ -22,7 +22,7 @@ jobs:
       - name: Build and push frontend for TEST
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: ./frontend/
           file: ./frontend/Dockerfile
           push: true
           tags: tegonal/untendurch-frontend:test-${{github.ref_name}}
@@ -30,7 +30,7 @@ jobs:
       - name: Build and push frontend for PROD
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: ./frontend/
           file: ./frontend/Dockerfile
           push: true
           tags: tegonal/untendurch-frontend:${{github.ref_name}}
