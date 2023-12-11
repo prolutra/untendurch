@@ -12,7 +12,7 @@
 	log {
 		format json
 	}
-	root * /dist
+	root * /app
 	encode gzip
 	file_server
 	try_files {path} /index.html
