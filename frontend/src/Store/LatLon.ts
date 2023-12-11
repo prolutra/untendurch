@@ -2,7 +2,7 @@ import { computed } from 'mobx';
 import { model, Model, prop } from 'mobx-keystone';
 import { fromLonLat } from 'ol/proj';
 import proj4 from 'proj4';
-import { Lv95 } from './Lv95';
+import type { Lv95 } from './Lv95';
 
 @model('untendurch/LatLon')
 export class LatLon extends Model({

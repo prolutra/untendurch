@@ -1,15 +1,19 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Map.css';
 import MapContext from './MapContext';
 import * as ol from 'ol';
+import { Feature } from 'ol';
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
 import { useStore } from '../Store/Store';
 import { observer } from 'mobx-react-lite';
 import { Box } from 'theme-ui';
 import OverlayContext from './OverlayContext';
 import { Select } from 'ol/interaction';
-import { Point } from 'ol/geom';
+import type { Point } from 'ol/geom';
 import BridgePinInfo from './BridgePinInfo';
+import type { FeatureLike } from 'ol/Feature';
+import VectorLayer from 'ol/layer/Vector';
+import { useLocation } from 'react-router-dom';
 
 interface MapWrapperProps {
   children: React.ReactNode;
@@ -22,6 +26,7 @@ const MapWrapper = observer(({ children }: MapWrapperProps) => {
   const popoverRef = useRef<HTMLDivElement>(null);
   const [mapContext, setMap] = useState<ol.Map | null>(null);
   const [overlayContext, setOverlay] = useState<ol.Overlay | null>(null);
+  const pathname = useLocation().pathname;
 
   useEffect(() => {
     if (!popoverRef.current) throw Error('popoverRef is not assigned');
@@ -71,6 +76,33 @@ const MapWrapper = observer(({ children }: MapWrapperProps) => {
 
     mapObject.addInteraction(select);
 
+    // Add a pointermove handler to the map to change the cursor to a pointer on hover over any feature
+    mapObject.on('pointermove', function (evt) {
+      let activeFeature: FeatureLike | Feature | undefined;
+      const hit = mapObject.forEachFeatureAtPixel(evt.pixel, (feature) => {
+        activeFeature = feature;
+        return true;
+      });
+
+      mapObject.getLayers().forEach(function (layer) {
+        if (layer instanceof VectorLayer) {
+          layer.getSource().forEachFeature(function (feature: Feature) {
+            feature.set('hovered', false);
+          });
+        }
+      });
+
+      if (hit) {
+        if (activeFeature instanceof Feature) {
+          activeFeature.set('hovered', true);
+        }
+
+        mapObject.getTargetElement().style.cursor = 'pointer';
+      } else {
+        mapObject.getTargetElement().style.cursor = '';
+      }
+    });
+
     mapObject.setTarget(mapRef.current);
     setMap(mapObject);
     return () => mapObject.setTarget(undefined);
@@ -104,11 +136,13 @@ const MapWrapper = observer(({ children }: MapWrapperProps) => {
     }
   }, [store.mapSettings.center]);
 
+  const hasOverlay = pathname.includes('/new');
+
   return (
     <MapContext.Provider value={mapContext}>
       <OverlayContext.Provider value={overlayContext}>
         {store.mapSettings.mode !== 'NONE' && (
-          <div className={store.mapSettings.containerClassName}>
+          <>
             <Box
               sx={{
                 zIndex: 1001,
@@ -128,10 +162,21 @@ const MapWrapper = observer(({ children }: MapWrapperProps) => {
                 <BridgePinInfo></BridgePinInfo>
               </Box>
             </Box>
-            <div ref={mapRef} className={store.mapSettings.className}>
+            <Box
+              sx={
+                hasOverlay
+                  ? { position: 'relative', width: '100%', height: [200, 300] }
+                  : {
+                      position: 'absolute',
+                      width: '100%',
+                      height: ['calc(100% - 60px)', 'calc(100% - 88px)'],
+                    }
+              }
+              ref={mapRef}
+            >
               {children}
-            </div>
-          </div>
+            </Box>
+          </>
         )}
       </OverlayContext.Provider>
     </MapContext.Provider>

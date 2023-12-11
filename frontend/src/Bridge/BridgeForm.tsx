@@ -1,25 +1,27 @@
 import './ReportBridge.css';
 
-import { Point } from 'ol/geom';
+import type { Point } from 'ol/geom';
 import Parse, { GeoPoint } from 'parse';
+import type { FC } from 'react';
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toLonLat } from 'ol/proj';
 
 import {
   Box,
-  Label,
-  Input,
   Button,
-  Select,
-  Grid,
-  Flex,
-  Heading,
-  Radio,
-  Image,
   Checkbox,
-  Textarea,
+  Flex,
+  Grid,
+  Heading,
   IconButton,
+  Image,
+  Input,
+  Label,
+  Paragraph,
+  Radio,
+  Select,
+  Textarea,
 } from 'theme-ui';
 
 import { fetchPointInformation } from '../GeoAdmin/FetchPointInformation';
@@ -27,15 +29,14 @@ import { useStore } from '../Store/Store';
 import { observer } from 'mobx-react-lite';
 import PositionInformation from './PositionInformation';
 import { uploadFiles } from './ReportBridgeImageUploader';
-import { FormattedMessage } from 'react-intl';
-import { useIntl } from 'react-intl';
-import { BridgeFormState } from './BridgeFormState';
+import { FormattedMessage, useIntl } from 'react-intl';
+import type { BridgeFormState } from './BridgeFormState';
 
-interface BridgeFormProps {
+type BridgeFormProps = {
   bridgeFormState: BridgeFormState;
-}
+};
 
-const BridgeForm = observer(({ bridgeFormState }: BridgeFormProps) => {
+const BridgeForm: FC<BridgeFormProps> = observer(({ bridgeFormState }) => {
   const store = useStore();
 
   const hiddenFileInputRef = useRef<HTMLInputElement>(null);
@@ -148,7 +149,7 @@ const BridgeForm = observer(({ bridgeFormState }: BridgeFormProps) => {
         ({
           ...previousState,
           [name]: value,
-        } as any)
+        }) as any
     );
     /* eslint-enable */
   }
@@ -164,7 +165,7 @@ const BridgeForm = observer(({ bridgeFormState }: BridgeFormProps) => {
             ({
               ...previousState,
               ['images']: [...state.images, file],
-            } as any)
+            }) as any
         );
       }
     }
@@ -180,7 +181,7 @@ const BridgeForm = observer(({ bridgeFormState }: BridgeFormProps) => {
         ({
           ...previousState,
           ['images']: updatedFiles,
-        } as any)
+        }) as any
     );
     /* eslint-enable */
   }
@@ -191,32 +192,43 @@ const BridgeForm = observer(({ bridgeFormState }: BridgeFormProps) => {
         <Grid gap={0} columns={[1, '1fr 1.6181fr 1fr']}>
           <Flex></Flex>
           <Flex>
-            <Box as="form" onSubmit={saveBridge} sx={{ padding: [2, 2, 3, 3] }}>
-              <Heading as="h4" sx={{ gridColumn: '1 / span 2' }}>
-                <FormattedMessage
-                  id="report_bridge_heading_info"
-                  defaultMessage={'Informationen zur Brücke'}
-                />
-              </Heading>
-              <Label htmlFor="position" className="disabledLabel" mt={3} mb={1}>
-                <FormattedMessage
-                  id="report_bridge_label_position"
-                  defaultMessage={'Position'}
-                />
-              </Label>
+            <Flex
+              as="form"
+              onSubmit={saveBridge}
+              sx={{ flexDirection: 'column', gap: 48, padding: 3 }}
+            >
+              <Flex
+                sx={{
+                  flexDirection: 'row',
+                  width: '100%',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <Heading as="h2" sx={{ gridColumn: '1 / span 2' }}>
+                  <FormattedMessage
+                    id="report_bridge_heading_info"
+                    defaultMessage={'Informationen zur Brücke'}
+                  />
+                </Heading>
+                <Button onClick={() => navigate('/')} variant="close">
+                  &times;
+                </Button>
+              </Flex>
+
               <PositionInformation
                 reportedBridge={store.reportBridge}
               ></PositionInformation>
               {store.auth.sessionToken && (
-                <>
-                  <Label mt={3} sx={{ fontStyle: 'italic' }}>
+                <Box>
+                  <Paragraph sx={{ fontStyle: 'italic' }}>
                     <FormattedMessage
                       id="report_bridge_label_position_hint"
                       defaultMessage={
                         'Die jeweiligen Listen von Kantonen und Gemeinden werden mit den ermittelten Werten des gesetzten Punkts vereint.'
                       }
                     />
-                  </Label>
+                  </Paragraph>
                   <Label
                     htmlFor="cantons"
                     mt={3}
@@ -251,520 +263,560 @@ const BridgeForm = observer(({ bridgeFormState }: BridgeFormProps) => {
                     onChange={handleChange}
                     backgroundColor="#ebd9cc"
                   />
-                </>
-              )}
-              <Label htmlFor="name" mt={3} mb={1}>
-                <FormattedMessage
-                  id="report_bridge_label_name"
-                  defaultMessage={'Name der Brücke (optional)'}
-                />
-              </Label>
-              <Input
-                name="name"
-                value={state.name ? state.name : ''}
-                onChange={handleChange}
-              />
-              <Label htmlFor="shape" mt={3} mb={1}>
-                <FormattedMessage
-                  id="report_bridge_label_form"
-                  defaultMessage={'Brückenform'}
-                />
-              </Label>
-              <Grid gap={1} columns={[3, 3]}>
-                <Label sx={{ alignItems: 'center' }} mt={3} mb={1}>
-                  <Radio
-                    name="shape"
-                    value="a"
-                    required
-                    checked={state.shape === 'a'}
-                    onChange={handleChange}
-                  />
-                  <Image src={'/shape/a.png'} />
-                </Label>
-                <Label sx={{ alignItems: 'center' }} mb={1}>
-                  <Radio
-                    name="shape"
-                    value="b"
-                    required
-                    checked={state.shape === 'b'}
-                    onChange={handleChange}
-                  />
-                  <Image src={'/shape/b.png'} />
-                </Label>
-                <Label sx={{ alignItems: 'center' }} mb={1}>
-                  <Radio
-                    name="shape"
-                    value="c"
-                    required
-                    checked={state.shape === 'c'}
-                    onChange={handleChange}
-                  />
-                  <Image src={'/shape/c.png'} />
-                </Label>
-                <Label sx={{ alignItems: 'center' }} mb={1}>
-                  <Radio
-                    name="shape"
-                    value="d"
-                    required
-                    checked={state.shape === 'd'}
-                    onChange={handleChange}
-                  />
-                  <Image src={'/shape/d.png'} />
-                </Label>
-                <Label sx={{ alignItems: 'center' }} mb={1}>
-                  <Radio
-                    name="shape"
-                    value="e"
-                    required
-                    checked={state.shape === 'e'}
-                    onChange={handleChange}
-                  />
-                  <Image src={'/shape/e.png'} />
-                </Label>
-                <Label sx={{ alignItems: 'center' }} mb={1}>
-                  <Radio
-                    name="shape"
-                    value="f"
-                    required
-                    checked={state.shape === 'f'}
-                    onChange={handleChange}
-                  />
-                  <Image src={'/shape/f.png'} />
-                </Label>
-              </Grid>
-              {!state.shape && (
-                <Box sx={{ fontStyle: 'italic' }} className="warningText">
-                  <FormattedMessage
-                    id="report_bridge_shape_required"
-                    defaultMessage={'Bitte Brückenform wählen'}
-                  />
                 </Box>
               )}
-              <Label htmlFor="hasBanquet" mt={3} mb={1}>
-                <FormattedMessage
-                  id="report_bridge_label_hasBanquet"
-                  defaultMessage={'Durchgängiges Bankett?'}
-                />
-              </Label>
-              <Label mb={1}>
-                <Checkbox
-                  name="hasBanquet"
-                  checked={state.hasBanquet}
+              <Box>
+                <Label htmlFor="name">
+                  <FormattedMessage
+                    id="report_bridge_label_name"
+                    defaultMessage={'Name der Brücke (optional)'}
+                  />
+                </Label>
+                <Input
+                  name="name"
+                  value={state.name ? state.name : ''}
                   onChange={handleChange}
                 />
-              </Label>
-              {state.hasBanquet && (
-                <>
-                  <Label htmlFor="hasMinimalBanquetWidth" mt={3} mb={1}>
+              </Box>
+              <Flex sx={{ flexDirection: 'column', gap: 3 }}>
+                <Heading as={'h3'}>
+                  <FormattedMessage
+                    id="report_bridge_label_form"
+                    defaultMessage={'Brückenform'}
+                  />
+                </Heading>
+                {!state.shape && (
+                  <Paragraph sx={{ fontStyle: 'italic' }}>
                     <FormattedMessage
-                      id="report_bridge_label_hasMinimalBanquetWidth"
-                      defaultMessage={'Bankettbreite grösser 30cm'}
+                      id="report_bridge_shape_required"
+                      defaultMessage={'Bitte Brückenform wählen'}
                     />
+                  </Paragraph>
+                )}
+                <Grid gap={1} columns={[3, 3]}>
+                  <Label sx={{ alignItems: 'center' }} mt={3} mb={1}>
+                    <Radio
+                      name="shape"
+                      value="a"
+                      required
+                      checked={state.shape === 'a'}
+                      onChange={handleChange}
+                    />
+                    <Image src={'/shape/a.png'} />
                   </Label>
-                  <Label mb={1}>
+                  <Label sx={{ alignItems: 'center' }} mb={1}>
+                    <Radio
+                      name="shape"
+                      value="b"
+                      required
+                      checked={state.shape === 'b'}
+                      onChange={handleChange}
+                    />
+                    <Image src={'/shape/b.png'} />
+                  </Label>
+                  <Label sx={{ alignItems: 'center' }} mb={1}>
+                    <Radio
+                      name="shape"
+                      value="c"
+                      required
+                      checked={state.shape === 'c'}
+                      onChange={handleChange}
+                    />
+                    <Image src={'/shape/c.png'} />
+                  </Label>
+                  <Label sx={{ alignItems: 'center' }} mb={1}>
+                    <Radio
+                      name="shape"
+                      value="d"
+                      required
+                      checked={state.shape === 'd'}
+                      onChange={handleChange}
+                    />
+                    <Image src={'/shape/d.png'} />
+                  </Label>
+                  <Label sx={{ alignItems: 'center' }} mb={1}>
+                    <Radio
+                      name="shape"
+                      value="e"
+                      required
+                      checked={state.shape === 'e'}
+                      onChange={handleChange}
+                    />
+                    <Image src={'/shape/e.png'} />
+                  </Label>
+                  <Label sx={{ alignItems: 'center' }} mb={1}>
+                    <Radio
+                      name="shape"
+                      value="f"
+                      required
+                      checked={state.shape === 'f'}
+                      onChange={handleChange}
+                    />
+                    <Image src={'/shape/f.png'} />
+                  </Label>
+                </Grid>
+                <Label>
+                  <Checkbox
+                    name="hasBanquet"
+                    checked={state.hasBanquet}
+                    onChange={handleChange}
+                  />
+                  <FormattedMessage
+                    id="report_bridge_label_hasBanquet"
+                    defaultMessage={'Durchgängiges Bankett?'}
+                  />
+                </Label>
+                {state.hasBanquet && (
+                  <Label>
                     <Checkbox
                       name="hasMinimalBanquetWidth"
                       checked={state.hasMinimalBanquetWidth}
                       onChange={handleChange}
                     />
-                  </Label>
-                </>
-              )}
-              <Label htmlFor="hasStones" mt={3} mb={1}>
-                <FormattedMessage
-                  id="report_bridge_label_hasStones"
-                  defaultMessage={'Steine vorhanden?'}
-                />
-              </Label>
-              <Label mb={1}>
-                <Checkbox
-                  name="hasStones"
-                  checked={state.hasStones}
-                  onChange={handleChange}
-                />
-              </Label>
-              <Label htmlFor="fileUpload" mt={3} mb={1}>
-                <FormattedMessage
-                  id="report_bridge_label_images"
-                  defaultMessage={'Bilder'}
-                />
-              </Label>
-              <Flex>
-                {hiddenFileInputRef && (
-                  <Box>
-                    <IconButton
-                      disabled={state.images.length >= 5}
-                      sx={{
-                        width: 50,
-                        height: 50,
-                        cursor: state.images.length < 5 ? 'pointer' : 'default',
-                        borderRadius: '50%',
-                        backgroundColor:
-                          state.images.length < 5 ? '#5694bd' : 'gray',
-                        filter: 'drop-shadow(2px 2px 4px gray)',
-                      }}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        hiddenFileInputRef.current?.click();
-                      }}
-                      className="uploadFileIconButton"
-                    >
-                      <Image src={'/image-add-line.svg'} width={30} />
-                    </IconButton>
-                    {state.images.length === 0 && (
-                      <Box sx={{ fontStyle: 'italic' }} className="warningText">
-                        <FormattedMessage
-                          id="report_bridge_images_required"
-                          defaultMessage={
-                            'Es muss mindestens ein Bild hochgeladen werden'
-                          }
-                        />
-                      </Box>
-                    )}
-                  </Box>
-                )}
-                <Input
-                  hidden
-                  onChange={handleFileChange}
-                  ref={hiddenFileInputRef}
-                  id="fileInput"
-                  type={'file'}
-                  accept=".jpg,.jpeg,.png"
-                  sx={{ display: 'none' }}
-                  required={state.images.length === 0}
-                />
-                {state.images.length > 0 &&
-                  state.images.map((file) => {
-                    return (
-                      <div
-                        key={'wrap-' + file.name}
-                        className="removeFileContainer"
-                      >
-                        <div key={'label-' + file.name}>{file.name}</div>
-                        <IconButton
-                          key={'remove-' + file.name}
-                          sx={{
-                            width: 50,
-                            height: 50,
-                            cursor: 'pointer',
-                            borderRadius: '50%',
-                            backgroundColor: 'white',
-                          }}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            removeFile(file);
-                          }}
-                          className="removeFileIconButton"
-                        >
-                          <Image src={'/delete-bin-line.svg'} width={30} />
-                        </IconButton>
-                      </div>
-                    );
-                  })}
-              </Flex>
-              <Heading as="h4" sx={{ gridColumn: '1 / span 2' }}>
-                <FormattedMessage
-                  id="report_bridge_heading_dimensions"
-                  defaultMessage={'Brückendimensionen'}
-                />
-              </Heading>
-              <Grid
-                gap={1}
-                columns={[1, 1, 2, 2]}
-                sx={{
-                  alignItems: 'end',
-                  gridColumn: '1 / span 2',
-                }}
-              >
-                <Image src={'/bridge_index.jpg'} />
-                <Grid columns={['1fr 6fr']} sx={{ justifyItems: 'end' }}>
-                  <div className="legendCircle">1</div>
-                  <Input
-                    type={'number'}
-                    name="bridgeWidth"
-                    placeholder={intl.formatMessage({
-                      id: 'report_bridge_placeholder_bridgeWidth',
-                      defaultMessage: 'breiteste Stelle in m',
-                    })}
-                    required
-                    value={state.bridgeWidth ? state.bridgeWidth : ''}
-                    onChange={handleChange}
-                  />
-                  <div className="legendCircle">2</div>
-                  <Input
-                    type={'number'}
-                    name="bridgeHeight"
-                    placeholder={intl.formatMessage({
-                      id: 'report_bridge_placeholder_bridgeHeight',
-                      defaultMessage:
-                        'höchste Stelle ab Mittelwasserlinie in m',
-                    })}
-                    required
-                    value={state.bridgeHeight ? state.bridgeHeight : ''}
-                    onChange={handleChange}
-                  />
-                  <div className="legendCircle">3</div>
-                  <Input
-                    type={'number'}
-                    name="bridgeLength"
-                    placeholder={intl.formatMessage({
-                      id: 'report_bridge_placeholder_bridgeLength',
-                      defaultMessage: 'Tiefe (Strassenbreite) in m',
-                    })}
-                    required
-                    value={state.bridgeLength ? state.bridgeLength : ''}
-                    onChange={handleChange}
-                  />
-                </Grid>
-              </Grid>
-              <Heading as="h4" sx={{ gridColumn: '1 / span 2' }}>
-                <FormattedMessage
-                  id="report_bridge_heading_surrounding"
-                  defaultMessage={'Umgebung Brücke'}
-                />
-              </Heading>
-              <Label htmlFor="hasContinuousShore" mt={3} mb={1}>
-                <FormattedMessage
-                  id="report_bridge_label_hasContinuousShore"
-                  defaultMessage={
-                    'Uferbereich mind. einseitig durchgehend vor- und nach der Brücke?'
-                  }
-                />
-              </Label>
-              <Label mb={1}>
-                <Checkbox
-                  name="hasContinuousShore"
-                  checked={state.hasContinuousShore}
-                  onChange={handleChange}
-                />
-              </Label>
-              <Label htmlFor="hasSlopes" mt={3} mb={1}>
-                <FormattedMessage
-                  id="report_bridge_label_hasSlopes"
-                  defaultMessage={
-                    'Schwellen / Abstürze von 1m Höhe innerhalb Distanz von 20m zur Brücke?'
-                  }
-                />
-              </Label>
-              <Label mb={1}>
-                <Checkbox
-                  name="hasSlopes"
-                  checked={state.hasSlopes}
-                  onChange={handleChange}
-                />
-              </Label>
-              <Heading as="h4" sx={{ gridColumn: '1 / span 2' }}>
-                <FormattedMessage
-                  id="report_bridge_heading_traffic"
-                  defaultMessage={'Verkehr'}
-                />
-              </Heading>
-              <Label htmlFor="traffic" mt={3} mb={1}>
-                <FormattedMessage
-                  id="report_bridge_label_traffic"
-                  defaultMessage={'Verkehrsaufkommen'}
-                />
-              </Label>
-              <Select
-                name="traffic"
-                value={state.traffic}
-                onChange={handleChange}
-              >
-                <option value={'NO_TRAFFIC'}>
-                  <FormattedMessage
-                    id="report_bridge_option_NO_TRAFFIC"
-                    defaultMessage={'Kein Verkehr'}
-                  />
-                </option>
-                <option value={'VERY_LIGHT_TRAFFIC'}>
-                  <FormattedMessage
-                    id="report_bridge_option_VERY_LIGHT_TRAFFIC"
-                    defaultMessage={'Selten (1x pro Tag)'}
-                  />
-                </option>
-                <option value={'LIGHT_TRAFFIC'}>
-                  <FormattedMessage
-                    id="report_bridge_option_LIGHT_TRAFFIC"
-                    defaultMessage={'Wenig (1 Auto pro Stunde)'}
-                  />
-                </option>
-                <option value={'MEDIUM_TRAFFIC'}>
-                  <FormattedMessage
-                    id="report_bridge_option_MEDIUM_TRAFFIC"
-                    defaultMessage={'Mittel (1 Auto/10 Minuten)'}
-                  />
-                </option>
-                <option value={'HEAVY_TRAFFIC'}>
-                  <FormattedMessage
-                    id="report_bridge_option_HEAVY_TRAFFIC"
-                    defaultMessage={'Hoch (1 Auto / 3 Minuten)'}
-                  />
-                </option>
-                <option value={'VERY_HEAVY_TRAFFIC'}>
-                  <FormattedMessage
-                    id="report_bridge_option_VERY_HEAVY_TRAFFIC"
-                    defaultMessage={'Sehr hoch (1+ Auto/Minute)'}
-                  />
-                </option>
-              </Select>
-              <Label htmlFor="speedLimit" mt={3} mb={1}>
-                <FormattedMessage
-                  id="report_bridge_label_speedLimit"
-                  defaultMessage={'Tempolimite'}
-                />
-              </Label>
-              <Select
-                name="speedLimit"
-                value={state.speedLimit}
-                onChange={handleChange}
-              >
-                <option value={'0_30'}>
-                  <FormattedMessage
-                    id="report_bridge_option_0_30"
-                    defaultMessage={'0-30km/h'}
-                  />
-                </option>
-                <option value={'40_50'}>
-                  <FormattedMessage
-                    id="report_bridge_option_40_50"
-                    defaultMessage={'40-50km/h'}
-                  />
-                </option>
-                <option value={'60'}>
-                  <FormattedMessage
-                    id="report_bridge_option_60"
-                    defaultMessage={'60km/h'}
-                  />
-                </option>
-                <option value={'70_80'}>
-                  <FormattedMessage
-                    id="report_bridge_option_70_80"
-                    defaultMessage={'70-80km/h'}
-                  />
-                </option>
-                <option value={'100'}>
-                  <FormattedMessage
-                    id="report_bridge_option_100"
-                    defaultMessage={'100+hm/h'}
-                  />
-                </option>
-              </Select>
-              <Label htmlFor="barriers" mt={3} mb={1}>
-                <FormattedMessage
-                  id="report_bridge_label_barriers"
-                  defaultMessage={'Barrieren, um auf die Strasse zu gelangen'}
-                />
-              </Label>
-              <Select
-                name="barriers"
-                value={state.barriers}
-                onChange={handleChange}
-              >
-                <option value={'NONE'}>
-                  <FormattedMessage
-                    id="report_bridge_option_NONE"
-                    defaultMessage={'keine'}
-                  />
-                </option>
-                <option value={'FENCE_LESS_75MM'}>
-                  <FormattedMessage
-                    id="report_bridge_option_FENCE_LESS_75MM"
-                    defaultMessage={'Zaun (Maschendrahtgrösse < 7.5 cm)'}
-                  />
-                </option>
-                <option value={'FENCE_MORE_75MM'}>
-                  <FormattedMessage
-                    id="report_bridge_option_FENCE_MORE_75MM"
-                    defaultMessage={'Zaun (Maschendrahtgrösse > 7.5 cm)'}
-                  />
-                </option>
-                <option value={'WALL'}>
-                  <FormattedMessage
-                    id="report_bridge_option_WALL"
-                    defaultMessage={'Mauer (> 1.2m)'}
-                  />
-                </option>
-              </Select>
-              <Heading as="h4" sx={{ gridColumn: '1 / span 2' }}>
-                <FormattedMessage
-                  id="report_bridge_heading_varia"
-                  defaultMessage={'Sonstiges'}
-                />
-              </Heading>
-              <Label htmlFor="nickname" mt={3} mb={1}>
-                <FormattedMessage
-                  id="report_bridge_label_nickname"
-                  defaultMessage={'Nickname (öffentlich)'}
-                />
-              </Label>
-              <Input
-                name="nickname"
-                value={state.nickname ? state.nickname : ''}
-                onChange={handleChange}
-              />
-              <Label htmlFor="email" mt={3} mb={1}>
-                <FormattedMessage
-                  id="report_bridge_label_email"
-                  defaultMessage={'E-Mail (nicht sichtbar)'}
-                />
-              </Label>
-              <Input
-                type="email"
-                name="email"
-                value={state.email ? state.email : ''}
-                onChange={handleChange}
-              />
-              <Label htmlFor="commentReporter" mt={3} mb={1}>
-                <FormattedMessage
-                  id="report_bridge_label_commentReporter"
-                  defaultMessage={'Bemerkungen'}
-                />
-              </Label>
-              <Textarea
-                name="commentReporter"
-                rows={8}
-                value={state.commentReporter ? state.commentReporter : ''}
-                onChange={handleChange}
-              />
-              {store.auth.sessionToken && (
-                <>
-                  <Label
-                    htmlFor="commentAdmin"
-                    mt={3}
-                    mb={1}
-                    sx={{ fontStyle: 'italic' }}
-                  >
                     <FormattedMessage
-                      id="report_bridge_label_commentAdmin"
-                      defaultMessage={'Bemerkungen (Admin)'}
+                      id="report_bridge_label_hasMinimalBanquetWidth"
+                      defaultMessage={'Bankettbreite grösser 30cm'}
+                    />
+                  </Label>
+                )}
+                <Label htmlFor={'hasStones'}>
+                  <Checkbox
+                    name="hasStones"
+                    checked={state.hasStones}
+                    onChange={handleChange}
+                  />
+                  <FormattedMessage
+                    id="report_bridge_label_hasStones"
+                    defaultMessage={'Steine vorhanden?'}
+                  />
+                </Label>
+              </Flex>
+              <Flex sx={{ flexDirection: 'column', gap: 3 }}>
+                <Heading as={'h3'}>
+                  <FormattedMessage
+                    id="report_bridge_label_images"
+                    defaultMessage={'Bilder'}
+                  />
+                </Heading>
+                {state.images.length === 0 && (
+                  <Paragraph sx={{ fontStyle: 'italic' }}>
+                    <FormattedMessage
+                      id="report_bridge_images_required"
+                      defaultMessage={
+                        'Es muss mindestens ein Bild hochgeladen werden'
+                      }
+                    />
+                  </Paragraph>
+                )}
+                {state.images.length > 0 && (
+                  <Paragraph sx={{ fontStyle: 'italic' }}>
+                    <FormattedMessage
+                      id="report_bridge_images_uploaded"
+                      defaultMessage={'Bilder erfolgreich hochgeladen'}
+                    />
+                  </Paragraph>
+                )}
+                <Flex>
+                  {hiddenFileInputRef && (
+                    <Box>
+                      <Button
+                        variant="outline"
+                        disabled={state.images.length >= 5}
+                        sx={{
+                          cursor:
+                            state.images.length < 5 ? 'pointer' : 'default',
+                          filter: 'drop-shadow(2px 2px 4px gray)',
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          hiddenFileInputRef.current?.click();
+                        }}
+                        className="uploadFileIconButton"
+                      >
+                        <FormattedMessage
+                          id="report_bridge_button_upload"
+                          defaultMessage={'Bilder auswählen und hochladen'}
+                        />
+                      </Button>
+                    </Box>
+                  )}
+                  <Input
+                    hidden
+                    onChange={handleFileChange}
+                    ref={hiddenFileInputRef}
+                    id="fileInput"
+                    type={'file'}
+                    accept=".jpg,.jpeg,.png"
+                    sx={{ display: 'none' }}
+                    required={state.images.length === 0}
+                  />
+                </Flex>
+                <Grid gap={2} columns={[1, 2]}>
+                  {state.images.length > 0 &&
+                    state.images.map((file) => {
+                      return (
+                        <Box
+                          sx={{
+                            background: 'text100',
+                            p: 2,
+                            position: 'relative',
+                          }}
+                          key={'wrap-' + file.name}
+                        >
+                          <Image src={URL.createObjectURL(file)} />
+                          <IconButton
+                            key={'remove-' + file.name}
+                            variant="outline"
+                            sx={{
+                              width: 38,
+                              height: 38,
+                              position: 'absolute',
+                              bottom: 4,
+                              right: 4,
+                            }}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              removeFile(file);
+                            }}
+                          >
+                            <Image src={'/delete-bin-line.svg'} width={28} />
+                          </IconButton>
+                        </Box>
+                      );
+                    })}
+                </Grid>
+              </Flex>
+              <Flex sx={{ flexDirection: 'column', gap: 3 }}>
+                <Heading as="h3">
+                  <FormattedMessage
+                    id="report_bridge_heading_dimensions"
+                    defaultMessage={'Brückendimensionen'}
+                  />
+                </Heading>
+                <Grid
+                  gap={1}
+                  columns={[1, 1, 2]}
+                  sx={{
+                    alignItems: 'end',
+                    gridColumn: '1 / span 2',
+                  }}
+                >
+                  <Image src={'/bridge_index.jpg'} />
+                  <Grid columns={['1fr 6fr']} sx={{ justifyItems: 'end' }}>
+                    <div className="legendCircle">1</div>
+                    <Input
+                      type={'number'}
+                      name="bridgeWidth"
+                      placeholder={intl.formatMessage({
+                        id: 'report_bridge_placeholder_bridgeWidth',
+                        defaultMessage: 'breiteste Stelle in m',
+                      })}
+                      required
+                      value={state.bridgeWidth ? state.bridgeWidth : ''}
+                      onChange={handleChange}
+                    />
+                    <div className="legendCircle">2</div>
+                    <Input
+                      type={'number'}
+                      name="bridgeHeight"
+                      placeholder={intl.formatMessage({
+                        id: 'report_bridge_placeholder_bridgeHeight',
+                        defaultMessage:
+                          'höchste Stelle ab Mittelwasserlinie in m',
+                      })}
+                      required
+                      value={state.bridgeHeight ? state.bridgeHeight : ''}
+                      onChange={handleChange}
+                    />
+                    <div className="legendCircle">3</div>
+                    <Input
+                      type={'number'}
+                      name="bridgeLength"
+                      placeholder={intl.formatMessage({
+                        id: 'report_bridge_placeholder_bridgeLength',
+                        defaultMessage: 'Tiefe (Strassenbreite) in m',
+                      })}
+                      required
+                      value={state.bridgeLength ? state.bridgeLength : ''}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                </Grid>
+              </Flex>
+              <Flex sx={{ flexDirection: 'column', gap: 3 }}>
+                <Heading as="h3">
+                  <FormattedMessage
+                    id="report_bridge_heading_surrounding"
+                    defaultMessage={'Umgebung Brücke'}
+                  />
+                </Heading>
+                <Box>
+                  <Label>
+                    <Checkbox
+                      name="hasContinuousShore"
+                      checked={state.hasContinuousShore}
+                      onChange={handleChange}
+                    />
+                    <FormattedMessage
+                      id="report_bridge_label_hasContinuousShore"
+                      defaultMessage={
+                        'Uferbereich mind. einseitig durchgehend vor- und nach der Brücke?'
+                      }
+                    />
+                  </Label>
+                  <Label>
+                    <Checkbox
+                      name="hasSlopes"
+                      checked={state.hasSlopes}
+                      onChange={handleChange}
+                    />
+                    <FormattedMessage
+                      id="report_bridge_label_hasSlopes"
+                      defaultMessage={
+                        'Schwellen / Abstürze von 1m Höhe innerhalb Distanz von 20m zur Brücke?'
+                      }
+                    />
+                  </Label>
+                </Box>
+              </Flex>
+              <Flex sx={{ flexDirection: 'column', gap: 3 }}>
+                <Heading as="h3">
+                  <FormattedMessage
+                    id="report_bridge_heading_traffic"
+                    defaultMessage={'Verkehr'}
+                  />
+                </Heading>
+                <Box>
+                  <Label htmlFor="traffic" mt={3} mb={1}>
+                    <FormattedMessage
+                      id="report_bridge_label_traffic"
+                      defaultMessage={'Verkehrsaufkommen'}
+                    />
+                  </Label>
+                  <Select
+                    name="traffic"
+                    value={state.traffic}
+                    onChange={handleChange}
+                  >
+                    <option value={'NO_TRAFFIC'}>
+                      <FormattedMessage
+                        id="report_bridge_option_NO_TRAFFIC"
+                        defaultMessage={'Kein Verkehr'}
+                      />
+                    </option>
+                    <option value={'VERY_LIGHT_TRAFFIC'}>
+                      <FormattedMessage
+                        id="report_bridge_option_VERY_LIGHT_TRAFFIC"
+                        defaultMessage={'Selten (1x pro Tag)'}
+                      />
+                    </option>
+                    <option value={'LIGHT_TRAFFIC'}>
+                      <FormattedMessage
+                        id="report_bridge_option_LIGHT_TRAFFIC"
+                        defaultMessage={'Wenig (1 Auto pro Stunde)'}
+                      />
+                    </option>
+                    <option value={'MEDIUM_TRAFFIC'}>
+                      <FormattedMessage
+                        id="report_bridge_option_MEDIUM_TRAFFIC"
+                        defaultMessage={'Mittel (1 Auto/10 Minuten)'}
+                      />
+                    </option>
+                    <option value={'HEAVY_TRAFFIC'}>
+                      <FormattedMessage
+                        id="report_bridge_option_HEAVY_TRAFFIC"
+                        defaultMessage={'Hoch (1 Auto / 3 Minuten)'}
+                      />
+                    </option>
+                    <option value={'VERY_HEAVY_TRAFFIC'}>
+                      <FormattedMessage
+                        id="report_bridge_option_VERY_HEAVY_TRAFFIC"
+                        defaultMessage={'Sehr hoch (1+ Auto/Minute)'}
+                      />
+                    </option>
+                  </Select>
+                </Box>
+                <Box>
+                  <Label htmlFor="speedLimit" mt={3} mb={1}>
+                    <FormattedMessage
+                      id="report_bridge_label_speedLimit"
+                      defaultMessage={'Tempolimite'}
+                    />
+                  </Label>
+                  <Select
+                    name="speedLimit"
+                    value={state.speedLimit}
+                    onChange={handleChange}
+                  >
+                    <option value={'0_30'}>
+                      <FormattedMessage
+                        id="report_bridge_option_0_30"
+                        defaultMessage={'0-30km/h'}
+                      />
+                    </option>
+                    <option value={'40_50'}>
+                      <FormattedMessage
+                        id="report_bridge_option_40_50"
+                        defaultMessage={'40-50km/h'}
+                      />
+                    </option>
+                    <option value={'60'}>
+                      <FormattedMessage
+                        id="report_bridge_option_60"
+                        defaultMessage={'60km/h'}
+                      />
+                    </option>
+                    <option value={'70_80'}>
+                      <FormattedMessage
+                        id="report_bridge_option_70_80"
+                        defaultMessage={'70-80km/h'}
+                      />
+                    </option>
+                    <option value={'100'}>
+                      <FormattedMessage
+                        id="report_bridge_option_100"
+                        defaultMessage={'100+hm/h'}
+                      />
+                    </option>
+                  </Select>
+                </Box>
+                <Box>
+                  <Label htmlFor="barriers" mt={3} mb={1}>
+                    <FormattedMessage
+                      id="report_bridge_label_barriers"
+                      defaultMessage={
+                        'Barrieren, um auf die Strasse zu gelangen'
+                      }
+                    />
+                  </Label>
+                  <Select
+                    name="barriers"
+                    value={state.barriers}
+                    onChange={handleChange}
+                  >
+                    <option value={'NONE'}>
+                      <FormattedMessage
+                        id="report_bridge_option_NONE"
+                        defaultMessage={'keine'}
+                      />
+                    </option>
+                    <option value={'FENCE_LESS_75MM'}>
+                      <FormattedMessage
+                        id="report_bridge_option_FENCE_LESS_75MM"
+                        defaultMessage={'Zaun (Maschendrahtgrösse < 7.5 cm)'}
+                      />
+                    </option>
+                    <option value={'FENCE_MORE_75MM'}>
+                      <FormattedMessage
+                        id="report_bridge_option_FENCE_MORE_75MM"
+                        defaultMessage={'Zaun (Maschendrahtgrösse > 7.5 cm)'}
+                      />
+                    </option>
+                    <option value={'WALL'}>
+                      <FormattedMessage
+                        id="report_bridge_option_WALL"
+                        defaultMessage={'Mauer (> 1.2m)'}
+                      />
+                    </option>
+                  </Select>
+                </Box>
+              </Flex>
+              <Flex sx={{ flexDirection: 'column', gap: 3 }}>
+                <Heading as="h3">
+                  <FormattedMessage
+                    id="report_bridge_heading_varia"
+                    defaultMessage={'Sonstiges'}
+                  />
+                </Heading>
+                <Box>
+                  <Label htmlFor="nickname" mt={3} mb={1}>
+                    <FormattedMessage
+                      id="report_bridge_label_nickname"
+                      defaultMessage={'Nickname (öffentlich)'}
+                    />
+                  </Label>
+                  <Input
+                    name="nickname"
+                    value={state.nickname ? state.nickname : ''}
+                    onChange={handleChange}
+                  />
+                </Box>
+                <Box>
+                  <Label htmlFor="email" mt={3} mb={1}>
+                    <FormattedMessage
+                      id="report_bridge_label_email"
+                      defaultMessage={'E-Mail (nicht sichtbar)'}
+                    />
+                  </Label>
+                  <Input
+                    type="email"
+                    name="email"
+                    value={state.email ? state.email : ''}
+                    onChange={handleChange}
+                  />
+                </Box>
+                <Box>
+                  <Label htmlFor="commentReporter" mt={3} mb={1}>
+                    <FormattedMessage
+                      id="report_bridge_label_commentReporter"
+                      defaultMessage={'Bemerkungen'}
                     />
                   </Label>
                   <Textarea
-                    name="commentAdmin"
+                    name="commentReporter"
                     rows={8}
-                    value={state.commentAdmin}
+                    value={state.commentReporter ? state.commentReporter : ''}
                     onChange={handleChange}
-                    backgroundColor="#ebd9cc"
                   />
-                </>
-              )}
-              {state.objectId && (
-                <Button marginTop={'1.6181rem'}>
+                  {store.auth.sessionToken && (
+                    <>
+                      <Label
+                        htmlFor="commentAdmin"
+                        mt={3}
+                        mb={1}
+                        sx={{ fontStyle: 'italic' }}
+                      >
+                        <FormattedMessage
+                          id="report_bridge_label_commentAdmin"
+                          defaultMessage={'Bemerkungen (Admin)'}
+                        />
+                      </Label>
+                      <Textarea
+                        name="commentAdmin"
+                        rows={8}
+                        value={state.commentAdmin}
+                        onChange={handleChange}
+                        backgroundColor="#ebd9cc"
+                      />
+                    </>
+                  )}
+                </Box>
+              </Flex>
+              <Flex sx={{ gap: 3, mb: 5 }}>
+                {state.objectId && (
+                  <Button type={'submit'}>
+                    <FormattedMessage
+                      id="report_bridge_button_save"
+                      defaultMessage={'Speichern'}
+                    />
+                  </Button>
+                )}
+                {!state.objectId && (
+                  <Button type={'submit'}>
+                    <FormattedMessage
+                      id="report_bridge_button_report"
+                      defaultMessage={'Erfassen'}
+                    />
+                  </Button>
+                )}
+                <Button variant={'outline'} onClick={() => navigate('/')}>
                   <FormattedMessage
-                    id="report_bridge_button_save"
-                    defaultMessage={'Speichern'}
+                    id="report_bridge_button_cancel"
+                    defaultMessage={'Abbrechen'}
                   />
                 </Button>
-              )}
-              {!state.objectId && (
-                <Button marginTop={'1.6181rem'}>
-                  <FormattedMessage
-                    id="report_bridge_button_report"
-                    defaultMessage={'Erfassen'}
-                  />
-                </Button>
-              )}
-            </Box>
+              </Flex>
+            </Flex>
           </Flex>
         </Grid>
       </div>

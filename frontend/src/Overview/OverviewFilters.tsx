@@ -1,15 +1,16 @@
 import { observer } from 'mobx-react-lite';
 import 'ol/ol.css';
 
+import type { FC } from 'react';
 import React, { useEffect, useState } from 'react';
 import { useStore } from '../Store/Store';
-import { Select, Box } from 'theme-ui';
+import { Box, Button, Label, Select } from 'theme-ui';
 import { FormattedMessage } from 'react-intl';
 import { AllFilter } from '../Store/AllFilter';
 import { SafetyRisk } from '../Store/SafetyRisk';
 import { useSearchParams } from 'react-router-dom';
 
-const OverviewFilters = observer(() => {
+const OverviewFilters: FC = observer(() => {
   const store = useStore();
 
   type OverviewFiltersState = {
@@ -68,7 +69,7 @@ const OverviewFilters = observer(() => {
     setSearchParams(state);
   }, [state.safetyRisk]);
 
-  function handleChange(e: React.FormEvent<HTMLSelectElement>): void {
+  const handleChange = (e: React.FormEvent<HTMLSelectElement>) => {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
 
@@ -99,11 +100,15 @@ const OverviewFilters = observer(() => {
           ({
             ...previousState,
             [name]: value,
-          } as any)
+          }) as any
       );
       /* eslint-enable */
     }
-  }
+  };
+
+  const handleReset = () => {
+    setState(defaultState);
+  };
 
   return (
     <Box
@@ -112,113 +117,165 @@ const OverviewFilters = observer(() => {
         gap: 2,
         zIndex: 3000,
         position: 'fixed',
-        fontSize: '1.61rem',
+        fontSize: 2,
         top: '112px',
-        left: ['calc(50% - 135px)', 'calc(50% - 135px)', '7%', '7%'],
+        left: 5,
+        p: 2,
+        pt: 1,
+        backgroundColor: 'rgba(255,255,255,0.75)',
+        borderRadius: '5px',
+        alignItems: 'flex-end',
       }}
     >
-      <Select name="canton" value={state.canton} onChange={handleChange}>
-        <option value={AllFilter}>
+      <Box>
+        <Label htmlFor="canton">
           <FormattedMessage
-            id="overview_filters_select_ALL"
-            defaultMessage={'Alle'}
+            id="overview_filters_label_canton"
+            defaultMessage={'Kanton'}
           />
-        </option>
-        {store.cantonMunicipality.cantons.map((canton) => (
-          <option key={canton} value={canton}>
-            {canton}
-          </option>
-        ))}
-      </Select>
-      <Select
-        name="municipality"
-        value={state.municipality}
-        onChange={handleChange}
-      >
-        <option value={AllFilter}>
-          <FormattedMessage
-            id="overview_filters_select_ALL"
-            defaultMessage={'Alle'}
-          />
-        </option>
-        {store.cantonMunicipality.municipalities
-          .filter(
-            (municipality) =>
-              state.canton === AllFilter || state.canton === municipality.canton
-          )
-          .map((municipality) => (
-            <option
-              key={municipality.canton + '_' + municipality.name}
-              value={municipality.name}
-            >
-              {municipality.name}
-            </option>
-          ))}
-      </Select>
-      <Select name="status" value={state.status} onChange={handleChange}>
-        <option value={AllFilter}>
-          <FormattedMessage
-            id="overview_filters_select_ALL"
-            defaultMessage={'Alle'}
-          />
-        </option>
-        <option value={'UNVERIFIED'}>
-          <FormattedMessage
-            id="overview_filters_select_status_unverified"
-            defaultMessage={'Nicht verifiziert'}
-          />
-        </option>
-        <option value={'VERIFIED'}>
-          <FormattedMessage
-            id="overview_filters_select_status_verified"
-            defaultMessage={'Verifiziert'}
-          />
-        </option>
-      </Select>
-      <Select
-        name="otterFriendly"
-        value={state.otterFriendly}
-        onChange={handleChange}
-      >
-        <option value={AllFilter}>
-          <FormattedMessage
-            id="overview_filters_select_ALL"
-            defaultMessage={'Alle'}
-          />
-        </option>
-        <option value={'FRIENDLY'}>
-          <FormattedMessage
-            id="otter_friendly_FRIENDLY"
-            defaultMessage={'Freundlich'}
-          />
-        </option>
-        <option value={'UNFRIENDLY'}>
-          <FormattedMessage
-            id="otter_friendly_UNFRIENDLY"
-            defaultMessage={'Unfreundlich'}
-          />
-        </option>
-      </Select>
-      <Select
-        name="safetyRisk"
-        value={state.safetyRisk}
-        onChange={handleChange}
-      >
-        <option value={AllFilter}>
-          <FormattedMessage
-            id="overview_filters_select_ALL"
-            defaultMessage={'Alle'}
-          />
-        </option>
-        {Object.keys(SafetyRisk).map((safetyRisk) => (
-          <option key={safetyRisk} value={safetyRisk}>
+        </Label>
+        <Select name="canton" value={state.canton} onChange={handleChange}>
+          <option value={AllFilter}>
             <FormattedMessage
-              id={`safety_risk_${safetyRisk}`}
-              defaultMessage={safetyRisk}
+              id="overview_filters_select_ALL"
+              defaultMessage={'Alle'}
             />
           </option>
-        ))}
-      </Select>
+          {store.cantonMunicipality.cantons.map((canton) => (
+            <option key={canton} value={canton}>
+              {canton}
+            </option>
+          ))}
+        </Select>
+      </Box>
+      <Box>
+        <Label htmlFor="municipality">
+          <FormattedMessage
+            id="overview_filters_label_municipality"
+            defaultMessage={'Gemeinde'}
+          />
+        </Label>
+        <Select
+          name="municipality"
+          value={state.municipality}
+          onChange={handleChange}
+        >
+          <option value={AllFilter}>
+            <FormattedMessage
+              id="overview_filters_select_ALL"
+              defaultMessage={'Alle'}
+            />
+          </option>
+          {store.cantonMunicipality.municipalities
+            .filter(
+              (municipality) =>
+                state.canton === AllFilter ||
+                state.canton === municipality.canton
+            )
+            .map((municipality) => (
+              <option
+                key={municipality.canton + '_' + municipality.name}
+                value={municipality.name}
+              >
+                {municipality.name}
+              </option>
+            ))}
+        </Select>
+      </Box>
+      <Box>
+        <Label htmlFor="status">
+          <FormattedMessage
+            id="overview_filters_label_status"
+            defaultMessage={'Status'}
+          />
+        </Label>
+        <Select name="status" value={state.status} onChange={handleChange}>
+          <option value={AllFilter}>
+            <FormattedMessage
+              id="overview_filters_select_ALL"
+              defaultMessage={'Alle'}
+            />
+          </option>
+          <option value={'UNVERIFIED'}>
+            <FormattedMessage
+              id="overview_filters_select_status_unverified"
+              defaultMessage={'Nicht verifiziert'}
+            />
+          </option>
+          <option value={'VERIFIED'}>
+            <FormattedMessage
+              id="overview_filters_select_status_verified"
+              defaultMessage={'Verifiziert'}
+            />
+          </option>
+        </Select>
+      </Box>
+      <Box>
+        <Label htmlFor="otterFriendly">
+          <FormattedMessage
+            id="overview_filters_label_otter_friendly"
+            defaultMessage={'Otterfreundlich'}
+          />
+        </Label>
+        <Select
+          name="otterFriendly"
+          value={state.otterFriendly}
+          onChange={handleChange}
+        >
+          <option value={AllFilter}>
+            <FormattedMessage
+              id="overview_filters_select_ALL"
+              defaultMessage={'Alle'}
+            />
+          </option>
+          <option value={'FRIENDLY'}>
+            <FormattedMessage
+              id="otter_friendly_FRIENDLY"
+              defaultMessage={'Freundlich'}
+            />
+          </option>
+          <option value={'UNFRIENDLY'}>
+            <FormattedMessage
+              id="otter_friendly_UNFRIENDLY"
+              defaultMessage={'Unfreundlich'}
+            />
+          </option>
+        </Select>
+      </Box>
+      <Box>
+        <Label htmlFor="safetyRisk">
+          <FormattedMessage
+            id="overview_filters_label_safety_risk"
+            defaultMessage={'Sicherheitsrisiko'}
+          />
+        </Label>
+
+        <Select
+          name="safetyRisk"
+          value={state.safetyRisk}
+          onChange={handleChange}
+        >
+          <option value={AllFilter}>
+            <FormattedMessage
+              id="overview_filters_select_ALL"
+              defaultMessage={'Alle'}
+            />
+          </option>
+          {Object.keys(SafetyRisk).map((safetyRisk) => (
+            <option key={safetyRisk} value={safetyRisk}>
+              <FormattedMessage
+                id={`safety_risk_${safetyRisk}`}
+                defaultMessage={safetyRisk}
+              />
+            </option>
+          ))}
+        </Select>
+      </Box>
+      <Box>
+        <Button sx={{ mt: 3 }} onClick={handleReset} variant="close">
+          &times;
+        </Button>
+      </Box>
     </Box>
   );
 });

@@ -14,6 +14,7 @@ const AdminLogoutButton = observer(() => {
     <>
       {store.auth.sessionToken && (
         <IconButton
+          variant="secondary"
           sx={{
             width: [48, 48],
             height: [48, 48],

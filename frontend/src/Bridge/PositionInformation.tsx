@@ -1,8 +1,9 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { ReportBridgeStore } from '../Store/ReportBridgeStore';
+import type { ReportBridgeStore } from '../Store/ReportBridgeStore';
 
-import { Flex, Input } from 'theme-ui';
+import { Box, Flex, Input, Label } from 'theme-ui';
+import { FormattedMessage } from 'react-intl';
 
 interface PositionInformationProps {
   reportedBridge: ReportBridgeStore;
@@ -11,23 +12,32 @@ interface PositionInformationProps {
 const PositionInformation = observer(
   ({ reportedBridge }: PositionInformationProps) => {
     return (
-      <Flex sx={{ gap: 1 }}>
-        <Input
-          sx={{
-            flex: ['1 60%', '1 60%', '1 100%', '1 100%'],
-            marginRight: '2',
-          }}
-          name="position"
-          disabled={true}
-          readOnly={true}
-          placeholder={
-            reportedBridge.latLon
-              ? reportedBridge.latLon.asLv95.east.toFixed(2) +
-                ', ' +
-                reportedBridge.latLon.asLv95.west.toFixed(2)
-              : ''
-          }
-        ></Input>
+      <Flex sx={{ gap: 1, alignItems: 'flex-end' }}>
+        <Box>
+          <Label htmlFor="position" className="disabledLabel">
+            <FormattedMessage
+              id="report_bridge_label_position"
+              defaultMessage={'Position'}
+            />
+          </Label>
+          <Input
+            sx={{
+              flex: ['1 60%', '1 60%', '1 100%', '1 100%'],
+              marginRight: '2',
+            }}
+            name="position"
+            disabled={true}
+            readOnly={true}
+            placeholder={
+              reportedBridge.latLon
+                ? reportedBridge.latLon.asLv95.east.toFixed(2) +
+                  ', ' +
+                  reportedBridge.latLon.asLv95.west.toFixed(2)
+                : ''
+            }
+          ></Input>{' '}
+        </Box>
+
         <Input
           sx={{ flex: ['1 13%', '1 13%', '1 20%', '1 20%'] }}
           name="canton"

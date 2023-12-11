@@ -1,6 +1,6 @@
 import { model, Model, prop } from 'mobx-keystone';
-import { LatLon } from './LatLon';
-import { SafetyRisk } from './SafetyRisk';
+import type { LatLon } from './LatLon';
+import type { SafetyRisk } from './SafetyRisk';
 
 @model('untendurch/BridgePin')
 export class BridgePin extends Model({

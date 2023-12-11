@@ -1,4 +1,4 @@
-import { model, Model, prop, _async, _await } from 'mobx-keystone';
+import { model, Model, prop } from 'mobx-keystone';
 import { AllFilter } from './AllFilter';
 
 export type MapMode = 'FULL' | 'TOP' | 'NONE';

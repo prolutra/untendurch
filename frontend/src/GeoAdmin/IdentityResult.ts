@@ -1,4 +1,4 @@
-import { LayerBodIdType } from './LayerBodIdType';
+import type { LayerBodIdType } from './LayerBodIdType';
 
 export interface IdentityResult {
   id: number;

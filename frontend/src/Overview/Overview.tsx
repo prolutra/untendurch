@@ -1,16 +1,15 @@
 import { observer } from 'mobx-react-lite';
-import 'ol/ol.css';
 
-import React from 'react';
-import { Link } from 'react-router-dom';
+import type { FC } from 'react';
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useStore } from '../Store/Store';
 import { Box, Button } from 'theme-ui';
 import { FormattedMessage } from 'react-intl';
 import OverviewFilters from './OverviewFilters';
 import OverviewExport from './OverviewExport';
 
-const Overview = observer(() => {
+const Overview: FC = observer(() => {
   const store = useStore();
 
   useEffect(() => {
@@ -20,18 +19,20 @@ const Overview = observer(() => {
 
   return (
     <>
-      <Box sx={{ display: ['none', 'none', 'initial', 'initial'] }}>
+      <Box sx={{ display: ['none', 'none', 'initial'], position: 'relative' }}>
         <OverviewFilters></OverviewFilters>
       </Box>
       {store.auth.sessionToken && <OverviewExport></OverviewExport>}
       <Link to="/bridges/new">
         <Button
-          className="reportButton"
+          variant="primary"
           sx={{
-            fontSize: '1.61rem',
-            bottom: '3rem',
-            left: ['calc(50% - 135px)', 'calc(50% - 135px)', '7%', '7%'],
+            fontSize: [3, 4],
+            bottom: [3, 4],
+            right: ['auto', 4],
+            left: [3, 'auto'],
             cursor: 'pointer',
+            position: 'fixed',
           }}
         >
           <FormattedMessage

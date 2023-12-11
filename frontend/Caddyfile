@@ -1,0 +1,19 @@
+# global options
+{
+	admin off
+	persist_config off
+	auto_https off
+	log {
+		format json
+	}
+}
+
+:8080 {
+	log {
+		format json
+	}
+	root * /dist
+	encode gzip
+	file_server
+	try_files {path} /index.html
+}

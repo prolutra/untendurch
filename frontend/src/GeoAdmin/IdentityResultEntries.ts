@@ -1,4 +1,4 @@
-import { IdentityResult } from './IdentityResult';
+import type { IdentityResult } from './IdentityResult';
 
 export interface IdentityResultEntries<T> extends IdentityResult {
   properties: T | undefined;

@@ -1,13 +1,14 @@
+import type { FC } from 'react';
 import { useContext, useEffect } from 'react';
 import MapContext from '../Map/MapContext';
 import OLTileLayer from 'ol/layer/Tile';
 import { XYZ } from 'ol/source';
 
-export interface TileLayerProps {
+type TileLayerProps = {
   zIndex: number;
-}
+};
 
-const TileLayer = ({ zIndex = 0 }: TileLayerProps) => {
+const TileLayer: FC<TileLayerProps> = ({ zIndex = 0 }) => {
   const mapContext = useContext(MapContext);
 
   useEffect(() => {

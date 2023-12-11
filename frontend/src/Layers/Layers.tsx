@@ -1,10 +1,11 @@
+import type { FC } from 'react';
 import React from 'react';
 
-interface LayersProps {
+type LayersProps = {
   children: React.ReactNode;
-}
+};
 
-const Layers = ({ children }: LayersProps) => {
+const Layers: FC<LayersProps> = ({ children }) => {
   return <div>{children}</div>;
 };
 

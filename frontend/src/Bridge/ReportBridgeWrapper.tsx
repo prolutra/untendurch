@@ -1,14 +1,15 @@
 import './ReportBridge.css';
 
-import React, { useEffect } from 'react';
+import type { FC } from 'react';
+import { useEffect } from 'react';
 
 import { useStore } from '../Store/Store';
 import { observer } from 'mobx-react-lite';
 import { LatLon } from '../Store/LatLon';
 import BridgeForm from './BridgeForm';
-import { BridgeFormState } from './BridgeFormState';
+import type { BridgeFormState } from './BridgeFormState';
 
-const ReportBridgeWrapper = observer(() => {
+const ReportBridgeWrapper: FC = observer(() => {
   const store = useStore();
 
   const defaultState = {

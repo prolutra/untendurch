@@ -1,13 +1,14 @@
 import './ReportBridge.css';
 
-import Parse, { GeoPoint } from 'parse';
+import type { GeoPoint } from 'parse';
+import Parse from 'parse';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useStore } from '../Store/Store';
 import { LatLon } from '../Store/LatLon';
 import BridgeForm from './BridgeForm';
-import { BridgeFormState } from './BridgeFormState';
+import type { BridgeFormState } from './BridgeFormState';
 import { latLonToPoint } from '../GeoAdmin/PointTransformations';
 
 const EditBridgeWrapper = () => {

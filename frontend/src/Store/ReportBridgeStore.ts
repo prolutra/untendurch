@@ -1,11 +1,11 @@
 import { computed } from 'mobx';
 import { model, Model, modelAction, prop } from 'mobx-keystone';
 import { Feature } from 'ol';
-import { Point } from 'ol/geom';
+import type { Point } from 'ol/geom';
 import { fromLonLat } from 'ol/proj';
-import { LatLon } from './LatLon';
+import type { LatLon } from './LatLon';
 import { fetchPointInformation } from '../GeoAdmin/FetchPointInformation';
-import { Lv95 } from './Lv95';
+import type { Lv95 } from './Lv95';
 import proj4 from 'proj4';
 import { latLonToPoint } from '../GeoAdmin/PointTransformations';
 
