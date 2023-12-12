@@ -112,7 +112,6 @@ const BridgeForm: FC<BridgeFormProps> = observer(({ bridgeFormState }) => {
             );
             persistedBridge.save().then(() => {
               store.reportBridge.setLatLon(null);
-              store.mapSettings.setMode('FULL');
               navigate('/');
               navigate(0);
             });
