@@ -2,7 +2,8 @@ import './ReportBridge.css';
 
 import type { GeoPoint } from 'parse';
 import Parse from 'parse';
-import React, { useEffect, useState } from 'react';
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useStore } from '../Store/Store';
@@ -10,8 +11,9 @@ import { LatLon } from '../Store/LatLon';
 import BridgeForm from './BridgeForm';
 import type { BridgeFormState } from './BridgeFormState';
 import { latLonToPoint } from '../GeoAdmin/PointTransformations';
+import type { BridgeLogItem } from '../Store/BridgeSchema';
 
-const EditBridgeWrapper = () => {
+const EditBridgeWrapper: FC = () => {
   const store = useStore();
 
   const { id } = useParams();
@@ -45,6 +47,7 @@ const EditBridgeWrapper = () => {
       const shape = bridge.attributes['shape'] as string;
       const cantons = bridge.attributes['cantons'] as string[];
       const municipalities = bridge.attributes['municipalities'] as string[];
+      const itemLog = bridge.attributes['itemLog'] as BridgeLogItem[];
 
       store.reportBridge.setPosition(
         new LatLon({
@@ -75,6 +78,7 @@ const EditBridgeWrapper = () => {
         images: [],
         cantons: cantons.join(', '),
         municipalities: municipalities.join(', '),
+        itemLog,
       } as BridgeFormState);
 
       store.mapSettings.setCenter(

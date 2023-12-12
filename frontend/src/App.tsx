@@ -39,57 +39,59 @@ function App() {
   }, [lang]);
 
   return (
-    <IntlProvider
-      messages={messages}
-      locale={lang}
-      defaultLocale={LocaleService.getDefaultLocale()}
-    >
-      <Router>
-        <StoreProvider>
-          <ThemeUIProvider theme={theme}>
-            <div className="App">
-              <Grid as="nav" gap={0} columns={[3, '100px 1fr 1fr']}>
-                <Box sx={{ width: 100 }}>
-                  <NavLink href="/">
-                    <Logo />
-                  </NavLink>
-                </Box>
-                <Flex
-                  sx={{
-                    paddingLeft: [0, 0, 40],
-                    alignItems: 'center',
-                  }}
-                >
-                  <Heading sx={{ fontSize: [3, 4] }}>Untendurch</Heading>
-                </Flex>
-                <Flex
-                  sx={{
-                    display: 'flex',
-                    gap: 2,
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    mr: [3, 4],
-                  }}
-                >
-                  <LocaleSelect setLang={setLang}></LocaleSelect>
-                  <AdminLogoutButton></AdminLogoutButton>
-                </Flex>
-              </Grid>
-              <MapWrapper>
-                <Map></Map>
-              </MapWrapper>
-              <LocateMe></LocateMe>
-              <Routes>
-                <Route path="/" element={<Overview />} />
-                <Route path="/bridges/new" element={<ReportBridge />} />
-                <Route path="/bridges/:id" element={<EditBridge />} />
-                <Route path="/admin" element={<AdminLogin />} />
-              </Routes>
-            </div>
-          </ThemeUIProvider>
-        </StoreProvider>
-      </Router>
-    </IntlProvider>
+    <React.StrictMode>
+      <IntlProvider
+        messages={messages}
+        locale={lang}
+        defaultLocale={LocaleService.getDefaultLocale()}
+      >
+        <Router>
+          <StoreProvider>
+            <ThemeUIProvider theme={theme}>
+              <div className="App">
+                <Grid as="nav" gap={0} columns={[3, '100px 1fr 1fr']}>
+                  <Box sx={{ width: 100 }}>
+                    <NavLink href="/">
+                      <Logo />
+                    </NavLink>
+                  </Box>
+                  <Flex
+                    sx={{
+                      paddingLeft: [0, 0, 40],
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Heading sx={{ fontSize: [3, 4] }}>Untendurch</Heading>
+                  </Flex>
+                  <Flex
+                    sx={{
+                      display: 'flex',
+                      gap: 2,
+                      alignItems: 'center',
+                      justifyContent: 'flex-end',
+                      mr: [3, 4],
+                    }}
+                  >
+                    <LocaleSelect setLang={setLang}></LocaleSelect>
+                    <AdminLogoutButton></AdminLogoutButton>
+                  </Flex>
+                </Grid>
+                <MapWrapper>
+                  <Map></Map>
+                </MapWrapper>
+                <LocateMe></LocateMe>
+                <Routes>
+                  <Route path="/" element={<Overview />} />
+                  <Route path="/bridges/new" element={<ReportBridge />} />
+                  <Route path="/bridges/:id" element={<EditBridge />} />
+                  <Route path="/admin" element={<AdminLogin />} />
+                </Routes>
+              </div>
+            </ThemeUIProvider>
+          </StoreProvider>
+        </Router>
+      </IntlProvider>
+    </React.StrictMode>
   );
 }
 

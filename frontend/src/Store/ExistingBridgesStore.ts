@@ -33,49 +33,54 @@ export class ExistingBridgesStore extends Model({
   fetchExistingBridges = _async(function* (this: ExistingBridgesStore) {
     const query = new Parse.Query('Bridge');
     const data = yield* _await(
-      query.findAll().then((bridges) =>
-        bridges.map((bridge) => {
-          const objectId = bridge.id;
-          const name = bridge.attributes['name'] as string;
-          const position = bridge.attributes['position'] as GeoPoint;
-          const bridgeIndex = bridge.attributes['bridgeIndex'] as number;
-          const safetyRisk = bridge.attributes['safetyRisk'] as SafetyRisk;
-          const cantons = bridge.attributes['cantons'] as string[];
-          const municipality = bridge.attributes['municipalities'] as string[];
-          const status = bridge.attributes['status'] as BridgeStatus;
-          const otterFriendly = bridge.attributes['otterFriendly'] as string;
-          const images = bridge.attributes['images'] as {
-            name: string;
-            url: string;
-          }[];
-          const nickname = bridge.attributes['nickname'] as string;
-          const shape = bridge.attributes['shape'] as string;
-          const averageDailyTraffic = bridge.attributes[
-            'averageDailyTraffic'
-          ] as number;
+      query
+        .limit(9999)
+        .find()
+        .then((bridges) =>
+          bridges.map((bridge) => {
+            const objectId = bridge.id;
+            const name = bridge.attributes['name'] as string;
+            const position = bridge.attributes['position'] as GeoPoint;
+            const bridgeIndex = bridge.attributes['bridgeIndex'] as number;
+            const safetyRisk = bridge.attributes['safetyRisk'] as SafetyRisk;
+            const cantons = bridge.attributes['cantons'] as string[];
+            const municipality = bridge.attributes[
+              'municipalities'
+            ] as string[];
+            const status = bridge.attributes['status'] as BridgeStatus;
+            const otterFriendly = bridge.attributes['otterFriendly'] as string;
+            const images = bridge.attributes['images'] as {
+              name: string;
+              url: string;
+            }[];
+            const nickname = bridge.attributes['nickname'] as string;
+            const shape = bridge.attributes['shape'] as string;
+            const averageDailyTraffic = bridge.attributes[
+              'averageDailyTraffic'
+            ] as number;
 
-          const imageUrl = images && images[0] ? images[0].url : '';
+            const imageUrl = images && images[0] ? images[0].url : '';
 
-          return new BridgePin({
-            latLon: new LatLon({
-              lat: position.latitude,
-              lon: position.longitude,
-            }),
-            objectId: objectId,
-            name: name,
-            safetyRisk: safetyRisk,
-            cantons: cantons,
-            municipalities: municipality,
-            status: status,
-            bridgeIndex: bridgeIndex,
-            otterFriendly: otterFriendly,
-            imageUrl: imageUrl,
-            nickname: nickname,
-            shape: shape,
-            averageDailyTraffic: averageDailyTraffic,
-          });
-        })
-      )
+            return new BridgePin({
+              latLon: new LatLon({
+                lat: position.latitude,
+                lon: position.longitude,
+              }),
+              objectId: objectId,
+              name: name,
+              safetyRisk: safetyRisk,
+              cantons: cantons,
+              municipalities: municipality,
+              status: status,
+              bridgeIndex: bridgeIndex,
+              otterFriendly: otterFriendly,
+              imageUrl: imageUrl,
+              nickname: nickname,
+              shape: shape,
+              averageDailyTraffic: averageDailyTraffic,
+            });
+          })
+        )
     );
 
     this.setBridgePins(data);

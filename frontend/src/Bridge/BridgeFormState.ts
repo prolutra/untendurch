@@ -1,3 +1,5 @@
+import type { BridgeLogItem } from '../Store/BridgeSchema';
+
 export type BridgeFormState = {
   objectId: string | undefined;
   name: string;
@@ -20,4 +22,5 @@ export type BridgeFormState = {
   images: File[];
   cantons: string;
   municipalities: string;
+  itemLog: BridgeLogItem[] | undefined;
 };

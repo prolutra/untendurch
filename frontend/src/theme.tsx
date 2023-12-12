@@ -110,6 +110,10 @@ export const theme: Theme = {
         bg: 'primary800',
         cursor: 'pointer',
       },
+      '&:disabled': {
+        bg: 'text200',
+        cursor: 'not-allowed',
+      },
     },
     secondary: {
       color: 'background',

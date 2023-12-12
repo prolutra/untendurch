@@ -1,6 +1,12 @@
 import type { GeoPoint } from 'parse';
 import type { BridgeStatus } from './BridgeStatus';
 
+export type BridgeLogItem = {
+  date: string;
+  message: string;
+  type: 'info' | 'warning' | 'error';
+};
+
 export interface BridgeSchema {
   objectId: string;
   position: GeoPoint;
@@ -28,6 +34,7 @@ export interface BridgeSchema {
   cantons: string[];
   municipalities: string[];
   status: BridgeStatus;
+  itemLog?: BridgeLogItem[];
 }
 
 export const BridgeSchemaFields: (keyof BridgeSchema)[] = [

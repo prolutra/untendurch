@@ -1,3 +1,4 @@
+import type { FC } from 'react';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import type { ReportBridgeStore } from '../Store/ReportBridgeStore';
@@ -5,12 +6,12 @@ import type { ReportBridgeStore } from '../Store/ReportBridgeStore';
 import { Box, Flex, Input, Label } from 'theme-ui';
 import { FormattedMessage } from 'react-intl';
 
-interface PositionInformationProps {
+type PositionInformationProps = {
   reportedBridge: ReportBridgeStore;
-}
+};
 
-const PositionInformation = observer(
-  ({ reportedBridge }: PositionInformationProps) => {
+const PositionInformation: FC<PositionInformationProps> = observer(
+  ({ reportedBridge }) => {
     return (
       <Flex sx={{ gap: 1, alignItems: 'flex-end' }}>
         <Box>
