@@ -5,8 +5,6 @@ type LayersProps = {
   children: React.ReactNode;
 };
 
-const Layers: FC<LayersProps> = ({ children }) => {
+export const Layers: FC<LayersProps> = ({ children }) => {
   return <div>{children}</div>;
 };
-
-export default Layers;

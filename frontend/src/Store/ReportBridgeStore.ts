@@ -9,7 +9,7 @@ import type { Lv95 } from './Lv95';
 import proj4 from 'proj4';
 import { latLonToPoint } from '../GeoAdmin/PointTransformations';
 
-@model('untendurch/ReportBridge')
+@model('untendurch/ReportBridgeRoute')
 export class ReportBridgeStore extends Model({
   latLon: prop<LatLon | null>(() => null).withSetter(),
   canton: prop<string>(() => '').withSetter(),

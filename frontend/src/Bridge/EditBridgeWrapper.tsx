@@ -1,17 +1,17 @@
-import './ReportBridge.css';
-
 import type { GeoPoint } from 'parse';
 import Parse from 'parse';
-import React, { useEffect, useState } from 'react';
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useStore } from '../Store/Store';
 import { LatLon } from '../Store/LatLon';
-import BridgeForm from './BridgeForm';
-import type { BridgeFormState } from './BridgeFormState';
+import type { BridgeFormState, PersistedFile } from './BridgeFormState';
 import { latLonToPoint } from '../GeoAdmin/PointTransformations';
+import type { BridgeLogItem } from '../Store/BridgeSchema';
+import { BridgeForm } from './BridgeForm';
 
-const EditBridgeWrapper = () => {
+export const EditBridgeWrapper: FC = () => {
   const store = useStore();
 
   const { id } = useParams();
@@ -45,6 +45,8 @@ const EditBridgeWrapper = () => {
       const shape = bridge.attributes['shape'] as string;
       const cantons = bridge.attributes['cantons'] as string[];
       const municipalities = bridge.attributes['municipalities'] as string[];
+      const itemLog = bridge.attributes['itemLog'] as BridgeLogItem[];
+      const images = bridge.attributes['images'] as PersistedFile[];
 
       store.reportBridge.setPosition(
         new LatLon({
@@ -72,9 +74,10 @@ const EditBridgeWrapper = () => {
         email: email,
         commentReporter: commentReporter,
         commentAdmin: commentAdmin,
-        images: [],
+        images: images,
         cantons: cantons.join(', '),
         municipalities: municipalities.join(', '),
+        itemLog,
       } as BridgeFormState);
 
       store.mapSettings.setCenter(
@@ -87,7 +90,7 @@ const EditBridgeWrapper = () => {
     });
   }, [id]);
 
-  return <>{state && <BridgeForm bridgeFormState={state}></BridgeForm>}</>;
-};
+  if (!state) return null;
 
-export default EditBridgeWrapper;
+  return <BridgeForm bridgeFormState={state}></BridgeForm>;
+};

@@ -1,32 +1,31 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Map.css';
-import MapContext from './MapContext';
 import * as ol from 'ol';
 import { Feature } from 'ol';
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
 import { useStore } from '../Store/Store';
 import { observer } from 'mobx-react-lite';
-import { Box } from 'theme-ui';
-import OverlayContext from './OverlayContext';
 import { Select } from 'ol/interaction';
 import type { Point } from 'ol/geom';
-import BridgePinInfo from './BridgePinInfo';
 import type { FeatureLike } from 'ol/Feature';
 import VectorLayer from 'ol/layer/Vector';
-import { useLocation } from 'react-router-dom';
+import { MapContext } from './MapContext';
+import { OverlayContext } from './OverlayContext';
+import { Map } from './Map';
+import { BridgePinInfo } from './BridgePinInfo';
 
-interface MapWrapperProps {
-  children: React.ReactNode;
-}
+type Props = {
+  variant?: 'small';
+};
 
-const MapWrapper = observer(({ children }: MapWrapperProps) => {
+export const MapWrapper = observer(({ variant }: Props) => {
   const store = useStore();
 
   const mapRef = useRef<HTMLDivElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const [mapContext, setMap] = useState<ol.Map | null>(null);
   const [overlayContext, setOverlay] = useState<ol.Overlay | null>(null);
-  const pathname = useLocation().pathname;
+  const [showPopover, setShowPopover] = useState(false);
 
   useEffect(() => {
     if (!popoverRef.current) throw Error('popoverRef is not assigned');
@@ -69,8 +68,10 @@ const MapWrapper = observer(({ children }: MapWrapperProps) => {
         const bridgePinObjectId = feature.get('bridgePinObjectId') as string;
         store.mapSettings.setSelectedBridgePinObjectId(bridgePinObjectId);
         overlay.setPosition(coordinates);
+        setShowPopover(true);
       } else {
         overlay.setPosition(undefined);
+        setShowPopover(false);
       }
     });
 
@@ -136,51 +137,36 @@ const MapWrapper = observer(({ children }: MapWrapperProps) => {
     }
   }, [store.mapSettings.center]);
 
-  const hasOverlay = pathname.includes('/new');
-
   return (
     <MapContext.Provider value={mapContext}>
       <OverlayContext.Provider value={overlayContext}>
         {store.mapSettings.mode !== 'NONE' && (
           <>
-            <Box
-              sx={{
-                zIndex: 1001,
-                position: 'absolute',
-                left: '50%',
-                top: '50%',
-                backgroundColor: 'white',
-                boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
-                borderRadius: '15px',
-                width: 'calc(72vw)',
-                maxWidth: '400px',
-                marginLeft: 'calc(max(-36vw, -200px))',
-              }}
+            <div
+              className={`z-40 absolute bg-white shadow-md rounded-xl w-80 -translate-x-1/2`}
               ref={popoverRef}
             >
-              <Box id="popoverContent">
-                <BridgePinInfo></BridgePinInfo>
-              </Box>
-            </Box>
-            <Box
-              sx={
-                hasOverlay
-                  ? { position: 'relative', width: '100%', height: [200, 300] }
-                  : {
-                      position: 'absolute',
-                      width: '100%',
-                      height: ['calc(100% - 60px)', 'calc(100% - 88px)'],
-                    }
+              {showPopover && (
+                <div id="popoverContent">
+                  <BridgePinInfo
+                    closeFn={() => setShowPopover(false)}
+                  ></BridgePinInfo>
+                </div>
+              )}
+            </div>
+            <div
+              className={
+                variant === 'small'
+                  ? 'z-0 relative w-full h-[200px] sm:h-[300px]'
+                  : 'z-0 h-full w-full'
               }
               ref={mapRef}
             >
-              {children}
-            </Box>
+              <Map></Map>
+            </div>
           </>
         )}
       </OverlayContext.Provider>
     </MapContext.Provider>
   );
 });
-
-export default MapWrapper;

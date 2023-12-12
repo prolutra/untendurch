@@ -1,3 +1,6 @@
+import type { BridgeLogItem } from '../Store/BridgeSchema';
+
+export type PersistedFile = { name: string; url: string };
 export type BridgeFormState = {
   objectId: string | undefined;
   name: string;
@@ -17,7 +20,8 @@ export type BridgeFormState = {
   email: string;
   commentReporter: string;
   commentAdmin: string | undefined;
-  images: File[];
+  images: (File | PersistedFile)[];
   cantons: string;
   municipalities: string;
+  itemLog: BridgeLogItem[] | undefined;
 };

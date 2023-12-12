@@ -1,4 +1,4 @@
-import { model, Model, modelFlow, prop, _async, _await } from 'mobx-keystone';
+import { _async, _await, model, Model, modelFlow, prop } from 'mobx-keystone';
 import Parse from 'parse';
 import { Municipality } from './Municipality';
 import cantons from './cantons.json';
@@ -17,17 +17,24 @@ export class CantonMunicipalityStore extends Model({
   fetchMunicipalities = _async(function* (this: CantonMunicipalityStore) {
     const query = new Parse.Query('Municipality');
     const data = yield* _await(
-      query.findAll().then((municipalities) =>
-        municipalities.map((municipality) => {
-          const name = municipality.attributes['name'] as string;
-          const canton = municipality.attributes['canton'] as string;
+      query
+        .limit(9999)
+        .find()
+        .then((municipalities) =>
+          municipalities.map((municipality) => {
+            const name = municipality.attributes['name'] as string;
+            const canton = municipality.attributes['canton'] as string;
 
-          return new Municipality({
-            name: name,
-            canton: canton,
-          });
+            return new Municipality({
+              name: name,
+              canton: canton,
+            });
+          })
+        )
+        .catch((error) => {
+          console.error('Error executing query', error);
+          return [];
         })
-      )
     );
 
     this.setMunicipalities(data.sortI18n((a, b) => [a.name, b.name]));

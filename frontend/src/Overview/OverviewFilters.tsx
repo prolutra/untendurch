@@ -4,13 +4,13 @@ import 'ol/ol.css';
 import type { FC } from 'react';
 import React, { useEffect, useState } from 'react';
 import { useStore } from '../Store/Store';
-import { Box, Button, Label, Select } from 'theme-ui';
 import { FormattedMessage } from 'react-intl';
 import { AllFilter } from '../Store/AllFilter';
 import { SafetyRisk } from '../Store/SafetyRisk';
 import { useSearchParams } from 'react-router-dom';
+import { CloseChar } from '../lib/closeChar';
 
-const OverviewFilters: FC = observer(() => {
+export const OverviewFilters: FC = observer(() => {
   const store = useStore();
 
   type OverviewFiltersState = {
@@ -111,30 +111,24 @@ const OverviewFilters: FC = observer(() => {
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        gap: 2,
-        zIndex: 3000,
-        position: 'fixed',
-        fontSize: 2,
-        top: '112px',
-        left: 5,
-        p: 2,
-        pt: 1,
-        backgroundColor: 'rgba(255,255,255,0.75)',
-        borderRadius: '5px',
-        alignItems: 'flex-end',
-      }}
+    <div
+      className={
+        'flex gap-2 p-2 pt-0 fixed bg-white bg-opacity-75 rounded items-end'
+      }
     >
-      <Box>
-        <Label htmlFor="canton">
+      <div className={'form-control'}>
+        <label className={'label'} htmlFor="canton">
           <FormattedMessage
             id="overview_filters_label_canton"
             defaultMessage={'Kanton'}
           />
-        </Label>
-        <Select name="canton" value={state.canton} onChange={handleChange}>
+        </label>
+        <select
+          className={'select select-bordered'}
+          name="canton"
+          value={state.canton}
+          onChange={handleChange}
+        >
           <option value={AllFilter}>
             <FormattedMessage
               id="overview_filters_select_ALL"
@@ -146,16 +140,17 @@ const OverviewFilters: FC = observer(() => {
               {canton}
             </option>
           ))}
-        </Select>
-      </Box>
-      <Box>
-        <Label htmlFor="municipality">
+        </select>
+      </div>
+      <div className={'form-control'}>
+        <label className={'label'} htmlFor="municipality">
           <FormattedMessage
             id="overview_filters_label_municipality"
             defaultMessage={'Gemeinde'}
           />
-        </Label>
-        <Select
+        </label>
+        <select
+          className={'select select-bordered'}
           name="municipality"
           value={state.municipality}
           onChange={handleChange}
@@ -180,16 +175,21 @@ const OverviewFilters: FC = observer(() => {
                 {municipality.name}
               </option>
             ))}
-        </Select>
-      </Box>
-      <Box>
-        <Label htmlFor="status">
+        </select>
+      </div>
+      <div className={'form-control'}>
+        <label className={'label'} htmlFor="status">
           <FormattedMessage
             id="overview_filters_label_status"
             defaultMessage={'Status'}
           />
-        </Label>
-        <Select name="status" value={state.status} onChange={handleChange}>
+        </label>
+        <select
+          className={'select select-bordered'}
+          name="status"
+          value={state.status}
+          onChange={handleChange}
+        >
           <option value={AllFilter}>
             <FormattedMessage
               id="overview_filters_select_ALL"
@@ -208,16 +208,17 @@ const OverviewFilters: FC = observer(() => {
               defaultMessage={'Verifiziert'}
             />
           </option>
-        </Select>
-      </Box>
-      <Box>
-        <Label htmlFor="otterFriendly">
+        </select>
+      </div>
+      <div className={'form-control'}>
+        <label className={'label'} htmlFor="otterFriendly">
           <FormattedMessage
             id="overview_filters_label_otter_friendly"
             defaultMessage={'Otterfreundlich'}
           />
-        </Label>
-        <Select
+        </label>
+        <select
+          className={'select select-bordered'}
           name="otterFriendly"
           value={state.otterFriendly}
           onChange={handleChange}
@@ -240,17 +241,18 @@ const OverviewFilters: FC = observer(() => {
               defaultMessage={'Unfreundlich'}
             />
           </option>
-        </Select>
-      </Box>
-      <Box>
-        <Label htmlFor="safetyRisk">
+        </select>
+      </div>
+      <div className={'form-control'}>
+        <label className={'label'} htmlFor="safetyRisk">
           <FormattedMessage
             id="overview_filters_label_safety_risk"
             defaultMessage={'Sicherheitsrisiko'}
           />
-        </Label>
+        </label>
 
-        <Select
+        <select
+          className={'select select-bordered'}
           name="safetyRisk"
           value={state.safetyRisk}
           onChange={handleChange}
@@ -269,15 +271,13 @@ const OverviewFilters: FC = observer(() => {
               />
             </option>
           ))}
-        </Select>
-      </Box>
-      <Box>
-        <Button sx={{ mt: 3 }} onClick={handleReset} variant="close">
-          &times;
-        </Button>
-      </Box>
-    </Box>
+        </select>
+      </div>
+      <div className={'pb-2'}>
+        <button className={'btn btn-circle btn-neutral'} onClick={handleReset}>
+          {CloseChar}
+        </button>
+      </div>
+    </div>
   );
 });
-
-export default OverviewFilters;

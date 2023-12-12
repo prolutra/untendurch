@@ -1,12 +1,11 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { Select } from 'theme-ui';
 
 export interface LocaleSelectProps {
   setLang: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const LocaleSelect = ({ setLang }: LocaleSelectProps) => {
+export const LocaleSelect = ({ setLang }: LocaleSelectProps) => {
   const intl = useIntl();
 
   function handleChange(e: React.FormEvent<HTMLSelectElement>) {
@@ -14,13 +13,16 @@ const LocaleSelect = ({ setLang }: LocaleSelectProps) => {
   }
 
   return (
-    <Select name="locale" value={intl.locale} onChange={handleChange}>
+    <select
+      className={'select select-bordered'}
+      name="locale"
+      value={intl.locale}
+      onChange={handleChange}
+    >
       <option value={'de'}>DE</option>
       <option value={'fr'}>FR</option>
       <option value={'it'}>IT</option>
       <option value={'en'}>EN</option>
-    </Select>
+    </select>
   );
 };
-
-export default LocaleSelect;

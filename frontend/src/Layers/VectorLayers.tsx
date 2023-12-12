@@ -6,14 +6,14 @@ import { Icon, Style } from 'ol/style';
 import { Modify } from 'ol/interaction';
 import type { FC } from 'react';
 import React, { useContext, useEffect } from 'react';
-import MapContext from '../Map/MapContext';
 import { useStore } from '../Store/Store';
 import { observer } from 'mobx-react-lite';
 import { toLonLat } from 'ol/proj';
 import { LatLon } from '../Store/LatLon';
-import OverlayContext from '../Map/OverlayContext';
 import type { StyleFunction } from 'ol/style/Style';
 import type { FeatureLike } from 'ol/Feature';
+import { MapContext } from '../Map/MapContext';
+import { OverlayContext } from '../Map/OverlayContext';
 
 type VectorLayerProps = {
   zIndex: number;

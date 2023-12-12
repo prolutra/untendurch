@@ -23,10 +23,28 @@
       "value": "Benutzername"
     }
   ],
+  "bridge_pin_info_bridge_averageDailyTraffic": [
+    {
+      "type": 0,
+      "value": "Durchschnittlicher Verkehr pro Tag"
+    }
+  ],
   "bridge_pin_info_bridge_form": [
     {
       "type": 0,
       "value": "Brückenform"
+    }
+  ],
+  "bridge_pin_info_bridge_index": [
+    {
+      "type": 0,
+      "value": "Brückenindex"
+    }
+  ],
+  "bridge_pin_info_bridge_traffic_situation": [
+    {
+      "type": 0,
+      "value": "Verkehrssituation"
     }
   ],
   "bridge_pin_info_button_approve": [
@@ -71,6 +89,36 @@
       "value": "Der Link wurde in die Zwischenablage kopiert."
     }
   ],
+  "overview_filters_label_canton": [
+    {
+      "type": 0,
+      "value": "Kanton"
+    }
+  ],
+  "overview_filters_label_municipality": [
+    {
+      "type": 0,
+      "value": "Gemeinde"
+    }
+  ],
+  "overview_filters_label_otter_friendly": [
+    {
+      "type": 0,
+      "value": "Otterfreundlich"
+    }
+  ],
+  "overview_filters_label_safety_risk": [
+    {
+      "type": 0,
+      "value": "Sicherheitsrisiko"
+    }
+  ],
+  "overview_filters_label_status": [
+    {
+      "type": 0,
+      "value": "Status"
+    }
+  ],
   "overview_filters_select_ALL": [
     {
       "type": 0,
@@ -89,6 +137,12 @@
       "value": "Verifiziert"
     }
   ],
+  "report_bridge_button_cancel": [
+    {
+      "type": 0,
+      "value": "Abbrechen"
+    }
+  ],
   "report_bridge_button_report": [
     {
       "type": 0,
@@ -99,6 +153,12 @@
     {
       "type": 0,
       "value": "Speichern"
+    }
+  ],
+  "report_bridge_button_upload": [
+    {
+      "type": 0,
+      "value": "Bilder auswählen und hochladen"
     }
   ],
   "report_bridge_heading_dimensions": [
@@ -129,6 +189,18 @@
     {
       "type": 0,
       "value": "Sonstiges"
+    }
+  ],
+  "report_bridge_images_required": [
+    {
+      "type": 0,
+      "value": "Es muss mindestens ein Bild hochgeladen werden"
+    }
+  ],
+  "report_bridge_images_uploaded": [
+    {
+      "type": 0,
+      "value": "Bilder erfolgreich hochgeladen"
     }
   ],
   "report_bridge_label_barriers": [
@@ -351,6 +423,12 @@
     {
       "type": 0,
       "value": "breiteste Stelle in m"
+    }
+  ],
+  "report_bridge_shape_required": [
+    {
+      "type": 0,
+      "value": "Bitte Brückenform wählen"
     }
   ],
   "safety_risk_HIGH_RISK": [

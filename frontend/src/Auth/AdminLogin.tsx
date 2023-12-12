@@ -3,17 +3,17 @@ import type { FC, FormEvent } from 'react';
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Close, Flex, Heading, Input, Label } from 'theme-ui';
 import { useStore } from '../Store/Store';
+import { CloseChar } from '../lib/closeChar';
 
-const AdminLogin: FC = observer(() => {
+type LoginFormState = {
+  username: string;
+  password: string;
+};
+
+export const AdminLogin: FC = observer(() => {
   const store = useStore();
-
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   store.mapSettings.setMode('NONE');
-  // }, []);
 
   function login(event: FormEvent) {
     event.preventDefault();
@@ -24,11 +24,6 @@ const AdminLogin: FC = observer(() => {
       navigate(0);
     });
   }
-
-  type LoginFormState = {
-    username: string;
-    password: string;
-  };
 
   const defaultState = {
     username: '',
@@ -52,83 +47,62 @@ const AdminLogin: FC = observer(() => {
   }
 
   return (
-    <Flex
-      sx={{
-        position: 'fixed',
-        inset: '0 0 0 0',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.3)',
-        backdropFilter: 'blur(2px)',
-      }}
+    <div
+      className={
+        'fixed inset-0 flex justify-center items-center bg-black bg-opacity-30 backdrop-blur-md'
+      }
     >
-      <Box
-        sx={{
-          p: 3,
-          maxWidth: 300,
-          width: '100%',
-          backgroundColor: 'background',
-          borderRadius: 8,
-          boxShadow: '0 0 8px rgba(0, 0, 0, 0.3)',
-        }}
-      >
-        <Flex
-          as="form"
-          onSubmit={login}
-          sx={{ margin: '0 auto', gap: 4, flexDirection: 'column' }}
-        >
-          <Flex
-            sx={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Heading as="h4" sx={{ gridColumn: '1 / span 2' }}>
+      <div className={'p-3 max-w-sm w-full bg-white rounded-lg shadow-md'}>
+        <form className={'flex gap-4 flex-col'} onSubmit={login}>
+          <div className={'flex justify-between items-center'}>
+            <h3>
               <FormattedMessage
                 id="admin_heading_login"
                 defaultMessage={'Login'}
               />
-            </Heading>
-            <Close onClick={() => navigate('/')}></Close>
-          </Flex>
-          <Box>
-            <Label htmlFor="username" mt={3} mb={1}>
+            </h3>
+            <button className={'btn btn-circle'} onClick={() => navigate('/')}>
+              {CloseChar}
+            </button>
+          </div>
+          <div className={'form-control'}>
+            <label htmlFor="username">
               <FormattedMessage
                 id="admin_label_username"
                 defaultMessage={'Benutzername'}
               />
-            </Label>
-            <Input
+            </label>
+            <input
+              className={'input input-bordered'}
+              type={'text'}
               name="username"
               value={state.username ? state.username : ''}
               onChange={handleChange}
             />
-          </Box>
-          <Box>
-            <Label htmlFor="password">
+          </div>
+          <div className={'form-control'}>
+            <label htmlFor="password">
               <FormattedMessage
                 id="admin_label_password"
                 defaultMessage={'Passwort'}
               />
-            </Label>
-            <Input
-              name="password"
+            </label>
+            <input
+              className={'input input-bordered'}
               type={'password'}
+              name="password"
               value={state.password ? state.password : ''}
               onChange={handleChange}
             />
-          </Box>
-          <Button>
+          </div>
+          <button className={'btn btn-primary'}>
             <FormattedMessage
               id="admin_button_login"
               defaultMessage={'Anmelden'}
             />
-          </Button>
-        </Flex>
-      </Box>
-    </Flex>
+          </button>
+        </form>
+      </div>
+    </div>
   );
 });
-
-export default AdminLogin;

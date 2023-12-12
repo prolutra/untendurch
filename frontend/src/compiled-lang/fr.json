@@ -2,13 +2,13 @@
   "admin_button_login": [
     {
       "type": 0,
-      "value": "Inscription"
+      "value": "Se connecter"
     }
   ],
   "admin_heading_login": [
     {
       "type": 0,
-      "value": "Login"
+      "value": "Connexion"
     }
   ],
   "admin_label_password": [
@@ -20,7 +20,7 @@
   "admin_label_username": [
     {
       "type": 0,
-      "value": "Utilisateur"
+      "value": "nom d'utilisateur"
     }
   ],
   "bridge_pin_info_bridge_averageDailyTraffic": [
@@ -38,25 +38,25 @@
   "bridge_pin_info_bridge_index": [
     {
       "type": 0,
-      "value": "Indice des ponts"
+      "value": "index du pont"
     }
   ],
   "bridge_pin_info_bridge_traffic_situation": [
     {
       "type": 0,
-      "value": "Situation du trafic"
+      "value": "situation du trafic"
     }
   ],
   "bridge_pin_info_button_approve": [
     {
       "type": 0,
-      "value": "Vérifier le pont"
+      "value": "vérifier le pont"
     }
   ],
   "bridge_pin_info_button_edit": [
     {
       "type": 0,
-      "value": "Editer le pont"
+      "value": "éditer le pont"
     }
   ],
   "bridge_pin_info_reported_by": [
@@ -68,25 +68,55 @@
   "otter_friendly_FRIENDLY": [
     {
       "type": 0,
-      "value": "Favorable"
+      "value": "Amical"
     }
   ],
   "otter_friendly_UNFRIENDLY": [
     {
       "type": 0,
-      "value": "Défavorable"
+      "value": "Inamical"
     }
   ],
   "overview_button_report": [
     {
       "type": 0,
-      "value": "Saisir un pont"
+      "value": "Saisir le pont"
     }
   ],
   "overview_export_alert_copied_to_clipboard": [
     {
       "type": 0,
-      "value": "Le lien a été copié dans le presse-papier."
+      "value": "Le lien a été copié dans le presse-papiers"
+    }
+  ],
+  "overview_filters_label_canton": [
+    {
+      "type": 0,
+      "value": "Canton"
+    }
+  ],
+  "overview_filters_label_municipality": [
+    {
+      "type": 0,
+      "value": "commune"
+    }
+  ],
+  "overview_filters_label_otter_friendly": [
+    {
+      "type": 0,
+      "value": "Ami des loutres"
+    }
+  ],
+  "overview_filters_label_safety_risk": [
+    {
+      "type": 0,
+      "value": "risque de sécurité"
+    }
+  ],
+  "overview_filters_label_status": [
+    {
+      "type": 0,
+      "value": "Statut"
     }
   ],
   "overview_filters_select_ALL": [
@@ -107,6 +137,12 @@
       "value": "Vérifié"
     }
   ],
+  "report_bridge_button_cancel": [
+    {
+      "type": 0,
+      "value": "Annuler"
+    }
+  ],
   "report_bridge_button_report": [
     {
       "type": 0,
@@ -117,6 +153,12 @@
     {
       "type": 0,
       "value": "Enregistrer"
+    }
+  ],
+  "report_bridge_button_upload": [
+    {
+      "type": 0,
+      "value": "Sélectionner et télécharger des images"
     }
   ],
   "report_bridge_heading_dimensions": [
@@ -134,7 +176,7 @@
   "report_bridge_heading_surrounding": [
     {
       "type": 0,
-      "value": "Allentours du pont"
+      "value": "Environnement du pont"
     }
   ],
   "report_bridge_heading_traffic": [
@@ -146,7 +188,7 @@
   "report_bridge_heading_varia": [
     {
       "type": 0,
-      "value": "Infos complémentaires"
+      "value": "Autre"
     }
   ],
   "report_bridge_images_required": [
@@ -155,22 +197,28 @@
       "value": "Au moins une image doit être téléchargée"
     }
   ],
+  "report_bridge_images_uploaded": [
+    {
+      "type": 0,
+      "value": "Images téléchargées avec succès"
+    }
+  ],
   "report_bridge_label_barriers": [
     {
       "type": 0,
-      "value": "Barrières pour parvenir sur la route"
+      "value": "Barrières pour accéder à la route"
     }
   ],
   "report_bridge_label_cantons": [
     {
       "type": 0,
-      "value": "Liste des cantons (séparation par virgule)"
+      "value": "Liste des cantons (séparés par des virgules)"
     }
   ],
   "report_bridge_label_commentAdmin": [
     {
       "type": 0,
-      "value": "Remarques (Admin)"
+      "value": "Commentaires (Admin)"
     }
   ],
   "report_bridge_label_commentReporter": [
@@ -182,43 +230,43 @@
   "report_bridge_label_email": [
     {
       "type": 0,
-      "value": "E-Mail (non visible)"
+      "value": "E-mail (non visible)"
     }
   ],
   "report_bridge_label_form": [
     {
       "type": 0,
-      "value": "Forme du pont "
+      "value": "forme de pont"
     }
   ],
   "report_bridge_label_hasBanquet": [
     {
       "type": 0,
-      "value": "Accotement continu?"
+      "value": "Banquet continu ?"
     }
   ],
   "report_bridge_label_hasContinuousShore": [
     {
       "type": 0,
-      "value": "Rive continue d'au moins un côté avant et après le pont ?"
+      "value": "Rive continue sur au moins un côté avant et après le pont ?"
     }
   ],
   "report_bridge_label_hasMinimalBanquetWidth": [
     {
       "type": 0,
-      "value": "Largeur de l'accotement supérieure à 30cm"
+      "value": "Largeur de banquette supérieure à 30cm"
     }
   ],
   "report_bridge_label_hasSlopes": [
     {
       "type": 0,
-      "value": "Seuils / chutes de 1m de haut à moins de 20m du pont?"
+      "value": "Seuils / chutes de 1m de haut à moins de 20m du pont ?"
     }
   ],
   "report_bridge_label_hasStones": [
     {
       "type": 0,
-      "value": "Présence de pierres?"
+      "value": "Des pierres sont-elles présentes ?"
     }
   ],
   "report_bridge_label_images": [
@@ -230,7 +278,7 @@
   "report_bridge_label_municipalities": [
     {
       "type": 0,
-      "value": "Liste des communes (séparation par virgule)"
+      "value": "Liste des municipalités (séparées par des virgules)"
     }
   ],
   "report_bridge_label_name": [
@@ -242,7 +290,7 @@
   "report_bridge_label_nickname": [
     {
       "type": 0,
-      "value": "Pseudo (public)"
+      "value": "Nom d'utilisateur (public)"
     }
   ],
   "report_bridge_label_position": [
@@ -254,7 +302,7 @@
   "report_bridge_label_position_hint": [
     {
       "type": 0,
-      "value": "Les listes des cantons et communes sont générées grâce aux coordonnées du point."
+      "value": "Les listes respectives des cantons et des communes sont réunies avec les valeurs déterminées du point placé"
     }
   ],
   "report_bridge_label_speedLimit": [
@@ -266,7 +314,7 @@
   "report_bridge_label_traffic": [
     {
       "type": 0,
-      "value": "Volume de trafic"
+      "value": "volume de trafic"
     }
   ],
   "report_bridge_option_0_30": [
@@ -278,43 +326,43 @@
   "report_bridge_option_100": [
     {
       "type": 0,
-      "value": "100 km/h"
+      "value": "100+hm/h"
     }
   ],
   "report_bridge_option_40_50": [
     {
       "type": 0,
-      "value": "40-50 km/h"
+      "value": "40-50km/h"
     }
   ],
   "report_bridge_option_60": [
     {
       "type": 0,
-      "value": "60 km/h"
+      "value": "60km/h"
     }
   ],
   "report_bridge_option_70_80": [
     {
       "type": 0,
-      "value": "70-80 km/h"
+      "value": "70-80km/h"
     }
   ],
   "report_bridge_option_FENCE_LESS_75MM": [
     {
       "type": 0,
-      "value": "Barrière (mailles de grillage < 7.5 cm)"
+      "value": "Clôture (taille du grillage < 7.5 cm)"
     }
   ],
   "report_bridge_option_FENCE_MORE_75MM": [
     {
       "type": 0,
-      "value": "Barrière (mailles de grillage > 7.5 cm)"
+      "value": "Clôture (taille du grillage > 7.5 cm)"
     }
   ],
   "report_bridge_option_HEAVY_TRAFFIC": [
     {
       "type": 0,
-      "value": "Elevé (1 voiture/3 minutes)"
+      "value": "Haute (1 voiture / 3 minutes)"
     }
   ],
   "report_bridge_option_LIGHT_TRAFFIC": [
@@ -338,7 +386,7 @@
   "report_bridge_option_NO_TRAFFIC": [
     {
       "type": 0,
-      "value": "Pas de circulation"
+      "value": "Pas de trafic"
     }
   ],
   "report_bridge_option_VERY_HEAVY_TRAFFIC": [
@@ -350,7 +398,7 @@
   "report_bridge_option_VERY_LIGHT_TRAFFIC": [
     {
       "type": 0,
-      "value": "Très faible (1 voiture/jour)"
+      "value": "Rarement (1x par jour)"
     }
   ],
   "report_bridge_option_WALL": [
@@ -362,19 +410,19 @@
   "report_bridge_placeholder_bridgeHeight": [
     {
       "type": 0,
-      "value": "point le plus haut à partir de la ligne des eaux moyennes en m"
+      "value": "point le plus haut à partir de la ligne d'eau moyenne en m"
     }
   ],
   "report_bridge_placeholder_bridgeLength": [
     {
       "type": 0,
-      "value": "profondeur (largeur de la route) in m"
+      "value": "profondeur (largeur de la route) en m"
     }
   ],
   "report_bridge_placeholder_bridgeWidth": [
     {
       "type": 0,
-      "value": "point le plus large en m"
+      "value": "endroit le plus large en m"
     }
   ],
   "report_bridge_shape_required": [
@@ -404,7 +452,7 @@
   "safety_risk_NO_RISK": [
     {
       "type": 0,
-      "value": "Sans danger"
+      "value": "Non dangereux"
     }
   ],
   "safety_risk_VERY_HIGH_RISK": [

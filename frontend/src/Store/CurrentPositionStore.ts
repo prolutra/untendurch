@@ -38,22 +38,31 @@ export class CurrentPositionStore extends Model({
     });
   }
 
+  async getCurrentPosition() {
+    return new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => resolve(position),
+          (error) => {
+            this.setNavigatorWithoutLocationSupport(true);
+            return reject(error);
+          }
+        );
+      } else {
+        reject(new Error('Geolocation is not supported by this browser.'));
+      }
+    });
+  }
+
   @modelAction
-  async locateMe() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (currentPosition) => {
-          this.setPosition(
-            new LatLon({
-              lat: currentPosition.coords.latitude,
-              lon: currentPosition.coords.longitude,
-            })
-          );
-        },
-        () => {
-          this.setNavigatorWithoutLocationSupport(true);
-        }
+  async locateMe(): Promise<void> {
+    return this.getCurrentPosition().then((position: any) => {
+      this.setPosition(
+        new LatLon({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
+        })
       );
-    }
+    });
   }
 }

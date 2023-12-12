@@ -17,7 +17,6 @@
     "noEmit": true,
     "types": ["node", "vite/client", "react"],
     "jsx": "react-jsx",
-    "jsxImportSource": "theme-ui"
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

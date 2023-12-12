@@ -2,160 +2,179 @@ import React from 'react';
 import './Map.css';
 import { useStore } from '../Store/Store';
 import { observer } from 'mobx-react-lite';
-import { Box, Button, Flex, Heading, Image } from 'theme-ui';
 import { FormattedMessage } from 'react-intl';
-import { SafetyRiskColors } from '../Store/SafetyRisk';
 import { Link } from 'react-router-dom';
+import { CloseChar } from '../lib/closeChar';
 
-const BridgePinInfo = observer(() => {
+interface BridgePinInfoProps {
+  closeFn?: () => void;
+}
+
+export const BridgePinInfo = observer(({ closeFn }: BridgePinInfoProps) => {
   const store = useStore();
 
   const objectId = store.mapSettings.selectedBridgePinObjectId;
 
-  function verifyBridge() {
+  const verifyBridge = () => {
     if (objectId) {
       store.existingBridges.verifyBridge(objectId);
     }
-  }
+  };
+
+  const deleteBridgeConfirmation = () => {
+    if (objectId) {
+      if (
+        window.confirm(
+          'Are you sure you want to delete this bridge? This action cannot be undone.'
+        )
+      ) {
+        store.existingBridges.deleteBridge(objectId);
+      }
+    }
+  };
 
   if (objectId) {
     const bridgePin = store.existingBridges.bridgeById(objectId);
     if (bridgePin) {
       const lv95 = bridgePin.latLon.asLv95;
       return (
-        <>
-          <Heading
-            backgroundColor={
-              bridgePin.safetyRisk
-                ? SafetyRiskColors[bridgePin.safetyRisk]
-                : '#808080ff'
-            }
-            sx={{
-              borderTopLeftRadius: '15px',
-              borderTopRightRadius: '15px',
-              padding: '15px',
-            }}
-          >
-            {bridgePin.name}
-          </Heading>
+        <div>
+          <div className={`p-2 rounded-t-lg bg-safety-${bridgePin.safetyRisk}`}>
+            <div className={'flex flex-row justify-between items-center'}>
+              <div className={'text-white font-bold'}>{bridgePin.name}</div>
+              <div>
+                <button
+                  className={'btn btn-ghost btn-sm btn-circle text-white'}
+                  onClick={closeFn}
+                >
+                  {CloseChar}
+                </button>
+              </div>
+            </div>
+          </div>
           {bridgePin.imageUrl && (
-            <Box sx={{ height: '200px', width: '100%', overflow: 'hidden' }}>
-              <Image
-                sx={{
-                  objectFit: 'cover',
-                }}
+            <div className={'h-48 w-full overflow-hidden'}>
+              <img
+                alt={bridgePin.name}
+                className={'h-full w-full object-cover'}
                 src={bridgePin.imageUrl}
               />
-            </Box>
+            </div>
           )}
-          <Box sx={{ padding: '15px' }}>
-            <Heading as="h3" sx={{ marginTop: 2 }}>
-              {bridgePin.municipalities.join(', ')} -{' '}
-              {bridgePin.cantons.join(', ')}
-            </Heading>
-            <Box>
-              {lv95.east.toFixed(2)}, {lv95.west.toFixed(2)}
-            </Box>
+          <div className={'flex flex-col gap-4 p-4'}>
+            <div>
+              <div className={'text-lg font-bold'}>
+                {bridgePin.municipalities.join(', ')} -{' '}
+                {bridgePin.cantons.join(', ')}
+              </div>
+              <div className={'text-sm'}>
+                {lv95.east.toFixed(2)}, {lv95.west.toFixed(2)}
+              </div>
+            </div>
             {bridgePin.shape && (
-              <Box sx={{ marginTop: 2 }}>
-                <Flex sx={{ gap: 4 }}>
+              <div className={'flex flex-col gap-2'}>
+                <div className={'font-bold'}>
                   <FormattedMessage
                     id="bridge_pin_info_bridge_form"
                     defaultMessage={'Brückenform'}
                   />
-                  <Image src={`/shape/${bridgePin.shape}.png`} />
-                </Flex>
-              </Box>
+                </div>
+                <img
+                  className={'max-w-36'}
+                  src={`/shape/${bridgePin.shape}.png`}
+                  alt={''}
+                />
+              </div>
             )}
-            <Box>
-              <Flex sx={{ gap: 4 }}>
-                <Box>
+            <div className={'flex flex-col gap-2'}>
+              <div>
+                <FormattedMessage
+                  id={'otter_friendly_' + bridgePin.otterFriendly}
+                  defaultMessage={bridgePin.otterFriendly}
+                />
+              </div>
+              {bridgePin.bridgeIndex && (
+                <div className={'italic'}>
                   <FormattedMessage
-                    id={'otter_friendly_' + bridgePin.otterFriendly}
-                    defaultMessage={bridgePin.otterFriendly}
+                    id="bridge_pin_info_bridge_index"
+                    defaultMessage={'Brückenindex'}
                   />
-                </Box>
-                {bridgePin.bridgeIndex && (
-                  <Box sx={{ fontStyle: 'italic' }}>
-                    <FormattedMessage
-                      id="bridge_pin_info_bridge_index"
-                      defaultMessage={'Brückenindex'}
-                    />
-                    : {bridgePin.bridgeIndex}
-                  </Box>
-                )}
-              </Flex>
-            </Box>
-            <Box>
-              <Flex sx={{ gap: 4 }}>
-                <Box>
-                  <FormattedMessage
-                    id="bridge_pin_info_bridge_traffic_situation"
-                    defaultMessage={'Verkehrssituation'}
-                  />
-                </Box>
-                <Box>
-                  <FormattedMessage
-                    id={'safety_risk_' + bridgePin.safetyRisk}
-                    defaultMessage={bridgePin.safetyRisk}
-                  />
-                </Box>
-              </Flex>
-            </Box>
+                  : {bridgePin.bridgeIndex}
+                </div>
+              )}
+            </div>
+            <div className={'flex flex-col gap-2'}>
+              <div className={'font-bold'}>
+                <FormattedMessage
+                  id="bridge_pin_info_bridge_traffic_situation"
+                  defaultMessage={'Verkehrssituation'}
+                />
+              </div>
+              <div>
+                <FormattedMessage
+                  id={'safety_risk_' + bridgePin.safetyRisk}
+                  defaultMessage={bridgePin.safetyRisk}
+                />
+              </div>
+            </div>
             {bridgePin.averageDailyTraffic && (
-              <Box sx={{ marginTop: 2 }}>
-                <Flex sx={{ gap: 4 }}>
+              <div className={'flex flex-col gap-2'}>
+                <div className={'font-bold'}>
                   <FormattedMessage
                     id="bridge_pin_info_bridge_averageDailyTraffic"
                     defaultMessage={'Durchschnittlicher Verkehr pro Tag'}
                   />
-                  <Box>{bridgePin.averageDailyTraffic}</Box>
-                </Flex>
-              </Box>
+                </div>
+                <div>{bridgePin.averageDailyTraffic}</div>
+              </div>
             )}
             {bridgePin.nickname && (
-              <Box
-                sx={{ fontStyle: 'italic', textAlign: 'right', marginTop: 3 }}
-              >
+              <div className={'italic text-right mt-4'}>
                 <FormattedMessage
                   id="bridge_pin_info_reported_by"
                   defaultMessage={'Rapportiert von'}
                 />
                 {' ' + bridgePin.nickname}
-              </Box>
+              </div>
             )}
             {store.auth.sessionToken && (
-              <Link to={'/bridges/' + bridgePin.objectId}>
-                <Button sx={{ marginTop: 2, cursor: 'pointer' }}>
+              <>
+                <Link to={'/bridges/' + bridgePin.objectId}>
+                  <button className={'btn btn-primary w-full'}>
+                    <FormattedMessage
+                      id="bridge_pin_info_button_edit"
+                      defaultMessage={'Brücke editieren'}
+                    />
+                  </button>
+                </Link>
+                {bridgePin.status === 'UNVERIFIED' && (
+                  <>
+                    <button
+                      className={'btn btn-primary w-full'}
+                      onClick={verifyBridge}
+                    >
+                      <FormattedMessage
+                        id="bridge_pin_info_button_approve"
+                        defaultMessage={'Brücke verifizieren'}
+                      />
+                    </button>
+                  </>
+                )}
+                <button
+                  className={'btn btn-error w-full'}
+                  onClick={deleteBridgeConfirmation}
+                >
                   <FormattedMessage
-                    id="bridge_pin_info_button_edit"
-                    defaultMessage={'Brücke editieren'}
+                    id="bridge_pin_info_button_delete"
+                    defaultMessage={'Brücke löschen'}
                   />
-                </Button>
-              </Link>
+                </button>
+              </>
             )}
-            {store.auth.sessionToken && bridgePin.status === 'UNVERIFIED' && (
-              <Button
-                onClick={verifyBridge}
-                sx={{
-                  marginTop: 2,
-                  marginLeft: 2,
-                  backgroundColor: '#5694bd',
-                  cursor: 'pointer',
-                }}
-              >
-                <FormattedMessage
-                  id="bridge_pin_info_button_approve"
-                  defaultMessage={'Brücke verifizieren'}
-                />
-              </Button>
-            )}
-          </Box>
-        </>
+          </div>
+        </div>
       );
     }
   }
   return <></>;
 });
-
-export default BridgePinInfo;

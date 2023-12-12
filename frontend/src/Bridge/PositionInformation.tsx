@@ -1,30 +1,42 @@
+import type { FC } from 'react';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import type { ReportBridgeStore } from '../Store/ReportBridgeStore';
-
-import { Box, Flex, Input, Label } from 'theme-ui';
 import { FormattedMessage } from 'react-intl';
+import { LocateMe } from '../Location/LocateMe';
 
-interface PositionInformationProps {
+type PositionInformationProps = {
   reportedBridge: ReportBridgeStore;
-}
+};
 
-const PositionInformation = observer(
-  ({ reportedBridge }: PositionInformationProps) => {
+export const PositionInformation: FC<PositionInformationProps> = observer(
+  ({ reportedBridge }) => {
+    if (!reportedBridge.latLon) {
+      return (
+        <div className={'flex flex-row items-center gap-4'}>
+          <LocateMe />
+          <div>
+            <FormattedMessage
+              id="report_bridge_no_position"
+              defaultMessage={
+                'Benutzen Sie die GPS-Funktion Ihres Geräts um die aktuelle Position zu bestimmen.'
+              }
+            />
+          </div>
+        </div>
+      );
+    }
     return (
-      <Flex sx={{ gap: 1, alignItems: 'flex-end' }}>
-        <Box>
-          <Label htmlFor="position" className="disabledLabel">
+      <div className="flex flex-col md:flex-row gap-1 md:items-end justify-stretch">
+        <div>
+          <label htmlFor="position" className="label">
             <FormattedMessage
               id="report_bridge_label_position"
               defaultMessage={'Position'}
             />
-          </Label>
-          <Input
-            sx={{
-              flex: ['1 60%', '1 60%', '1 100%', '1 100%'],
-              marginRight: '2',
-            }}
+          </label>
+          <input
+            className="input input-bordered"
             name="position"
             disabled={true}
             readOnly={true}
@@ -35,26 +47,24 @@ const PositionInformation = observer(
                   reportedBridge.latLon.asLv95.west.toFixed(2)
                 : ''
             }
-          ></Input>{' '}
-        </Box>
+          />
+        </div>
 
-        <Input
-          sx={{ flex: ['1 13%', '1 13%', '1 20%', '1 20%'] }}
+        <input
+          className="input input-bordered grow-0"
           name="canton"
           disabled={true}
           readOnly={true}
           placeholder={reportedBridge.canton}
-        ></Input>
-        <Input
-          sx={{ flex: ['1 37%', '1 37%', '1 100%', '1 100%'] }}
+        />
+        <input
+          className="input input-bordered grow"
           name="municipality"
           disabled={true}
           readOnly={true}
           placeholder={reportedBridge.municipality}
-        ></Input>
-      </Flex>
+        />
+      </div>
     );
   }
 );
-
-export default PositionInformation;

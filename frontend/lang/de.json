@@ -44,6 +44,21 @@
   "overview_export_alert_copied_to_clipboard": {
     "defaultMessage": "Der Link wurde in die Zwischenablage kopiert."
   },
+  "overview_filters_label_canton": {
+    "defaultMessage": "Kanton"
+  },
+  "overview_filters_label_municipality": {
+    "defaultMessage": "Gemeinde"
+  },
+  "overview_filters_label_otter_friendly": {
+    "defaultMessage": "Otterfreundlich"
+  },
+  "overview_filters_label_safety_risk": {
+    "defaultMessage": "Sicherheitsrisiko"
+  },
+  "overview_filters_label_status": {
+    "defaultMessage": "Status"
+  },
   "overview_filters_select_ALL": {
     "defaultMessage": "Alle"
   },
@@ -53,11 +68,17 @@
   "overview_filters_select_status_verified": {
     "defaultMessage": "Verifiziert"
   },
+  "report_bridge_button_cancel": {
+    "defaultMessage": "Abbrechen"
+  },
   "report_bridge_button_report": {
     "defaultMessage": "Erfassen"
   },
   "report_bridge_button_save": {
     "defaultMessage": "Speichern"
+  },
+  "report_bridge_button_upload": {
+    "defaultMessage": "Bilder auswählen und hochladen"
   },
   "report_bridge_heading_dimensions": {
     "defaultMessage": "Brückendimensionen"
@@ -76,6 +97,9 @@
   },
   "report_bridge_images_required": {
     "defaultMessage": "Es muss mindestens ein Bild hochgeladen werden"
+  },
+  "report_bridge_images_uploaded": {
+    "defaultMessage": "Bilder erfolgreich hochgeladen"
   },
   "report_bridge_label_barriers": {
     "defaultMessage": "Barrieren, um auf die Strasse zu gelangen"

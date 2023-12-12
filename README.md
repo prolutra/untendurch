@@ -16,7 +16,7 @@ The app consists of the following components:
 ### Installing
 ```bash
 cd frontend
-npm install
+yarn install
 ```
 ### Starting it all for local development
 #### Starting `mongodb`, `parse-server`, `parse-dashboard` and `nginx`
@@ -27,7 +27,7 @@ docker-compose up
 #### Starting the client in dev mode
 ```bash
 cd frontend
-npm start
+yarn run dev
 ```
 
 The app will be available under [http://localhost:3000](http://localhost:3000).
@@ -36,7 +36,7 @@ Parse Dashboard can be accessed via [http://localhost:4040](http://localhost:404
 ### Building the app
 ```bash
 cd frontend
-npm run build
+yarn run build
 ```
 ### Translations
 #### Extraction

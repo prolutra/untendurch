@@ -1,32 +1,21 @@
 .ol-map {
-  position: absolute;
-  display: flex;
-  flex-direction: row;
-  width: 100%;
+  @apply w-full absolute flex flex-row;
   height: calc(100% - 110px);
 }
 
 .ol-control {
-  position: absolute;
-  background-color: rgba(255, 255, 255, 0.4);
-  border-radius: 4px;
-  padding: 2px;
+  @apply absolute rounded-md bg-white bg-opacity-50 p-1;
 }
 
 .ol-full-screen {
-  top: 0.5em;
-  right: 0.5em;
+  @apply absolute top-0 right-0;
 }
 
 .ol-map-top {
-  position: absolute;
-  width: 100%;
+  @apply absolute w-full;
   height: 300px;
 }
 
 .map-container-in-reporting {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 300px;
+  @apply flex flex-row w-full h-96;
 }
