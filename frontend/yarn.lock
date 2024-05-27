@@ -3725,7 +3725,7 @@ __metadata:
     mobx: "npm:6.12.3"
     mobx-keystone: "npm:^1.10.1"
     mobx-react-lite: "npm:^4.0.7"
-    ol: "npm:8.2.0"
+    ol: "npm:9.2.3"
     parse: "npm:^4.3.1"
     polished: "npm:^4.3.1"
     postcss: "npm:^8.4.38"
@@ -5515,9 +5515,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ol@npm:8.2.0":
-  version: 8.2.0
-  resolution: "ol@npm:8.2.0"
+"ol@npm:9.2.3":
+  version: 9.2.3
+  resolution: "ol@npm:9.2.3"
   dependencies:
     color-rgba: "npm:^3.0.0"
     color-space: "npm:^2.0.1"
@@ -5525,7 +5525,7 @@ __metadata:
     geotiff: "npm:^2.0.7"
     pbf: "npm:3.2.1"
     rbush: "npm:^3.0.1"
-  checksum: 10/d6144e47dd2b608efb6d43ab51b4e3c3f2bb1d87a451988481b9a1bd73946f1b5e61ddaa3990e6b4402caaab034143245f8c055647a37223f3d0e0dab5d25d3d
+  checksum: 10/48000d94629cb09670c3f53205403f0f67a42dc90bae9edc374a58a680bdacd2a062b7e8036997bed578b66416cbb0debbca281b123928f96386eed0c2390802
   languageName: node
   linkType: hard
 

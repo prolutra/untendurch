@@ -6,7 +6,7 @@ import { Feature } from 'ol';
 import type { Point } from 'ol/geom';
 import { latLonToPoint } from '../GeoAdmin/PointTransformations';
 import { SafetyRisk } from '../Store/SafetyRisk';
-import VectorLayer from '../Layers/VectorLayers';
+import { VectorLayer } from '../Layers/VectorLayers';
 import { Layers } from '../Layers/Layers';
 import { TileLayer } from '../Layers/TileLayers';
 

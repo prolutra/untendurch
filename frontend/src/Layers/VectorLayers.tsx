@@ -1,41 +1,40 @@
 import type { Feature } from 'ol';
 import type { Geometry, Point } from 'ol/geom';
 import OLVectorLayer from 'ol/layer/Vector';
-import { Vector } from 'ol/source';
 import { Icon, Style } from 'ol/style';
 import { Modify } from 'ol/interaction';
 import type { FC } from 'react';
-import React, { useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { useStore } from '../Store/Store';
 import { observer } from 'mobx-react-lite';
 import { toLonLat } from 'ol/proj';
 import { LatLon } from '../Store/LatLon';
 import type { StyleFunction } from 'ol/style/Style';
-import type { FeatureLike } from 'ol/Feature';
 import { MapContext } from '../Map/MapContext';
 import { OverlayContext } from '../Map/OverlayContext';
+import VectorSource from 'ol/source/Vector';
 
 type VectorLayerProps = {
   zIndex: number;
-  features: Feature<Point>[];
+  features: Feature<Geometry>[];
   iconSrc: string;
   draggable: boolean;
 };
 
-const VectorLayer: FC<VectorLayerProps> = observer(
+export const VectorLayer: FC<VectorLayerProps> = observer(
   ({ zIndex, features, iconSrc, draggable }) => {
     const store = useStore();
 
     const mapContext = useContext(MapContext);
     const overlayContext = useContext(OverlayContext);
 
-    function addFeaturesToMap(): [
-      OLVectorLayer<Vector<Feature<Geometry>>> | undefined,
+    const addFeaturesToMap = useCallback((): [
+      OLVectorLayer<Feature<Geometry>> | undefined,
       Modify | undefined,
-    ] {
+    ] => {
       if (!mapContext || !overlayContext) return [undefined, undefined];
 
-      const source = new Vector({
+      const source = new VectorSource({
         features: features,
       });
 
@@ -60,7 +59,7 @@ const VectorLayer: FC<VectorLayerProps> = observer(
         zIndex: 10000,
       });
 
-      const styleFunction: StyleFunction = (feature: FeatureLike) => {
+      const styleFunction: StyleFunction = (feature) => {
         return feature.get('hovered') ? styleHovered : style;
       };
 
@@ -103,7 +102,7 @@ const VectorLayer: FC<VectorLayerProps> = observer(
       }
 
       return [layer, undefined];
-    }
+    }, [mapContext, overlayContext, features]);
 
     useEffect(() => {
       if (store.currentPosition.currentPoint) {
@@ -118,7 +117,7 @@ const VectorLayer: FC<VectorLayerProps> = observer(
       if (!mapContext) return;
 
       let layerAndInteraction: [
-        OLVectorLayer<Vector<Feature<Geometry>>> | undefined,
+        OLVectorLayer<Feature<Geometry>> | undefined,
         Modify | undefined,
       ];
 
@@ -142,5 +141,3 @@ const VectorLayer: FC<VectorLayerProps> = observer(
     return <></>;
   }
 );
-
-export default VectorLayer;

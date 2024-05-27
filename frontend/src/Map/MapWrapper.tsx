@@ -87,6 +87,7 @@ export const MapWrapper = observer(({ variant }: Props) => {
 
       mapObject.getLayers().forEach(function (layer) {
         if (layer instanceof VectorLayer) {
+          // @ts-ignore
           layer.getSource().forEachFeature(function (feature: Feature) {
             feature.set('hovered', false);
           });
@@ -121,7 +122,7 @@ export const MapWrapper = observer(({ variant }: Props) => {
     // unfortunately, we have to force a size update to resize the tile layer
     setTimeout(() => {
       if (mapContext) mapContext.updateSize();
-    }, 200);
+    }, 50);
   }, [store.mapSettings.mode]);
 
   useEffect(() => {

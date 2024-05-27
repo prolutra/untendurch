@@ -6,5 +6,5 @@ type LayersProps = {
 };
 
 export const Layers: FC<LayersProps> = ({ children }) => {
-  return <div>{children}</div>;
+  return <>{children}</>;
 };
