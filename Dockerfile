@@ -33,6 +33,6 @@ WORKDIR /
 
 COPY --from=builder /build/packages/backend/ /app
 RUN ls -al
-CMD node ./src/server.js
+CMD node ./dist/server.js
 
 EXPOSE 8080
