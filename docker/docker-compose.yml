@@ -5,12 +5,12 @@ services:
     image: nginx:latest
     restart: unless-stopped
     ports:
-      - 8080:8080
+      - "8080:8080"
   parse-platform:
     image: parseplatform/parse-server:5.2.3
     container_name: parse-platform
     ports:
-      - 1337:1337
+      - "1337:1337"
     restart: unless-stopped
     environment:
       PARSE_SERVER_APPLICATION_ID: untendurch
@@ -30,7 +30,7 @@ services:
     image: parseplatform/parse-dashboard:4.1.2
     container_name: parse-dashboard
     ports:
-      - 4040:4040
+      - "4040:4040"
     restart: unless-stopped
     environment:
       PARSE_DASHBOARD_SERVER_URL: http://localhost:1337/parse
@@ -45,7 +45,7 @@ services:
     image: mongo:5.0.9
     container_name: mongodb
     ports:
-      - 27017:27017
+      - "27017:27017"
     restart: unless-stopped
     environment:
       MONGO_INITDB_DATABASE: untendurch

@@ -1,0 +1,233 @@
+{
+  "admin_button_login": {
+    "defaultMessage": "Accedi"
+  },
+  "admin_heading_login": {
+    "defaultMessage": "Accesso"
+  },
+  "admin_label_password": {
+    "defaultMessage": "Password"
+  },
+  "admin_label_username": {
+    "defaultMessage": "Nome utente"
+  },
+  "bridge_pin_info_bridge_averageDailyTraffic": {
+    "defaultMessage": "Traffico medio giornaliero"
+  },
+  "bridge_pin_info_bridge_form": {
+    "defaultMessage": "Forma del ponte"
+  },
+  "bridge_pin_info_bridge_index": {
+    "defaultMessage": "Indice del ponte"
+  },
+  "bridge_pin_info_bridge_traffic_situation": {
+    "defaultMessage": "Situazione del traffico"
+  },
+  "bridge_pin_info_button_approve": {
+    "defaultMessage": "Verifica ponte"
+  },
+  "bridge_pin_info_button_edit": {
+    "defaultMessage": "Modifica ponte"
+  },
+  "bridge_pin_info_reported_by": {
+    "defaultMessage": "Segnalato da"
+  },
+  "otter_friendly_FRIENDLY": {
+    "defaultMessage": "Amichevole"
+  },
+  "otter_friendly_UNFRIENDLY": {
+    "defaultMessage": "Non amichevole"
+  },
+  "overview_button_report": {
+    "defaultMessage": "Segnala ponte"
+  },
+  "overview_export_alert_copied_to_clipboard": {
+    "defaultMessage": "Il link è stato copiato negli appunti."
+  },
+  "overview_filters_label_canton": {
+    "defaultMessage": "Cantone"
+  },
+  "overview_filters_label_municipality": {
+    "defaultMessage": "Comune"
+  },
+  "overview_filters_label_otter_friendly": {
+    "defaultMessage": "Amichevole per le lontre"
+  },
+  "overview_filters_label_safety_risk": {
+    "defaultMessage": "Rischio sicurezza"
+  },
+  "overview_filters_label_status": {
+    "defaultMessage": "Stato"
+  },
+  "overview_filters_select_ALL": {
+    "defaultMessage": "Tutti"
+  },
+  "overview_filters_select_status_unverified": {
+    "defaultMessage": "Non verificato"
+  },
+  "overview_filters_select_status_verified": {
+    "defaultMessage": "Verificato"
+  },
+  "report_bridge_button_cancel": {
+    "defaultMessage": "Annulla"
+  },
+  "report_bridge_button_report": {
+    "defaultMessage": "Segnala"
+  },
+  "report_bridge_button_save": {
+    "defaultMessage": "Salva"
+  },
+  "report_bridge_button_upload": {
+    "defaultMessage": "Seleziona immagini"
+  },
+  "report_bridge_heading_dimensions": {
+    "defaultMessage": "Dimensioni del ponte"
+  },
+  "report_bridge_heading_info": {
+    "defaultMessage": "Informazioni sul ponte"
+  },
+  "report_bridge_heading_surrounding": {
+    "defaultMessage": "Dintorni del ponte"
+  },
+  "report_bridge_heading_traffic": {
+    "defaultMessage": "Traffico"
+  },
+  "report_bridge_heading_varia": {
+    "defaultMessage": "Varie"
+  },
+  "report_bridge_images_required": {
+    "defaultMessage": "Deve essere caricata almeno una immagine"
+  },
+  "report_bridge_images_uploaded": {
+    "defaultMessage": "Immagini caricate con successo"
+  },
+  "report_bridge_label_barriers": {
+    "defaultMessage": "Barriere per raggiungere la strada"
+  },
+  "report_bridge_label_cantons": {
+    "defaultMessage": "Elenco dei cantoni (separati da virgola)"
+  },
+  "report_bridge_label_commentAdmin": {
+    "defaultMessage": "Commenti (Admin)"
+  },
+  "report_bridge_label_commentReporter": {
+    "defaultMessage": "Commenti"
+  },
+  "report_bridge_label_email": {
+    "defaultMessage": "E-mail (non visibile)"
+  },
+  "report_bridge_label_form": {
+    "defaultMessage": "Forma del ponte"
+  },
+  "report_bridge_label_hasBanquet": {
+    "defaultMessage": "Banquette continua?"
+  },
+  "report_bridge_label_hasContinuousShore": {
+    "defaultMessage": "Sponda continua almeno su un lato prima e dopo il ponte?"
+  },
+  "report_bridge_label_hasMinimalBanquetWidth": {
+    "defaultMessage": "Larghezza banquette maggiore di 30cm"
+  },
+  "report_bridge_label_hasSlopes": {
+    "defaultMessage": "Gradini/salti di 1m di altezza entro 20m dal ponte?"
+  },
+  "report_bridge_label_hasStones": {
+    "defaultMessage": "Sono presenti pietre?"
+  },
+  "report_bridge_label_images": {
+    "defaultMessage": "Immagini"
+  },
+  "report_bridge_label_municipalities": {
+    "defaultMessage": "Elenco dei comuni (separati da virgola)"
+  },
+  "report_bridge_label_name": {
+    "defaultMessage": "Nome del ponte (opzionale)"
+  },
+  "report_bridge_label_nickname": {
+    "defaultMessage": "Soprannome (pubblico)"
+  },
+  "report_bridge_label_position": {
+    "defaultMessage": "Posizione"
+  },
+  "report_bridge_label_position_hint": {
+    "defaultMessage": "Gli elenchi dei cantoni e dei comuni saranno uniti con i valori trovati del punto impostato."
+  },
+  "report_bridge_label_speedLimit": {
+    "defaultMessage": "Limite di velocità"
+  },
+  "report_bridge_label_traffic": {
+    "defaultMessage": "Intensità del traffico"
+  },
+  "report_bridge_option_0_30": {
+    "defaultMessage": "0-30km/h"
+  },
+  "report_bridge_option_100": {
+    "defaultMessage": "100+km/h"
+  },
+  "report_bridge_option_40_50": {
+    "defaultMessage": "40-50km/h"
+  },
+  "report_bridge_option_60": {
+    "defaultMessage": "60km/h"
+  },
+  "report_bridge_option_70_80": {
+    "defaultMessage": "70-80km/h"
+  },
+  "report_bridge_option_FENCE_LESS_75MM": {
+    "defaultMessage": "Recinzione (dimensione della maglia < 7.5 cm)"
+  },
+  "report_bridge_option_FENCE_MORE_75MM": {
+    "defaultMessage": "Recinzione (dimensione della maglia > 7.5 cm)"
+  },
+  "report_bridge_option_HEAVY_TRAFFIC": {
+    "defaultMessage": "Alto (1 auto / 3 minuti)"
+  },
+  "report_bridge_option_LIGHT_TRAFFIC": {
+    "defaultMessage": "Basso (1 auto all'ora)"
+  },
+  "report_bridge_option_MEDIUM_TRAFFIC": {
+    "defaultMessage": "Medio (1 auto/10 minuti)"
+  },
+  "report_bridge_option_NONE": {
+    "defaultMessage": "Nessuno"
+  },
+  "report_bridge_option_NO_TRAFFIC": {
+    "defaultMessage": "Nessun traffico"
+  },
+  "report_bridge_option_VERY_HEAVY_TRAFFIC": {
+    "defaultMessage": "Molto alto (1+ auto/minuto)"
+  },
+  "report_bridge_option_VERY_LIGHT_TRAFFIC": {
+    "defaultMessage": "Raro (1 volta al giorno)"
+  },
+  "report_bridge_option_WALL": {
+    "defaultMessage": "Muro (> 1.2m)"
+  },
+  "report_bridge_placeholder_bridgeHeight": {
+    "defaultMessage": "punto più alto dal livello medio dell'acqua in m"
+  },
+  "report_bridge_placeholder_bridgeLength": {
+    "defaultMessage": "Larghezza della strada in m"
+  },
+  "report_bridge_placeholder_bridgeWidth": {
+    "defaultMessage": "punto più largo in m"
+  },
+  "report_bridge_shape_required": {
+    "defaultMessage": "Seleziona la forma del ponte"
+  },
+  "safety_risk_HIGH_RISK": {
+    "defaultMessage": "Molto pericoloso"
+  },
+  "safety_risk_LOW_RISK": {
+    "defaultMessage": "Poco pericoloso"
+  },
+  "safety_risk_MEDIUM_RISK": {
+    "defaultMessage": "Pericoloso"
+  },
+  "safety_risk_NO_RISK": {
+    "defaultMessage": "Non pericoloso"
+  },
+  "safety_risk_VERY_HIGH_RISK": {
+    "defaultMessage": "Estremamente pericoloso"
+  }
+}

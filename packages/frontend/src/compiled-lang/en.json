@@ -1,0 +1,464 @@
+{
+  "admin_button_login": [
+    {
+      "type": 0,
+      "value": "Login"
+    }
+  ],
+  "admin_heading_login": [
+    {
+      "type": 0,
+      "value": "Login"
+    }
+  ],
+  "admin_label_password": [
+    {
+      "type": 0,
+      "value": "Password"
+    }
+  ],
+  "admin_label_username": [
+    {
+      "type": 0,
+      "value": "Username"
+    }
+  ],
+  "bridge_pin_info_bridge_averageDailyTraffic": [
+    {
+      "type": 0,
+      "value": "Average traffic per day"
+    }
+  ],
+  "bridge_pin_info_bridge_form": [
+    {
+      "type": 0,
+      "value": "Bridge shape"
+    }
+  ],
+  "bridge_pin_info_bridge_index": [
+    {
+      "type": 0,
+      "value": "Bridge index"
+    }
+  ],
+  "bridge_pin_info_bridge_traffic_situation": [
+    {
+      "type": 0,
+      "value": "Traffic situation"
+    }
+  ],
+  "bridge_pin_info_button_approve": [
+    {
+      "type": 0,
+      "value": "Verify bridge"
+    }
+  ],
+  "bridge_pin_info_button_edit": [
+    {
+      "type": 0,
+      "value": "Edit bridge"
+    }
+  ],
+  "bridge_pin_info_reported_by": [
+    {
+      "type": 0,
+      "value": "Reported by"
+    }
+  ],
+  "otter_friendly_FRIENDLY": [
+    {
+      "type": 0,
+      "value": "Friendly"
+    }
+  ],
+  "otter_friendly_UNFRIENDLY": [
+    {
+      "type": 0,
+      "value": "Unfriendly"
+    }
+  ],
+  "overview_button_report": [
+    {
+      "type": 0,
+      "value": "Capture bridge"
+    }
+  ],
+  "overview_export_alert_copied_to_clipboard": [
+    {
+      "type": 0,
+      "value": "The link was copied to the clipboard."
+    }
+  ],
+  "overview_filters_label_canton": [
+    {
+      "type": 0,
+      "value": "Canton"
+    }
+  ],
+  "overview_filters_label_municipality": [
+    {
+      "type": 0,
+      "value": "Municipality"
+    }
+  ],
+  "overview_filters_label_otter_friendly": [
+    {
+      "type": 0,
+      "value": "Otter friendly"
+    }
+  ],
+  "overview_filters_label_safety_risk": [
+    {
+      "type": 0,
+      "value": "Safety risk"
+    }
+  ],
+  "overview_filters_label_status": [
+    {
+      "type": 0,
+      "value": "Status"
+    }
+  ],
+  "overview_filters_select_ALL": [
+    {
+      "type": 0,
+      "value": "All"
+    }
+  ],
+  "overview_filters_select_status_unverified": [
+    {
+      "type": 0,
+      "value": "Not verified"
+    }
+  ],
+  "overview_filters_select_status_verified": [
+    {
+      "type": 0,
+      "value": "Verified"
+    }
+  ],
+  "report_bridge_button_cancel": [
+    {
+      "type": 0,
+      "value": "Cancel"
+    }
+  ],
+  "report_bridge_button_report": [
+    {
+      "type": 0,
+      "value": "Capture"
+    }
+  ],
+  "report_bridge_button_save": [
+    {
+      "type": 0,
+      "value": "Save"
+    }
+  ],
+  "report_bridge_button_upload": [
+    {
+      "type": 0,
+      "value": "Select images"
+    }
+  ],
+  "report_bridge_heading_dimensions": [
+    {
+      "type": 0,
+      "value": "Bridge dimensions"
+    }
+  ],
+  "report_bridge_heading_info": [
+    {
+      "type": 0,
+      "value": "Information about the bridge"
+    }
+  ],
+  "report_bridge_heading_surrounding": [
+    {
+      "type": 0,
+      "value": "Bridge surroundings"
+    }
+  ],
+  "report_bridge_heading_traffic": [
+    {
+      "type": 0,
+      "value": "Traffic"
+    }
+  ],
+  "report_bridge_heading_varia": [
+    {
+      "type": 0,
+      "value": "Other"
+    }
+  ],
+  "report_bridge_images_required": [
+    {
+      "type": 0,
+      "value": "At least one image must be uploaded"
+    }
+  ],
+  "report_bridge_images_uploaded": [
+    {
+      "type": 0,
+      "value": "Images uploaded successfully"
+    }
+  ],
+  "report_bridge_label_barriers": [
+    {
+      "type": 0,
+      "value": "Barriers to get on the road"
+    }
+  ],
+  "report_bridge_label_cantons": [
+    {
+      "type": 0,
+      "value": "List of cantons (comma separated)"
+    }
+  ],
+  "report_bridge_label_commentAdmin": [
+    {
+      "type": 0,
+      "value": "Comments (Admin)"
+    }
+  ],
+  "report_bridge_label_commentReporter": [
+    {
+      "type": 0,
+      "value": "Comments"
+    }
+  ],
+  "report_bridge_label_email": [
+    {
+      "type": 0,
+      "value": "Email (not visible)"
+    }
+  ],
+  "report_bridge_label_form": [
+    {
+      "type": 0,
+      "value": "Bridge form"
+    }
+  ],
+  "report_bridge_label_hasBanquet": [
+    {
+      "type": 0,
+      "value": "Continuous banquet?"
+    }
+  ],
+  "report_bridge_label_hasContinuousShore": [
+    {
+      "type": 0,
+      "value": "Bank area at least continuous on one side before and after the bridge?"
+    }
+  ],
+  "report_bridge_label_hasMinimalBanquetWidth": [
+    {
+      "type": 0,
+      "value": "Banquet width greater than 30cm"
+    }
+  ],
+  "report_bridge_label_hasSlopes": [
+    {
+      "type": 0,
+      "value": "Thresholds / drops of 1m height within a distance of 20m from the bridge?"
+    }
+  ],
+  "report_bridge_label_hasStones": [
+    {
+      "type": 0,
+      "value": "Stones present?"
+    }
+  ],
+  "report_bridge_label_images": [
+    {
+      "type": 0,
+      "value": "Images"
+    }
+  ],
+  "report_bridge_label_municipalities": [
+    {
+      "type": 0,
+      "value": "List of municipalities (comma separated)"
+    }
+  ],
+  "report_bridge_label_name": [
+    {
+      "type": 0,
+      "value": "Name of the bridge (optional)"
+    }
+  ],
+  "report_bridge_label_nickname": [
+    {
+      "type": 0,
+      "value": "Nickname (public)"
+    }
+  ],
+  "report_bridge_label_position": [
+    {
+      "type": 0,
+      "value": "Position"
+    }
+  ],
+  "report_bridge_label_position_hint": [
+    {
+      "type": 0,
+      "value": "The respective lists of cantons and municipalities are combined with the determined values of the set point."
+    }
+  ],
+  "report_bridge_label_speedLimit": [
+    {
+      "type": 0,
+      "value": "Speed limit"
+    }
+  ],
+  "report_bridge_label_traffic": [
+    {
+      "type": 0,
+      "value": "Traffic volume"
+    }
+  ],
+  "report_bridge_option_0_30": [
+    {
+      "type": 0,
+      "value": "0-30km/h"
+    }
+  ],
+  "report_bridge_option_100": [
+    {
+      "type": 0,
+      "value": "100+hm/h"
+    }
+  ],
+  "report_bridge_option_40_50": [
+    {
+      "type": 0,
+      "value": "40-50km/h"
+    }
+  ],
+  "report_bridge_option_60": [
+    {
+      "type": 0,
+      "value": "60km/h"
+    }
+  ],
+  "report_bridge_option_70_80": [
+    {
+      "type": 0,
+      "value": "70-80km/h"
+    }
+  ],
+  "report_bridge_option_FENCE_LESS_75MM": [
+    {
+      "type": 0,
+      "value": "Fence (wire mesh size < 7.5 cm)"
+    }
+  ],
+  "report_bridge_option_FENCE_MORE_75MM": [
+    {
+      "type": 0,
+      "value": "Fence (wire mesh size > 7.5 cm)"
+    }
+  ],
+  "report_bridge_option_HEAVY_TRAFFIC": [
+    {
+      "type": 0,
+      "value": "High (1 car / 3 minutes)"
+    }
+  ],
+  "report_bridge_option_LIGHT_TRAFFIC": [
+    {
+      "type": 0,
+      "value": "Low (1 car per hour)"
+    }
+  ],
+  "report_bridge_option_MEDIUM_TRAFFIC": [
+    {
+      "type": 0,
+      "value": "Medium (1 car/10 minutes)"
+    }
+  ],
+  "report_bridge_option_NONE": [
+    {
+      "type": 0,
+      "value": "none"
+    }
+  ],
+  "report_bridge_option_NO_TRAFFIC": [
+    {
+      "type": 0,
+      "value": "No traffic"
+    }
+  ],
+  "report_bridge_option_VERY_HEAVY_TRAFFIC": [
+    {
+      "type": 0,
+      "value": "Very high (1+ car/minute)"
+    }
+  ],
+  "report_bridge_option_VERY_LIGHT_TRAFFIC": [
+    {
+      "type": 0,
+      "value": "Rarely (1x per day)"
+    }
+  ],
+  "report_bridge_option_WALL": [
+    {
+      "type": 0,
+      "value": "Wall (> 1.2m)"
+    }
+  ],
+  "report_bridge_placeholder_bridgeHeight": [
+    {
+      "type": 0,
+      "value": "highest point from centre waterline in m"
+    }
+  ],
+  "report_bridge_placeholder_bridgeLength": [
+    {
+      "type": 0,
+      "value": "Depth (road width) in metres"
+    }
+  ],
+  "report_bridge_placeholder_bridgeWidth": [
+    {
+      "type": 0,
+      "value": "widest point in metres"
+    }
+  ],
+  "report_bridge_shape_required": [
+    {
+      "type": 0,
+      "value": "Please select bridge shape"
+    }
+  ],
+  "safety_risk_HIGH_RISK": [
+    {
+      "type": 0,
+      "value": "Very dangerous"
+    }
+  ],
+  "safety_risk_LOW_RISK": [
+    {
+      "type": 0,
+      "value": "Barely dangerous"
+    }
+  ],
+  "safety_risk_MEDIUM_RISK": [
+    {
+      "type": 0,
+      "value": "Dangerous"
+    }
+  ],
+  "safety_risk_NO_RISK": [
+    {
+      "type": 0,
+      "value": "Non-hazardous"
+    }
+  ],
+  "safety_risk_VERY_HIGH_RISK": [
+    {
+      "type": 0,
+      "value": "Extremely dangerous"
+    }
+  ]
+}

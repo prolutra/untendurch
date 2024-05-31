@@ -1,0 +1,15 @@
+{
+  "name": "untendurch",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "self-update": "yarn set version stable && yarn install",
+    "up": "yarn upgrade-interactive",
+    "build-frontend": "yarn workspace @untendurch/frontend run build"
+  },
+  "packageManager": "yarn@4.2.2"
+}

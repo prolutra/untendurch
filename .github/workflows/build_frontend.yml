@@ -1,10 +1,10 @@
-name: Build Frontend
+name: Build on commit
 on:
   workflow_call:
   pull_request:
   push:
     paths:
-      - 'frontend/**'
+      - '**'
     branches:
       - '**'
     tags-ignore:
@@ -17,13 +17,18 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
-      - name: build frontend
-        working-directory: ./frontend
+          node-version: 20
+      - name: Try to build React frontend
         run: |
-          npm --version
-          npm install --global prettier
-          prettier --list-different "{src,public}/**/*.{ts,tsx,scss,json,html}"
+          yarn --version
           node ./scripts/generateBuildId.js $CI_COMMIT_SHORT_SHA
-          npm install
-          npm run build
+          yarn workspaces focus @untendurch/frontend
+          yarn workspace @untendurch/frontend lint
+          yarn workspace @untendurch/frontend build
+      - name: Try to build express/parse backend
+        run: |
+          yarn --version
+          node ./scripts/generateBuildId.js $CI_COMMIT_SHORT_SHA
+          yarn workspaces focus @untendurch/backend
+          yarn workspace @untendurch/backend lint
+          yarn workspace @untendurch/backend build

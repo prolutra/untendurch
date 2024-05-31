@@ -1,3 +1,4 @@
+node_modules
 
 .yarn/*
 !.yarn/patches
@@ -13,3 +14,9 @@
 !src/**
 
 tmp/
+logs/
+dist/
+
+.env
+.env.local
+db-backup
