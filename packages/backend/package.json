@@ -3,8 +3,8 @@
   "packageManager": "yarn@4.2.2",
   "type": "module",
   "scripts": {
-    "start": "node dist/server.js",
-    "dev": "tsc -w & dotenv -e .env nodemon dist/server.js",
+    "start": "dotenv -e .env node ./dist/server.js",
+    "dev": "tsc -w & dotenv -e .env nodemon ./dist/server.js",
     "build": "tsc",
     "lint": "eslint ./src/**/*.{js,ts,jsx,tsx,html}",
     "db:start": "docker compose -f docker-compose.dev.yml up -d",

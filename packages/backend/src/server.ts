@@ -7,7 +7,9 @@ const app = express();
 
 const serverOptions = {
   databaseURI: process.env.PARSE_SERVER_DATABASE_URI,
-  cloud: process.env.PARSE_SERVER_CLOUD,
+  cloud: function () {
+    import('./parse/cloud/main.js');
+  },
   appId: process.env.PARSE_SERVER_APPLICATION_ID,
   masterKey: process.env.PARSE_SERVER_MASTER_KEY,
   fileKey: process.env.PARSE_SERVER_FILE_KEY,
