@@ -14,7 +14,7 @@ const serverOptions = {
   masterKey: process.env.PARSE_SERVER_MASTER_KEY,
   fileKey: process.env.PARSE_SERVER_FILE_KEY,
   serverURL: process.env.PARSE_SERVER_URL,
-  masterKeyIps: ['0.0.0.0/0', '::0'],
+  masterKeyIps: ['0.0.0.0/0', '::/0'],
   // enableAnonymousUsers: true,
   fileUpload: {
     enableForPublic: true,
