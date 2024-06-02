@@ -35,6 +35,17 @@ const dashboard = new ParseDashboard(
         appName: process.env.PARSE_SERVER_APP_NAME,
       },
     ],
+    users: [
+      {
+        user: process.env.PARSE_SERVER_DASHBOARD_USER_ID,
+        pass: process.env.PARSE_SERVER_DASHBOARD_USER_PASSWORD,
+        apps: [
+          {
+            appId: process.env.PARSE_SERVER_APPLICATION_ID,
+          },
+        ],
+      },
+    ],
   },
   { allowInsecureHTTP: true }
 );
