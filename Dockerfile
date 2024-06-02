@@ -12,7 +12,7 @@ RUN node -v
 RUN yarn -v
 RUN node ./scripts/generateBuildId.js $CI_COMMIT_SHORT_SHA
 RUN yarn workspaces focus @untendurch/frontend
-RUN yarn workspace @untendurch/frontend run build
+RUN yarn workspace @untendurch/frontend run build:$ENVIRONMENT
 RUN yarn workspaces focus @untendurch/backend
 RUN yarn workspace @untendurch/backend run build
 RUN cp -r ./packages/frontend/dist/* ./packages/backend/public

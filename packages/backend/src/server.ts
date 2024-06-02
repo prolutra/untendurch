@@ -25,17 +25,19 @@ parseServer.start();
 
 app.use(process.env.PARSE_SERVER_MOUNT_PATH || '/parse', parseServer.app);
 
-const dashboard = new ParseDashboard({
-  apps: [
-    {
-      serverURL: process.env.PARSE_SERVER_URL,
-      appId: process.env.PARSE_SERVER_APPLICATION_ID,
-      masterKey: process.env.PARSE_SERVER_MASTER_KEY,
-      appName: process.env.PARSE_SERVER_APP_NAME,
-      allowInsecureHTTP: true,
-    },
-  ],
-});
+const dashboard = new ParseDashboard(
+  {
+    apps: [
+      {
+        serverURL: process.env.PARSE_SERVER_URL,
+        appId: process.env.PARSE_SERVER_APPLICATION_ID,
+        masterKey: process.env.PARSE_SERVER_MASTER_KEY,
+        appName: process.env.PARSE_SERVER_APP_NAME,
+      },
+    ],
+  },
+  { allowInsecureHTTP: true }
+);
 
 app.use('/dashboard', dashboard);
 app.use(thumbnailRoute);
