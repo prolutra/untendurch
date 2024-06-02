@@ -2,6 +2,9 @@ import express from 'express';
 import { ParseServer } from 'parse-server';
 import ParseDashboard from 'parse-dashboard';
 import { thumbnailRoute } from './routes/thumbnail.js';
+import path from 'path';
+
+const __dirname = import.meta.dirname;
 
 const app = express();
 
@@ -37,8 +40,9 @@ const dashboard = new ParseDashboard({
 });
 
 app.use('/dashboard', dashboard);
-
 app.use(thumbnailRoute);
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(process.env.PARSE_SERVER_PORT, function () {
   console.log(`localhost:${process.env.PARSE_SERVER_PORT}`);
