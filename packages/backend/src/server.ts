@@ -2,9 +2,6 @@ import express from 'express';
 import { ParseServer } from 'parse-server';
 import ParseDashboard from 'parse-dashboard';
 import { thumbnailRoute } from './routes/thumbnail.js';
-import path from 'path';
-
-const __dirname = import.meta.dirname;
 
 const app = express();
 
@@ -35,6 +32,7 @@ const dashboard = new ParseDashboard({
       appId: process.env.PARSE_SERVER_APPLICATION_ID,
       masterKey: process.env.PARSE_SERVER_MASTER_KEY,
       appName: process.env.PARSE_SERVER_APP_NAME,
+      allowInsecureHTTP: true,
     },
   ],
 });
@@ -42,7 +40,9 @@ const dashboard = new ParseDashboard({
 app.use('/dashboard', dashboard);
 app.use(thumbnailRoute);
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+  express.static('public', { cacheControl: true, etag: true, maxAge: '1d' })
+);
 
 app.listen(process.env.PARSE_SERVER_PORT, function () {
   console.log(`localhost:${process.env.PARSE_SERVER_PORT}`);
