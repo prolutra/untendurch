@@ -30,9 +30,9 @@ ARG ENVIRONMENT
 LABEL git-commit=$CI_COMMIT_SHORT_SHA
 
 WORKDIR /
+COPY --from=builder /build/ /app
 
-COPY --from=builder /build/packages/backend/ /app
-RUN ls -al
+WORKDIR /app/packages/backend
 CMD node ./dist/server.js
 
 EXPOSE 8080
