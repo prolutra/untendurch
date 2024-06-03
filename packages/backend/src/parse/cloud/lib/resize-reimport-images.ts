@@ -80,6 +80,7 @@ Parse.Cloud.job('resizeReimportImages', async (request) => {
           (metadata.width > maxSide || metadata.height > maxSide)
         ) {
           const resizedBuffer = await imgSharp
+            .rotate()
             .resize({ width: maxSide, height: maxSide, fit: 'inside' })
             .toFormat('jpeg', { quality: 75 })
             .toBuffer();

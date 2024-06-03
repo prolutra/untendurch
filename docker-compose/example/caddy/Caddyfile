@@ -1,5 +1,11 @@
 untendurch.yourdomain.com {
- 	reverse_proxy frontend:8080 {
-		header_up X-Real-IP {remote}
-	}
+  encode gzip zstd
+
+  rewrite /dashboard /dashboard/
+  rewrite /parse /parse/
+
+  rewrite /admin* /index.html
+  rewrite /bridges/* /index.html
+
+  reverse_proxy /* frontend:8080
 }

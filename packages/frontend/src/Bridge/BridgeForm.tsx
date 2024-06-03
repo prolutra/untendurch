@@ -172,15 +172,13 @@ export const BridgeForm: FC<BridgeFormProps> = observer(
         }
       }
 
-      console.log(currentImages);
-
       persistedBridge.set('images', currentImages);
 
       persistedBridge.save().then(async () => {
         store.reportBridge.setLatLon(null);
-        // await store.existingBridges.fetchExistingBridges();
-        // navigate('/');
-        // navigate(0);
+        await store.existingBridges.fetchExistingBridges();
+        navigate('/');
+        navigate(0);
       });
     };
 
