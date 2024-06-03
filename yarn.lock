@@ -2227,6 +2227,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@parse/fs-files-adapter@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@parse/fs-files-adapter@npm:3.0.0"
+  checksum: 10/394dbc70c1c4f1efeae873ca03f25ad519ac19c3ccc52491811de6c95a677105d9d234c790a48f24a05d034940475c813238b1cd4ecf36f051d139df73ff70f3
+  languageName: node
+  linkType: hard
+
 "@parse/node-apn@npm:6.0.1":
   version: 6.0.1
   resolution: "@parse/node-apn@npm:6.0.1"
@@ -3371,6 +3378,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@untendurch/backend@workspace:packages/backend"
   dependencies:
+    "@parse/fs-files-adapter": "npm:^3.0.0"
     "@tsconfig/node20": "npm:^20.1.4"
     "@types/lodash-es": "npm:^4.17.12"
     "@types/parse": "npm:^3.0.9"

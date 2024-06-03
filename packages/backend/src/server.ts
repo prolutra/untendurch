@@ -2,8 +2,14 @@ import express from 'express';
 import { ParseServer } from 'parse-server';
 import ParseDashboard from 'parse-dashboard';
 import { thumbnailRoute } from './routes/thumbnail.js';
+import FSFilesAdapter from '@parse/fs-files-adapter';
 
 const app = express();
+
+const fsAdapter = new FSFilesAdapter({
+  filesSubDirectory: './uploads', // optional, defaults to ./files
+  encryptionKey: 'someKey', //optional, but mandatory if you want to encrypt files
+});
 
 app.use(
   express.static('public', { cacheControl: true, etag: true, maxAge: '1d' })
@@ -16,6 +22,7 @@ const serverOptions = {
   },
   appId: process.env.PARSE_SERVER_APPLICATION_ID,
   masterKey: process.env.PARSE_SERVER_MASTER_KEY,
+  filesAdapter: fsAdapter,
   fileKey: process.env.PARSE_SERVER_FILE_KEY,
   serverURL: process.env.PARSE_SERVER_URL,
   masterKeyIps: ['0.0.0.0/0', '::/0'],

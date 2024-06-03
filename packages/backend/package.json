@@ -12,6 +12,7 @@
     "db:clean": "docker volume rm backend_mongodb_data"
   },
   "dependencies": {
+    "@parse/fs-files-adapter": "^3.0.0",
     "axios": "^1.7.2",
     "express": "^4.19.2",
     "lodash-es": "^4.17.21",
