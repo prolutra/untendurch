@@ -7,15 +7,11 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  options: {
-    safelist: [
-      'bg-safety-NO_RISK',
-      'bg-safety-LOW_RISK',
-      'bg-safety-MEDIUM_RISK',
-      'bg-safety-HIGH_RISK',
-      'bg-safety-VERY_HIGH_RISK',
-    ],
-  },
+  safelist: [
+    {
+      pattern: /bg-safety/,
+    }
+  ],
   theme: {
     extend: {
       colors: {

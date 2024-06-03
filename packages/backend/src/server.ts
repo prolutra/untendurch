@@ -5,6 +5,10 @@ import { thumbnailRoute } from './routes/thumbnail.js';
 
 const app = express();
 
+app.use(
+  express.static('public', { cacheControl: true, etag: true, maxAge: '1d' })
+);
+
 const serverOptions = {
   databaseURI: process.env.PARSE_SERVER_DATABASE_URI,
   cloud: function () {
@@ -53,10 +57,6 @@ const dashboard = new ParseDashboard(
 
 app.use('/dashboard', dashboard);
 app.use(thumbnailRoute);
-
-app.use(
-  express.static('public', { cacheControl: true, etag: true, maxAge: '1d' })
-);
 
 app.listen(process.env.PARSE_SERVER_PORT, function () {
   console.log(`localhost:${process.env.PARSE_SERVER_PORT}`);

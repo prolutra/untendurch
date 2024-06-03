@@ -18,15 +18,19 @@ thumbnailRoute.get('/thumbnail', async (req, res) => {
   const cacheDir = path.join(projectRoot, 'cache', 'thumbnails');
 
   if (!url) {
-    return res.status(400).send('Missing URL parameter');
+    return res.status(400).send({ error: 'Missing URL parameter' });
   }
 
   if (typeof url !== 'string') {
-    return res.status(400).send('URL parameter must be a string');
+    return res.status(400).send({ error: 'URL parameter must be a string' });
   }
 
   if (!url.includes(process.env.PARSE_SERVER_URL.replace('/parse', ''))) {
-    return res.status(400).send('Invalid URL');
+    return res.status(400).send({
+      error: 'Invalid URL',
+      url,
+      serverUrl: process.env.PARSE_SERVER_URL,
+    });
   }
 
   const filename = path.basename(url);
