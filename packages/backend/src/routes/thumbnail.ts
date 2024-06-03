@@ -57,7 +57,6 @@ thumbnailRoute.get('/thumbnail', async (req, res) => {
     if (metadata.width && metadata.height && metadata.height > metadata.width) {
       // If the image is in portrait mode, select the center region and resize it to landscape mode
       thumbnail = await imgSharp
-        .rotate()
         .extract({
           left: 0,
           top: Math.ceil((metadata.height - metadata.width) / 2),
