@@ -1,0 +1,5 @@
+untendurch.yourdomain.com {
+ 	reverse_proxy frontend:8080 {
+		header_up X-Real-IP {remote}
+	}
+}

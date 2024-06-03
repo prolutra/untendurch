@@ -2,6 +2,7 @@
   "name": "@untendurch/backend",
   "packageManager": "yarn@4.2.2",
   "type": "module",
+  "license": "AGPL-3.0",
   "scripts": {
     "start": "dotenv -e .env node ./dist/server.js",
     "dev": "tsc -w & dotenv -e .env nodemon ./dist/server.js",

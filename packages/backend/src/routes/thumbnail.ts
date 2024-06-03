@@ -17,6 +17,11 @@ thumbnailRoute.get('/thumbnail', async (req, res) => {
   const height = 200;
   const cacheDir = path.join(projectRoot, 'cache', 'thumbnails');
 
+  // Create the cache directory recursively if it does not exist
+  if (!fs.existsSync(cacheDir)) {
+    fs.mkdirSync(cacheDir, { recursive: true });
+  }
+
   if (!url) {
     return res.status(400).send({ error: 'Missing URL parameter' });
   }
