@@ -4,6 +4,7 @@ import viteTsconfigPaths from 'vite-tsconfig-paths';
 import * as path from "path";
 import checker from "vite-plugin-checker";
 import { terser } from "rollup-plugin-terser";
+// import { analyzer } from "vite-bundle-analyzer";
 
 export default defineConfig(() => {
   return {
@@ -16,13 +17,16 @@ export default defineConfig(() => {
             ol: ['ol'],
             react: ['react', 'react-dom'],
             lodash: ['lodash-es'],
+            'image-js':[ 'image-js'],
+            jszip: ['jszip'],
+            mobx: ['mobx', 'mobx-keystone'],
           },
           plugins: [terser()]
         }
       }
     },
     optimizeDeps: {
-      include: ['parse', 'ol', 'react', 'react-dom', 'lodash-es'],
+      include: ['parse', 'ol', 'react', 'react-dom', 'lodash-es', 'image-js', 'jszip', 'mobx', 'mobx-keystone'],
     },
     plugins: [
       react({
@@ -43,6 +47,7 @@ export default defineConfig(() => {
           lintCommand: 'eslint "./src/**/*.{ts,tsx}"',
         },
       }),
+      // analyzer(),
     ],
     resolve: {
       alias: {

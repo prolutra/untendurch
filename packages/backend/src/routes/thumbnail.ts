@@ -25,7 +25,7 @@ thumbnailRoute.get('/thumbnail', async (req, res) => {
     return res.status(400).send('URL parameter must be a string');
   }
 
-  if (!url.includes(process.env.PARSE_SERVER_URL)) {
+  if (!url.includes(process.env.PARSE_SERVER_URL.replace('/parse', ''))) {
     return res.status(400).send('Invalid URL');
   }
 
