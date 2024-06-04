@@ -11,20 +11,20 @@ export default defineConfig(() => {
     build: {
       rollupOptions: {
         output: {
-          experimentalMinChunkSize: 10000,
+          experimentalMinChunkSize: 20000,
           manualChunks: {
-            parse: ['parse'],
             ol: ['ol'],
             react: ['react', 'react-dom'],
             lodash: ['lodash-es'],
             mobx: ['mobx', 'mobx-keystone'],
+            parse: ['parse'],
           },
           plugins: [terser()]
         }
       }
     },
     optimizeDeps: {
-      include: ['parse', 'ol', 'react', 'react-dom', 'lodash-es', 'mobx', 'mobx-keystone'],
+      include: ['ol', 'react', 'react-dom', 'lodash-es', 'mobx', 'mobx-keystone', 'parse'],
     },
     plugins: [
       react({
@@ -50,7 +50,7 @@ export default defineConfig(() => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '/src'),
-        // parse: path.resolve(__dirname, './node_modules/parse/dist/parse.min.js')
+        parse: path.resolve(__dirname, '../../node_modules/parse/dist/parse.min.js')
       },
     },
   };

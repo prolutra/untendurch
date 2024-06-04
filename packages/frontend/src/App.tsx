@@ -10,10 +10,14 @@ import { ReportBridgeRoute } from './Bridge/ReportBridgeRoute';
 import { RootRoute } from './Overview/RootRoute';
 import { EditBridgeRoute } from './Bridge/EditBridgeRoute';
 import { AdminRoute } from './Auth/AdminRoute';
-
-import './parseConfig';
+import Parse from 'parse';
 
 export const App = () => {
+  Parse.initialize('untendurch');
+  Parse.serverURL =
+    `${import.meta.env.VITE_REACT_APP_PARSE_SERVER_URL}` ||
+    'http://localhost:1337/parse';
+
   return (
     <React.StrictMode>
       <Router>

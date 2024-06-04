@@ -15,14 +15,10 @@ RUN yarn workspaces focus @untendurch/frontend
 RUN yarn workspace @untendurch/frontend run build:$ENVIRONMENT
 RUN yarn workspaces focus @untendurch/backend
 RUN yarn workspace @untendurch/backend run build
-RUN cp -r ./packages/frontend/dist/* ./packages/backend/public
+RUN cp -pr ./packages/frontend/dist/* ./packages/backend/public/
 RUN yarn workspaces focus @untendurch/backend --production
 
-
-
-RUN rm -rf .git && rm -rf *.lock && \
-    find . -name "*.ts" -type f -delete && find . -name "*.md" -type f -delete && find . -name "README.*" -type f -delete && find . -name "README" -type f -delete && find . -name "LICENSE.*" -type f -delete && find . -name "LICENSE" -type f -delete
-
+#RUN rm -rf .git && rm -rf *.lock
 
 FROM node:20-slim AS runner
 ARG CI_COMMIT_SHORT_SHA

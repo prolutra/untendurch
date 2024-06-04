@@ -23,6 +23,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build --mode development",
+    "build:dev": "vite build --mode development",
     "build:test": "vite build --mode test",
     "build:prod": "vite build --mode prod",
     "ix-de": "formatjs extract 'src/**/*.ts*' --ignore='**/*.d.ts' --out-file lang/de.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
@@ -48,8 +49,8 @@
     "@types/proj4": "^2.5.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "@typescript-eslint/eslint-plugin": "^7.12.0",
-    "@typescript-eslint/parser": "7.12.0",
+    "@typescript-eslint/eslint-plugin": "7.11.0",
+    "@typescript-eslint/parser": "7.11.0",
     "@vitejs/plugin-react": "^4.3.0",
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.2",
