@@ -6,11 +6,7 @@ export function uploadFiles(
 ): Promise<Parse.File[]> {
   return Promise.all(
     filesToUpload.map(async (file) => {
-      const parseFile = new Parse.File(
-        bridgeId,
-        { base64: file.url },
-        'image/jpeg'
-      );
+      const parseFile = new Parse.File(bridgeId, { uri: file.url });
       return await parseFile.save();
     })
   );

@@ -3,6 +3,8 @@ import { ParseServer } from 'parse-server';
 import ParseDashboard from 'parse-dashboard';
 import { thumbnailRoute } from './routes/thumbnail.js';
 import FSFilesAdapter from '@parse/fs-files-adapter';
+import { uploadRoute } from './routes/upload.js';
+import cors from 'cors';
 
 const app = express();
 
@@ -60,9 +62,18 @@ const dashboard = new ParseDashboard(
 
 app.use('/dashboard', dashboard);
 app.use(thumbnailRoute);
+app.use(uploadRoute);
 
 app.use(
   express.static('public', { cacheControl: true, etag: true, maxAge: '1d' })
+);
+
+app.use(
+  '/uploads',
+  cors({
+    origin: '*',
+  }),
+  express.static('./cache/uploads')
 );
 
 app.listen(process.env.PARSE_SERVER_PORT, function () {

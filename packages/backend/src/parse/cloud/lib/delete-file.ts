@@ -1,0 +1,15 @@
+Parse.Cloud.define('deleteFile', async (req) => {
+  const { filename } = req.params;
+  if (!filename) {
+    throw new Error('Missing filename parameter');
+  }
+
+  // @ts-expect-error types are outdated
+  const file = new Parse.File(filename);
+  try {
+    await file.destroy({ useMasterKey: true });
+    return 'File deleted successfully';
+  } catch (error) {
+    throw new Error('Failed to delete file');
+  }
+});

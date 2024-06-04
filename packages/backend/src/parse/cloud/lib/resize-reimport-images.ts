@@ -70,16 +70,32 @@ Parse.Cloud.job('resizeReimportImages', async (request) => {
         const imgSharp = sharp(imgBuffer);
         const metadata = await imgSharp.metadata();
 
-        switch (metadata.orientation) {
-          case 3:
-            imgSharp.rotate(180);
-            break;
-          case 6:
-            imgSharp.rotate(90);
-            break;
-          case 8:
-            imgSharp.rotate(-90);
-            break;
+        if (metadata.orientation) {
+          switch (metadata.orientation) {
+            case 1:
+              break;
+            case 2:
+              imgSharp.flip();
+              break;
+            case 3:
+              imgSharp.rotate(180);
+              break;
+            case 4:
+              imgSharp.flip().rotate(180);
+              break;
+            case 5:
+              imgSharp.flip().rotate(90);
+              break;
+            case 6:
+              imgSharp.rotate(90);
+              break;
+            case 7:
+              imgSharp.flip().rotate(-90);
+              break;
+            case 8:
+              imgSharp.rotate(-90);
+              break;
+          }
         }
 
         log.info(

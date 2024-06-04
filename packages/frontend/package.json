@@ -6,9 +6,6 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "@mdx-js/react": "^3.0.1",
-    "buffer": "^6.0.3",
-    "image-js": "^0.35.5",
-    "jszip": "^3.10.1",
     "lodash-es": "^4.17.21",
     "mobx": "6.12.3",
     "mobx-keystone": "^1.10.1",
@@ -21,8 +18,7 @@
     "react-dom": "^18.3.1",
     "react-intl": "^6.6.8",
     "react-router-dom": "^6.23.1",
-    "tslog": "^4.9.2",
-    "write-excel-file": "^2.0.1"
+    "tslog": "^4.9.2"
   },
   "scripts": {
     "dev": "vite",

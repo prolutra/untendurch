@@ -17,8 +17,6 @@ export default defineConfig(() => {
             ol: ['ol'],
             react: ['react', 'react-dom'],
             lodash: ['lodash-es'],
-            'image-js':[ 'image-js'],
-            jszip: ['jszip'],
             mobx: ['mobx', 'mobx-keystone'],
           },
           plugins: [terser()]
@@ -26,7 +24,7 @@ export default defineConfig(() => {
       }
     },
     optimizeDeps: {
-      include: ['parse', 'ol', 'react', 'react-dom', 'lodash-es', 'image-js', 'jszip', 'mobx', 'mobx-keystone'],
+      include: ['parse', 'ol', 'react', 'react-dom', 'lodash-es', 'mobx', 'mobx-keystone'],
     },
     plugins: [
       react({

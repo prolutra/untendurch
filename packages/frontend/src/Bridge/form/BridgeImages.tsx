@@ -4,19 +4,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import type { BridgeFormState, PersistedFile } from '../BridgeFormState';
 import type Parse from 'parse';
 import { compact, uniqBy } from 'lodash-es';
-import Image from 'image-js';
-import { Buffer } from 'buffer/';
-
-window.Buffer = window.Buffer || Buffer;
-
-export const isPersistedFile = (
-  file: File | PersistedFile | Parse.File
-): file is PersistedFile => {
-  return (
-    (file as PersistedFile).name !== undefined &&
-    (file as PersistedFile).url !== undefined
-  );
-};
 
 type DisplayFile = {
   isNew?: boolean;
@@ -36,6 +23,8 @@ export const BridgeImages: FC<Props> = ({ state, setState }) => {
   const [parseFiles, setParseFiles] = useState<Parse.File[]>();
   const [newFiles, setNewFiles] = useState<DisplayFile[]>([]);
   const [displayFiles, setDisplayFiles] = useState<DisplayFile[]>([]);
+  const [isBusy, setIsBusy] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   useEffect(() => {
     if (state.images && state.images.length > 0) {
@@ -56,41 +45,83 @@ export const BridgeImages: FC<Props> = ({ state, setState }) => {
     }
   }, [state.images]);
 
-  const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (!files) return;
-
-    const filePromises = Array.from(files).map(async (file) => {
-      const image = await Image.load(await file.arrayBuffer());
-      if (image.width < image.height) {
-        alert(
-          'Bild ist im Hochformat. Bitte lade nur Bilder im Querformat hoch.'
-        );
-        return;
+  type UploadedImage =
+    | {
+        isValid: true;
+        name: string;
+        url: string;
       }
-      image.resize({ width: 2000, preserveAspectRatio: true });
-      return {
-        isNew: true,
-        name: file.name,
-        url: image.toDataURL('image/jpeg', { encoder: { compression: 80 } }),
+    | {
+        isValid: false;
+        error: string;
       };
+
+  const uploadImages = async (files: FileList): Promise<UploadedImage[]> => {
+    if (!files) return [];
+
+    const formData = new FormData();
+
+    Array.from(files).forEach((file) => {
+      formData.append('images', file, file.name);
     });
 
-    const newFiles = compact(await Promise.all(filePromises));
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_REACT_APP_PARSE_SERVER_URL.replace('/parse', '')}/upload`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+
+      const json = await response.json();
+      if (json.images) {
+        return json.images;
+      }
+      return [];
+    } catch (error) {
+      return [];
+    }
+  };
+
+  const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+
+    if (!files) return;
+    setIsBusy(true);
+
+    const uploadedFiles = await uploadImages(files);
+
+    const newFiles = compact(
+      uploadedFiles.map((file) => {
+        if (file.isValid) {
+          return {
+            isNew: true,
+            name: file.name,
+            url: file.url,
+          };
+        } else {
+          setUploadError(file.error);
+          return null;
+        }
+      })
+    );
 
     setNewFiles(newFiles);
     setDisplayFiles((previousFiles) => [...previousFiles, ...newFiles]);
+
     setState((previousState) => ({
       ...previousState,
       imagesToUpload: [...(previousState.imagesToUpload || []), ...newFiles],
     }));
+    setIsBusy(false);
   };
 
   function removeFile(file: PersistedFile) {
     setDisplayFiles((previousFiles) => {
       return previousFiles.filter((f) => f.url !== file.url);
     });
-    //   is parse file?
+    // is existing parse file?
     if (state.images.some((f) => f.url() === file.url)) {
       const parseFile = state.images.find((f) => f.url() === file.url);
       if (parseFile) {
@@ -100,7 +131,7 @@ export const BridgeImages: FC<Props> = ({ state, setState }) => {
         }));
       }
     }
-    //   is freshly added file?
+    // is freshly added file?
     if (newFiles.some((f) => f.name === file.name)) {
       newFiles.splice(
         newFiles.findIndex((f) => f.name === file.name),
@@ -110,13 +141,27 @@ export const BridgeImages: FC<Props> = ({ state, setState }) => {
   }
 
   return (
-    <div className={'flex flex-col gap-3'}>
+    <div className={'flex flex-col gap-3 relative'}>
+      {isBusy && (
+        <div
+          className={
+            'absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center'
+          }
+        >
+          <div className={'loading loading-spinner'}></div>
+        </div>
+      )}
       <h3>
         <FormattedMessage
           id="report_bridge_label_images"
           defaultMessage={'Bilder'}
         />
       </h3>
+      {uploadError && (
+        <div className="alert alert-warning" role="alert">
+          {uploadError}
+        </div>
+      )}
       {displayFiles.length === 0 && (
         <>
           <p className={'italic'}>
