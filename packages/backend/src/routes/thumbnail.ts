@@ -2,82 +2,63 @@ import express from 'express';
 import axios from 'axios';
 import sharp from 'sharp';
 import fs from 'fs';
-import path, { resolve } from 'path';
-
-const __dirname = import.meta.dirname;
+import path from 'path';
+import { isString, toNumber } from 'lodash-es';
+import { thumbnailDirectory } from '../directories.js';
+import { PARSE_SERVER_URL } from '../config.js';
 
 const thumbnailRoute = express.Router();
 
-const projectRoot = resolve(__dirname, '../..');
+type Query = {
+  url: string;
+  devicePixels: string;
+};
 
 thumbnailRoute.get('/thumbnail', async (req, res) => {
-  const { url } = req.query;
+  const { url, devicePixels } = req.query as Query;
 
-  const width = 320;
-  const height = 200;
-  const cacheDir = path.join(projectRoot, 'cache', 'thumbnails');
-
-  // Create the cache directory recursively if it does not exist
-  if (!fs.existsSync(cacheDir)) {
-    fs.mkdirSync(cacheDir, { recursive: true });
-  }
+  const width = Math.ceil(320 * (toNumber(devicePixels) || 1));
+  const height = Math.ceil(200 * (toNumber(devicePixels) || 1));
 
   if (!url) {
     return res.status(400).send({ error: 'Missing URL parameter' });
   }
 
-  if (typeof url !== 'string') {
+  if (!isString(url)) {
     return res.status(400).send({ error: 'URL parameter must be a string' });
   }
 
-  if (!url.includes(process.env.PARSE_SERVER_URL.split('//')[1])) {
+  if (!url.includes(PARSE_SERVER_URL.split('//')[1])) {
     return res.status(400).send({
       error: 'Invalid URL',
       url,
-      serverUrl: process.env.PARSE_SERVER_URL,
+      serverUrl: PARSE_SERVER_URL,
     });
   }
 
-  const filename = path.basename(url);
-  const cachePath = path.join(cacheDir, filename);
+  const filename = `${devicePixels}_${path.basename(url)}`;
+  const cachePathFilename = path.join(thumbnailDirectory, filename);
 
-  // Check if the image is already cached
-  if (fs.existsSync(cachePath)) {
-    return res.sendFile(cachePath);
+  if (fs.existsSync(cachePathFilename)) {
+    return res.sendFile(cachePathFilename);
   }
 
   try {
     const response = await axios.get(url, { responseType: 'arraybuffer' });
     const buffer = Buffer.from(response.data, 'binary');
+    console.log(url);
 
     const imgSharp = sharp(buffer);
-    const metadata = await imgSharp.metadata();
+    const thumbnail = await imgSharp
+      .rotate()
+      .resize({ width, height, fit: 'inside' })
+      .sharpen()
+      .jpeg({ quality: 70 })
+      .toBuffer();
 
-    let thumbnail;
-    if (metadata.width && metadata.height && metadata.height > metadata.width) {
-      // If the image is in portrait mode, select the center region and resize it to landscape mode
-      thumbnail = await imgSharp
-        .extract({
-          left: 0,
-          top: Math.ceil((metadata.height - metadata.width) / 2),
-          width: metadata.width,
-          height: metadata.width,
-        })
-        .resize(width, height) // Resize to 200x200 pixels
-        .jpeg({ quality: 80 }) // Convert to JPEG with 80% quality
-        .toBuffer();
-    } else {
-      thumbnail = await imgSharp
-        .resize(width, height) // Resize to 200x200 pixels
-        .jpeg({ quality: 80 }) // Convert to JPEG with 80% quality
-        .toBuffer();
-    }
+    fs.writeFileSync(cachePathFilename, thumbnail);
 
-    // Save the thumbnail to the cache directory
-    fs.writeFileSync(cachePath, thumbnail);
-
-    // Serve the thumbnail
-    res.sendFile(cachePath);
+    res.sendFile(cachePathFilename);
   } catch (error) {
     console.error(`Failed to fetch or resize image: ${error}`);
     res.status(500).send('Failed to fetch or resize image');

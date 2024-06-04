@@ -40,7 +40,7 @@ services:
       PARSE_SERVER_PORT: ${PARSE_SERVER_PORT}
       TZ: ${TZ:-CET}
     volumes:
-      - parse_uploads:/app/packages/backend/files/uploads
+      - parse_files:/app/packages/backend/files
     networks:
       default:
         aliases:
@@ -110,7 +110,7 @@ volumes:
     driver: local
   parse_uploads:
     driver: local
-    
+
 networks:
   default:
     name: external

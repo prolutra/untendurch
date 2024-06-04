@@ -5,26 +5,36 @@ import { thumbnailRoute } from './routes/thumbnail.js';
 import FSFilesAdapter from '@parse/fs-files-adapter';
 import { uploadRoute } from './routes/upload.js';
 import cors from 'cors';
+import {
+  PARSE_SERVER_APP_NAME,
+  PARSE_SERVER_APPLICATION_ID,
+  PARSE_SERVER_DASHBOARD_USER_ID,
+  PARSE_SERVER_DASHBOARD_USER_PASSWORD,
+  PARSE_SERVER_DATABASE_URI,
+  PARSE_SERVER_MASTER_KEY,
+  PARSE_SERVER_MOUNT_PATH,
+  PARSE_SERVER_PORT,
+  PARSE_SERVER_URL,
+} from './config.js';
+import { uploadsDirectory } from './directories.js';
 
 const app = express();
 
 const fsAdapter = new FSFilesAdapter({
-  filesSubDirectory: './uploads', // optional, defaults to ./files
-  encryptionKey: 'someKey', //optional, but mandatory if you want to encrypt files
+  filesSubDirectory: './images',
 });
 
 const serverOptions = {
-  databaseURI: process.env.PARSE_SERVER_DATABASE_URI,
+  databaseURI: PARSE_SERVER_DATABASE_URI,
   cloud: function () {
     import('./parse/cloud/main.js');
   },
-  appId: process.env.PARSE_SERVER_APPLICATION_ID,
-  masterKey: process.env.PARSE_SERVER_MASTER_KEY,
+  appId: PARSE_SERVER_APPLICATION_ID,
+  masterKey: PARSE_SERVER_MASTER_KEY,
   filesAdapter: fsAdapter,
-  fileKey: process.env.PARSE_SERVER_FILE_KEY,
-  serverURL: process.env.PARSE_SERVER_URL,
+  serverURL: PARSE_SERVER_URL,
+  publicServerURL: PARSE_SERVER_URL,
   masterKeyIps: ['0.0.0.0/0', '::/0'],
-  // enableAnonymousUsers: true,
   fileUpload: {
     enableForPublic: true,
   },
@@ -33,25 +43,25 @@ const serverOptions = {
 const parseServer = new ParseServer(serverOptions);
 parseServer.start();
 
-app.use(process.env.PARSE_SERVER_MOUNT_PATH || '/parse', parseServer.app);
+app.use(PARSE_SERVER_MOUNT_PATH, parseServer.app);
 
 const dashboard = new ParseDashboard(
   {
     apps: [
       {
-        serverURL: process.env.PARSE_SERVER_URL,
-        appId: process.env.PARSE_SERVER_APPLICATION_ID,
-        masterKey: process.env.PARSE_SERVER_MASTER_KEY,
-        appName: process.env.PARSE_SERVER_APP_NAME,
+        serverURL: PARSE_SERVER_URL,
+        appId: PARSE_SERVER_APPLICATION_ID,
+        masterKey: PARSE_SERVER_MASTER_KEY,
+        appName: PARSE_SERVER_APP_NAME,
       },
     ],
     users: [
       {
-        user: process.env.PARSE_SERVER_DASHBOARD_USER_ID,
-        pass: process.env.PARSE_SERVER_DASHBOARD_USER_PASSWORD,
+        user: PARSE_SERVER_DASHBOARD_USER_ID,
+        pass: PARSE_SERVER_DASHBOARD_USER_PASSWORD,
         apps: [
           {
-            appId: process.env.PARSE_SERVER_APPLICATION_ID,
+            appId: PARSE_SERVER_APPLICATION_ID,
           },
         ],
       },
@@ -73,9 +83,13 @@ app.use(
   cors({
     origin: '*',
   }),
-  express.static('./cache/uploads')
+  express.static(uploadsDirectory, {
+    cacheControl: true,
+    etag: true,
+    maxAge: '14d',
+  })
 );
 
-app.listen(process.env.PARSE_SERVER_PORT, function () {
-  console.log(`localhost:${process.env.PARSE_SERVER_PORT}`);
+app.listen(PARSE_SERVER_PORT, function () {
+  console.log(`localhost:${PARSE_SERVER_PORT}`);
 });

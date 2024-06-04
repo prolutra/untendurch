@@ -3,7 +3,6 @@ import 'ol/ol.css';
 
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Parse from 'parse';
 import { StoreProvider } from './Store/Store';
 
 import './extensions/ArrayExtensions';
@@ -12,12 +11,9 @@ import { RootRoute } from './Overview/RootRoute';
 import { EditBridgeRoute } from './Bridge/EditBridgeRoute';
 import { AdminRoute } from './Auth/AdminRoute';
 
-export const App = () => {
-  Parse.initialize('untendurch');
-  Parse.serverURL =
-    `${import.meta.env.VITE_REACT_APP_PARSE_SERVER_URL}` ||
-    'http://localhost:1337/parse';
+import './parseConfig';
 
+export const App = () => {
   return (
     <React.StrictMode>
       <Router>

@@ -273,8 +273,8 @@ export const OverviewFilters: FC = observer(() => {
           ))}
         </select>
       </div>
-      <div className={'pb-2'}>
-        <button className={'btn btn-circle btn-neutral'} onClick={handleReset}>
+      <div>
+        <button className={'btn btn-circle btn-ghost'} onClick={handleReset}>
           {CloseChar}
         </button>
       </div>

@@ -1,21 +1,18 @@
 import express from 'express';
 import sharp from 'sharp';
 import fs from 'fs';
-import path, { resolve } from 'path';
+import path from 'path';
 import multer from 'multer';
 import cors from 'cors';
 import { v4 as uuidv4 } from 'uuid';
-
-const __dirname = import.meta.dirname;
+import { uploadsDirectory } from '../directories.js';
+import { PARSE_SERVER_ROOT_URL } from '../config.js';
 
 const uploadRoute = express.Router();
 
-const projectRoot = resolve(__dirname, '../..');
-const cacheDir = path.join(projectRoot, 'cache', 'uploads');
-
 // Configure multer to store uploaded files in the cache/uploads directory
 const storage = multer.diskStorage({
-  destination: cacheDir,
+  destination: uploadsDirectory,
   filename: function (req, file, cb) {
     // Generate a unique name for the file using uuid
     const uniqueName = `${uuidv4()}-${file.originalname.replace(/[^a-z0-9.]/gi, '')}`;
@@ -49,8 +46,8 @@ uploadRoute.post(
 
       for (const file of files) {
         console.log('Processing image:', file.originalname);
-        const filename = file.originalname;
-        const cachePath = path.join(cacheDir, filename);
+        const originalName = file.originalname;
+        const uploadPathFilename = path.join(uploadsDirectory, originalName);
 
         const buffer = fs.readFileSync(file.path);
 
@@ -61,47 +58,17 @@ uploadRoute.post(
           `Image metadata: ${metadata.width}x${metadata.height}, ${Math.ceil((metadata.size || 0) / 1024)} kb`
         );
 
-        if (metadata.orientation) {
-          switch (metadata.orientation) {
-            case 1:
-              break;
-            case 2:
-              imgSharp.flip();
-              break;
-            case 3:
-              imgSharp.rotate(180);
-              break;
-            case 4:
-              imgSharp.flip().rotate(180);
-              break;
-            case 5:
-              imgSharp.flip().rotate(90);
-              break;
-            case 6:
-              imgSharp.rotate(90);
-              break;
-            case 7:
-              imgSharp.flip().rotate(-90);
-              break;
-            case 8:
-              imgSharp.rotate(-90);
-              break;
-          }
-        }
-
         const processedImage = await imgSharp
+          .rotate()
           .resize(2000)
           .jpeg({ quality: 80 })
           .toBuffer();
+
         const newMeta = await sharp(processedImage).metadata();
 
         if (newMeta.width && newMeta.height && newMeta.width > newMeta.height) {
-          fs.writeFileSync(cachePath, processedImage);
-          const serverAddr = process.env.PARSE_SERVER_URL.replace(
-            process.env.PARSE_SERVER_MOUNT_PATH,
-            ''
-          );
-          const url = `${serverAddr}/uploads/${file.filename}`;
+          fs.writeFileSync(uploadPathFilename, processedImage);
+          const url = `${PARSE_SERVER_ROOT_URL}/uploads/${file.filename}`;
           processedImages.push({ isValid: true, url, name: file.originalname });
         } else {
           processedImages.push({

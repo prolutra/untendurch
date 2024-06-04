@@ -1,11 +1,30 @@
-import { compact } from 'lodash-es';
-import path, { resolve } from 'path';
+import {
+  compact,
+  isArray,
+  isBoolean,
+  isDate,
+  isNumber,
+  isObject,
+  padStart,
+} from 'lodash-es';
+import path from 'path';
 import fs from 'fs';
 import writeXlsxFile from 'write-excel-file/node';
 import archiver from 'archiver';
+import { exportDirectory, uploadsDirectory } from '../../../directories.js';
+import { PARSE_SERVER_ROOT_URL } from '../../../config.js';
 
-const __dirname = import.meta.dirname;
-const projectRoot = resolve(__dirname, '../../../..');
+function getTimestamp() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = padStart((date.getMonth() + 1).toString(), 2, '0');
+  const day = padStart(date.getDate().toString(), 2, '0');
+  const hours = padStart(date.getHours().toString(), 2, '0');
+  const minutes = padStart(date.getMinutes().toString(), 2, '0');
+  const seconds = padStart(date.getSeconds().toString(), 2, '0');
+
+  return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
+}
 
 Parse.Cloud.define('export-xls', async (req) => {
   type Filter = {
@@ -85,7 +104,7 @@ Parse.Cloud.define('export-xls', async (req) => {
         };
       }
       // Test if the value is a date
-      if (value instanceof Date) {
+      if (isDate(value)) {
         return {
           type: Date,
           value: value,
@@ -93,21 +112,21 @@ Parse.Cloud.define('export-xls', async (req) => {
         };
       }
       // Test if the value is a boolean
-      if (typeof value === 'boolean') {
+      if (isBoolean(value)) {
         return {
           type: Boolean,
           value: value,
         };
       }
       // Test if the value is a number
-      if (typeof value === 'number') {
+      if (isNumber(value)) {
         return {
           type: Number,
           value: value,
         };
       }
       // Test if the value is an array
-      if (Array.isArray(value)) {
+      if (isArray(value)) {
         if (value.length === 0) {
           return {
             type: String,
@@ -126,9 +145,9 @@ Parse.Cloud.define('export-xls', async (req) => {
         };
       }
       // Test if the value is an object
-      if (typeof value === 'object') {
+      if (isObject(value)) {
         // test if the object is an r2 point
-        if (value.latitude && value.longitude) {
+        if ('latitude' in value && 'longitude' in value) {
           return {
             type: String,
             value: `${value.latitude}, ${value.longitude}`,
@@ -147,10 +166,8 @@ Parse.Cloud.define('export-xls', async (req) => {
   );
 
   const sheetData = [headerRow, ...rows];
-  const date = new Date();
-  const timestamp = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}-${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}`;
-  const tmpDir = path.join(projectRoot, 'cache', 'tmp', 'exports', timestamp);
-  const uploadDir = path.join(projectRoot, 'files', 'uploads');
+  const timestamp = getTimestamp();
+  const tmpDir = path.join(exportDirectory, timestamp);
 
   fs.mkdirSync(tmpDir, { recursive: true });
 
@@ -159,11 +176,11 @@ Parse.Cloud.define('export-xls', async (req) => {
   // copy all files to the tmp directory from the files directory, find matches by filename
   for (const file of files) {
     const filename = path.basename(file);
-    const availableFiles = fs.readdirSync(uploadDir);
+    const availableFiles = fs.readdirSync(uploadsDirectory);
 
     for (const availableFile of availableFiles) {
       if (availableFile.includes(filename)) {
-        const src = path.join(uploadDir, availableFile);
+        const src = path.join(uploadsDirectory, availableFile);
         const dest = path.join(tmpDir, availableFile);
         fs.copyFileSync(src, dest);
       }
@@ -189,25 +206,15 @@ Parse.Cloud.define('export-xls', async (req) => {
       archive.finalize();
     });
   }
+
   const zipFileName = `bridges-${timestamp}.zip`;
-  const zipFilePath = path.join(projectRoot, 'cache', 'uploads', zipFileName);
+  const zipFilePath = path.join(uploadsDirectory, zipFileName);
   await zipDirectory(tmpDir, zipFilePath);
 
   // clean up
   fs.rmSync(tmpDir, { recursive: true, force: true });
 
-  // delete upload files older than a week
-  const weekAgo = new Date();
-  weekAgo.setDate(weekAgo.getDate() - 7);
-  const filesToDelete = fs.readdirSync(uploadDir);
-  for (const file of filesToDelete) {
-    const stats = fs.statSync(path.join(uploadDir, file));
-    if (stats.mtime < weekAgo) {
-      fs.rmSync(path.join(uploadDir, file));
-    }
-  }
-
-  const zipFileUrl = `${process.env.PARSE_SERVER_URL.replace(process.env.PARSE_SERVER_MOUNT_PATH, '')}/uploads/${zipFileName}`;
+  const zipFileUrl = `${PARSE_SERVER_ROOT_URL}/uploads/${zipFileName}`;
 
   return { zipFileUrl };
 });

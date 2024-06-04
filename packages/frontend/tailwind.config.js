@@ -64,15 +64,19 @@ export default {
           'width': 'var(--input-size-lg)',
         },
         '.file-input,.select,.input': {
+          'min-height': 'var(--input-size-md)',
           'height': 'var(--input-size-md)',
         },
         '.file-input.file-input-xs,.select.select-xs,.input.input-xs': {
+          'min-height': 'var(--input-size-xs)',
           'height': 'var(--input-size-xs)',
         },
         '.file-input.file-input-sm,.select.select-sm,.input.input-sm': {
+          'min-height': 'var(--input-size-sm)',
           'height': 'var(--input-size-sm)',
         },
         '.file-input.file-input-lg,.select.select-lg,.input.input-lg': {
+          'min-height': 'var(--input-size-lg)',
           'height': 'var(--input-size-lg)',
         },
       }}
