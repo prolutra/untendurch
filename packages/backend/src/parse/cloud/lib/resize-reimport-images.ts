@@ -1,6 +1,11 @@
 import axios from 'axios';
 import sharp from 'sharp';
 import { compact } from 'lodash-es';
+import https from 'https';
+
+const agent = new https.Agent({
+  rejectUnauthorized: false,
+});
 
 Parse.Cloud.job(
   'Migration2024-06::resizeAndReimportImages',
@@ -36,7 +41,7 @@ Parse.Cloud.job(
           parseFile = image;
         } else {
           // If not, create a new Parse.File object
-          const imageUrl =
+          let imageUrl =
             typeof image.url === 'function'
               ? image.url()
               : image.url
@@ -46,6 +51,11 @@ Parse.Cloud.job(
           if (!imageUrl) {
             continue;
           }
+
+          imageUrl = imageUrl.replace(
+            'untendurch.prolutra.ch',
+            'untendurch.tegonal.com'
+          );
 
           // check for partial matches on image urls
           if (
@@ -63,6 +73,7 @@ Parse.Cloud.job(
             response = await axios.get(imageUrl, {
               timeout: 2000,
               responseType: 'arraybuffer',
+              httpsAgent: agent,
             });
           } catch (error: any) {
             log.error(error.code, error.config.url);

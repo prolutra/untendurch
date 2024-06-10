@@ -1,117 +1,88 @@
-services:
-  reverse-proxy:
-    restart: always
-    image: caddy:2
-    volumes:
-      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
-      - ./caddy/data:/data
-    ports:
-      - "80:80"
-      - "443:443/tcp"
-      - "443:443/udp"
-    networks:
-      default:
-        aliases:
-          - internal
-          - external
+  services:
+    reverse-proxy:
+      restart: always
+      image: caddy:2
+      volumes:
+        - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+        - ./caddy/data:/data
+      ports:
+        - "80:80"
+        - "443:443/tcp"
+        - "443:443/udp"
+      networks:
+        default:
+          aliases:
+            - internal
+            - external
 
-  frontend:
-    image: tegonal/untendurch:${IMAGE_VERSION:-latest}
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "curl http://localhost:${PARSE_SERVER_PORT}/ || exit 1"]
-      interval: 10s
-      retries: 5
-      start_period: 5s
-      timeout: 10s
-    depends_on:
-      mongodb:
-        condition: service_healthy
-    environment:
-      ENVIRONMENT: ${ENVIRONMENT:-development}
-      PARSE_SERVER_APPLICATION_ID: ${PARSE_SERVER_APPLICATION_ID}
-      PARSE_SERVER_APP_NAME: ${PARSE_SERVER_APP_NAME}
-      PARSE_SERVER_MASTER_KEY: ${PARSE_SERVER_MASTER_KEY}
-      PARSE_SERVER_DATABASE_URI: ${PARSE_SERVER_DATABASE_URI}
-      PARSE_SERVER_URL: ${PARSE_SERVER_URL}
-      PARSE_SERVER_MOUNT_PATH: ${PARSE_SERVER_MOUNT_PATH}
-      PARSE_SERVER_DASHBOARD_USER_ID: ${PARSE_SERVER_DASHBOARD_USER_ID}
-      PARSE_SERVER_DASHBOARD_USER_PASSWORD: ${PARSE_SERVER_DASHBOARD_USER_PASSWORD}
-      PARSE_SERVER_PORT: ${PARSE_SERVER_PORT}
-      TZ: ${TZ:-CET}
-    volumes:
-      - parse_files:/app/packages/backend/files
-    networks:
-      default:
-        aliases:
-          - internal
+    app:
+      image: tegonal/untendurch:${IMAGE_VERSION}
+      restart: always
+      healthcheck:
+        test: ["CMD-SHELL", "curl http://localhost:${PARSE_SERVER_PORT}/ || exit 1"]
+        interval: 10s
+        retries: 5
+        start_period: 5s
+        timeout: 10s
+      depends_on:
+        mongodb:
+          condition: service_healthy
+      env_file: .env
+      volumes:
+        - parse_uploads:/app/packages/backend/files
+      networks:
+        default:
+          aliases:
+            - internal
 
-  mongodb:
-    image: mongo:7.0.8
-    container_name: mongodb
-    ports:
-      - "27017:27017"
-    restart: unless-stopped
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/untendurch --quiet
-    environment:
-      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:-untendurch}
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-admin}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-admin}
-      MONGO_INITDB_USERNAME: ${MONGO_INITDB_USERNAME:-untendurch}
-      MONGO_INITDB_PASSWORD: ${MONGO_INITDB_PASSWORD:-untendurch}
-    volumes:
-      - mongodb_data:/data/db
-      - ./backups/db:/backups
-      - ./mongodb/dumps:/dumps
-      - ./mongodb/mongodb-init.sh:/docker-entrypoint-initdb.d/mongodb-init.sh:ro
-    networks:
-      default:
-        aliases:
-          - internal
+    mongodb:
+      image: mongo:7.0.8
+      container_name: mongodb
+      ports:
+        - "27017:27017"
+      restart: unless-stopped
+      healthcheck:
+        test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/${MONGO_INITDB_DATABASE} --quiet
+      env_file: .env
+      volumes:
+        - mongodb_data:/data/db
+        - ./mongodb/dumps:/dumps
+        - ./mongodb/mongodb-init.sh:/docker-entrypoint-initdb.d/mongodb-init.sh:ro
+      networks:
+        default:
+          aliases:
+            - internal
 
-  mongodb-backup:
-    image: ghcr.io/tiredofit/docker-db-backup
-    volumes:
-      - ./mongodb/backup:/backup
-    environment:
-      - DB_TYPE=mongo
-      - DB_HOST=mongodb
-      - DB_NAME=untendurch
-      - DB_PORT=27017
-      - DB_USER=${MONGO_INITDB_USERNAME:-lasius}
-      - DB_PASS=${MONGO_INITDB_PASSWORD:-lasius}
-      - DB_DUMP_FREQ=1440
-      #      - DB_DUMP_BEGIN=0000 # <== Uncomment to set a specific time to start the backup, otherwise it will run immediately
-      - DB_CLEANUP_TIME=8640
-      - CONTAINER_ENABLE_MONITORING=FALSE
-    restart: always
-    depends_on:
-      mongodb:
-        condition: service_healthy
-    networks:
-      default:
-        aliases:
-          - internal
+    mongodb-backup:
+      image: ghcr.io/tiredofit/docker-db-backup
+      env_file: .env
+      restart: always
+      depends_on:
+        mongodb:
+          condition: service_healthy
+      networks:
+        default:
+          aliases:
+            - internal
 
-  volume-backup:
-    image: offen/docker-volume-backup:v2
-    environment:
-      BACKUP_FILENAME: backup-%Y-%m-%dT%H-%M-%S.tar.gz
-      BACKUP_PRUNING_PREFIX: backup-
-      BACKUP_RETENTION_DAYS: '7'
-    volumes:
-      - ./backups/volume:/archive
-      - parse_uploads:/backup/parse_uploads:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+    volume-backup:
+      image: offen/docker-volume-backup:v2
+      env_file: .env
+      volumes:
+        - parse_uploads:/backup/parse_uploads:ro
+        - /var/run/docker.sock:/var/run/docker.sock:ro
+      networks:
+        default:
+          aliases:
+            - internal
 
-volumes:
-  mongodb_data:
-    driver: local
-  parse_uploads:
-    driver: local
+  volumes:
+    mongodb_data:
+      driver: local
+    parse_uploads:
+      driver: local
 
-networks:
-  default:
-    name: external
-    external: true
+  networks:
+    default:
+      name: external
+      external: true
