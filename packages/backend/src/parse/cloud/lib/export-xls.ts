@@ -11,7 +11,11 @@ import path from 'path';
 import fs from 'fs';
 import writeXlsxFile from 'write-excel-file/node';
 import archiver from 'archiver';
-import { exportDirectory, uploadsDirectory } from '../../../directories.js';
+import {
+  exportDirectory,
+  imagesDirectory,
+  uploadsDirectory,
+} from '../../../directories.js';
 import { PARSE_SERVER_ROOT_URL } from '../../../config.js';
 
 function getTimestamp() {
@@ -173,14 +177,14 @@ Parse.Cloud.define('export-xls', async (req) => {
 
   const filePath = path.join(tmpDir, 'bridges.xlsx');
 
-  // copy all files to the tmp directory from the files directory, find matches by filename
+  // copy all files to the tmp directory from the images directory, find matches by filename
   for (const file of files) {
     const filename = path.basename(file);
-    const availableFiles = fs.readdirSync(uploadsDirectory);
+    const availableFiles = fs.readdirSync(imagesDirectory);
 
     for (const availableFile of availableFiles) {
       if (availableFile.includes(filename)) {
-        const src = path.join(uploadsDirectory, availableFile);
+        const src = path.join(imagesDirectory, availableFile);
         const dest = path.join(tmpDir, availableFile);
         fs.copyFileSync(src, dest);
       }
