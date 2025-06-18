@@ -1,10 +1,12 @@
-# Parse server backend
+# Backend: Parse Server
 
-This package provides an express server that serves the parse server backend, a dashboard and the compiled react frontend app once an image from the root Dockerfile has been created.
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-## Usage
+This package provides an Express server that serves the Parse Server backend, a dashboard, and the compiled React frontend app once an image from the root Dockerfile has been created.
 
-To run the development server, you need to have a `.env` file in the root of the project with the following variables:
+## 🔧 Configuration
+
+The backend requires environment variables for configuration. Create a `.env` file in the root of this package with the following variables:
 
 ```bash
 PARSE_SERVER_APPLICATION_ID=untendurch
@@ -18,21 +20,49 @@ PARSE_SERVER_DASHBOARD_USER_PASSWORD=untendurch
 PARSE_SERVER_PORT=1337
 ```
 
-Then, you can run the server with the following command:
+## 🚀 Development
 
+### Starting MongoDB
 ```bash
 yarn run start:db
+```
+
+### Starting Development Server
+```bash
 yarn run dev
 ```
 
-To build the production image, you can run the following command in the root of the project:
+Access points:
+- Parse Dashboard: [http://localhost:1337/dashboard](http://localhost:1337/dashboard)
+- Parse Server API: [http://localhost:1337/parse](http://localhost:1337/parse)
+- MongoDB: `localhost:27017`
 
+## 🏗️ Building
+
+### Building for Production
+```bash
+yarn run build
+```
+
+### Docker Build
+From the project root directory:
 ```bash
 docker build .
 ```
 
-## Static files
+## 📁 Directory Structure
 
-- The static files are served from the `public` directory. The frontend app is compiled to this directory.
-- The backend uses a thumbnail cache which creates a `cache` directory in the package directory.
-- The parse backend saves files to the `files` directory in the package directory instead of using mongodb to save file chunks.
+The backend uses the following key directories:
+
+- `public/` - Static files served by the Express server. The frontend app is compiled to this directory.
+- `cache/` - Thumbnail cache directory created automatically when needed
+- `files/` - Parse backend saves files here instead of using MongoDB for file storage
+- `src/` - Source code for the Express server and Parse Server configuration
+
+## 🔗 Integration with Frontend
+
+The backend serves the compiled frontend app from the `public` directory. When building for production, make sure to build the frontend first so that the compiled files are available in the `public` directory.
+
+## 📄 License
+
+This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE - see the [LICENSE](/LICENSE) file for details
