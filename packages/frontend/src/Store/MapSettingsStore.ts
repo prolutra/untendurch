@@ -14,6 +14,7 @@ interface MapSettingsActions {
   saveMainMapState: () => void;
   setCenter: (center: number[]) => void;
   setClassName: (className: string) => void;
+  setClusteringEnabled: (clusteringEnabled: boolean) => void;
   setContainerClassName: (containerClassName: string) => void;
   setFilterCanton: (filterCanton: string) => void;
   setFilterMunicipality: (filterMunicipality: string) => void;
@@ -22,12 +23,14 @@ interface MapSettingsActions {
   setFilterStatus: (filterStatus: string) => void;
   setMode: (mode: MapMode) => void;
   setSelectedBridgePinObjectId: (objectId: null | string) => void;
+  setShowRiskyPinsUnclustered: (showRiskyPinsUnclustered: boolean) => void;
   setZoom: (zoom: number) => void;
 }
 
 interface MapSettingsState {
   center: number[];
   className: string;
+  clusteringEnabled: boolean;
   containerClassName: string;
   filterCanton: string;
   filterMunicipality: string;
@@ -38,12 +41,14 @@ interface MapSettingsState {
   savedMainMapCenter: null | number[];
   savedMainMapZoom: null | number;
   selectedBridgePinObjectId: null | string;
+  showRiskyPinsUnclustered: boolean;
   zoom: number;
 }
 
 export const useMapSettingsStore = create<MapSettingsStore>((set, get) => ({
   center: DEFAULT_CENTER,
   className: 'ol-map',
+  clusteringEnabled: true,
   containerClassName: '',
   filterCanton: AllFilter,
   filterMunicipality: AllFilter,
@@ -73,6 +78,7 @@ export const useMapSettingsStore = create<MapSettingsStore>((set, get) => ({
   setCenter: (center) => set({ center }),
 
   setClassName: (className) => set({ className }),
+  setClusteringEnabled: (clusteringEnabled) => set({ clusteringEnabled }),
   setContainerClassName: (containerClassName) => set({ containerClassName }),
   setFilterCanton: (filterCanton) => set({ filterCanton }),
   setFilterMunicipality: (filterMunicipality) => set({ filterMunicipality }),
@@ -82,6 +88,9 @@ export const useMapSettingsStore = create<MapSettingsStore>((set, get) => ({
   setMode: (mode) => set({ mode }),
   setSelectedBridgePinObjectId: (selectedBridgePinObjectId) =>
     set({ selectedBridgePinObjectId }),
+  setShowRiskyPinsUnclustered: (showRiskyPinsUnclustered) =>
+    set({ showRiskyPinsUnclustered }),
   setZoom: (zoom) => set({ zoom }),
+  showRiskyPinsUnclustered: false,
   zoom: DEFAULT_ZOOM,
 }));

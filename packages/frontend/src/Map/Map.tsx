@@ -14,6 +14,13 @@ import { VectorLayer } from '../Layers/VectorLayers';
 import { SafetyRisk as SafetyRiskEnum } from '../Store/SafetyRisk';
 import { useStore } from '../Store/Store';
 
+// Risk levels that should be excluded from clustering when showRiskyPinsUnclustered is enabled
+const RISKY_SAFETY_LEVELS: SafetyRisk[] = [
+  SafetyRiskEnum.MEDIUM_RISK,
+  SafetyRiskEnum.HIGH_RISK,
+  SafetyRiskEnum.VERY_HIGH_RISK,
+];
+
 export const Map: FC = () => {
   const store = useStore();
 
@@ -21,8 +28,10 @@ export const Map: FC = () => {
     Feature<Point>[],
     string,
     number,
+    SafetyRisk | undefined,
   ][] => {
-    const result = Array.of<[Feature<Point>[], string, number]>();
+    const result =
+      Array.of<[Feature<Point>[], string, number, SafetyRisk | undefined]>();
 
     store.existingBridges
       .filteredBridges()
@@ -42,7 +51,7 @@ export const Map: FC = () => {
         const zIndex =
           10 +
           (safetyRisk ? Object.keys(SafetyRiskEnum).indexOf(safetyRisk) : 0);
-        result.push([features, iconSrc, zIndex]);
+        result.push([features, iconSrc, zIndex, safetyRisk]);
       });
     return result;
   }, [
@@ -56,18 +65,29 @@ export const Map: FC = () => {
 
   const reportedFeature = store.reportBridge.reportedFeature();
 
+  const showRiskyUnclustered = store.mapSettings.showRiskyPinsUnclustered;
+
   return (
     <Layers>
       <TileLayer zIndex={0} />
-      {vectorLayersBySafety.map(([features, iconSrc, zIndex]) => (
-        <VectorLayer
-          draggable={false}
-          features={features}
-          iconSrc={iconSrc}
-          key={iconSrc}
-          zIndex={zIndex}
-        />
-      ))}
+      {vectorLayersBySafety.map(([features, iconSrc, zIndex, safetyRisk]) => {
+        // Exclude risky pins from clustering if the option is enabled
+        const excludeFromClustering =
+          showRiskyUnclustered &&
+          safetyRisk !== undefined &&
+          RISKY_SAFETY_LEVELS.includes(safetyRisk);
+
+        return (
+          <VectorLayer
+            draggable={false}
+            excludeFromClustering={excludeFromClustering}
+            features={features}
+            iconSrc={iconSrc}
+            key={iconSrc}
+            zIndex={zIndex}
+          />
+        );
+      })}
       {reportedFeature && (
         <VectorLayer
           draggable={true}

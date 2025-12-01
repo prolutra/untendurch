@@ -1,37 +1,57 @@
 import type { FC } from 'react';
 
 import 'ol/ol.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useSearchParams } from 'react-router-dom';
 
 import type { Municipality } from '../Store/Municipality';
 
-import { CloseChar } from '../lib/closeChar';
 import { AllFilter } from '../Store/AllFilter';
 import { SafetyRisk } from '../Store/SafetyRisk';
 import { useStore } from '../Store/Store';
 
+type OverviewFiltersState = {
+  canton: string;
+  municipality: string;
+  otterFriendly: string;
+  safetyRisk: string;
+};
+
+const defaultState: OverviewFiltersState = {
+  canton: AllFilter,
+  municipality: AllFilter,
+  otterFriendly: AllFilter,
+  safetyRisk: AllFilter,
+};
+
 export const OverviewFilters: FC = () => {
   const store = useStore();
-
-  type OverviewFiltersState = {
-    canton: string;
-    municipality: string;
-    otterFriendly: string;
-    safetyRisk: string;
-  };
-
-  const defaultState = {
-    canton: AllFilter,
-    municipality: AllFilter,
-    otterFriendly: AllFilter,
-    safetyRisk: AllFilter,
-  } as OverviewFiltersState;
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [viewOpen, setViewOpen] = useState(false);
+  const filterRef = useRef<HTMLDivElement>(null);
+  const viewRef = useRef<HTMLDivElement>(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
-
   const [state, setState] = useState<OverviewFiltersState>(defaultState);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        filterRef.current &&
+        !filterRef.current.contains(event.target as Node)
+      ) {
+        setFilterOpen(false);
+      }
+      if (viewRef.current && !viewRef.current.contains(event.target as Node)) {
+        setViewOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const stateFromParams = Object.fromEntries([
@@ -103,139 +123,259 @@ export const OverviewFilters: FC = () => {
     setState(defaultState);
   };
 
-  return (
-    <div
-      className={
-        'flex gap-2 p-2 pt-0 fixed bg-white bg-opacity-75 rounded items-end'
-      }
-    >
-      <div className={'form-control'}>
-        <label className={'label'} htmlFor="canton">
-          <FormattedMessage
-            defaultMessage={'Kanton'}
-            id="overview_filters_label_canton"
-          />
-        </label>
-        <select
-          className={'select select-bordered'}
-          name="canton"
-          onChange={handleChange}
-          value={state.canton}
-        >
-          <option value={AllFilter}>
-            <FormattedMessage
-              defaultMessage={'Alle'}
-              id="overview_filters_select_ALL"
-            />
-          </option>
-          {store.cantonMunicipality.cantons.map((canton: string) => (
-            <option key={canton} value={canton}>
-              {canton}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className={'form-control'}>
-        <label className={'label'} htmlFor="municipality">
-          <FormattedMessage
-            defaultMessage={'Gemeinde'}
-            id="overview_filters_label_municipality"
-          />
-        </label>
-        <select
-          className={'select select-bordered'}
-          name="municipality"
-          onChange={handleChange}
-          value={state.municipality}
-        >
-          <option value={AllFilter}>
-            <FormattedMessage
-              defaultMessage={'Alle'}
-              id="overview_filters_select_ALL"
-            />
-          </option>
-          {store.cantonMunicipality.municipalities
-            .filter(
-              (m: Municipality) =>
-                state.canton === AllFilter || state.canton === m.canton
-            )
-            .map((municipality: Municipality) => (
-              <option
-                key={municipality.canton + '_' + municipality.name}
-                value={municipality.name}
-              >
-                {municipality.name}
-              </option>
-            ))}
-        </select>
-      </div>
-      <div className={'form-control'}>
-        <label className={'label'} htmlFor="otterFriendly">
-          <FormattedMessage
-            defaultMessage={'Otterfreundlich'}
-            id="overview_filters_label_otter_friendly"
-          />
-        </label>
-        <select
-          className={'select select-bordered'}
-          name="otterFriendly"
-          onChange={handleChange}
-          value={state.otterFriendly}
-        >
-          <option value={AllFilter}>
-            <FormattedMessage
-              defaultMessage={'Alle'}
-              id="overview_filters_select_ALL"
-            />
-          </option>
-          <option value={'FRIENDLY'}>
-            <FormattedMessage
-              defaultMessage={'Freundlich'}
-              id="otter_friendly_FRIENDLY"
-            />
-          </option>
-          <option value={'UNFRIENDLY'}>
-            <FormattedMessage
-              defaultMessage={'Unfreundlich'}
-              id="otter_friendly_UNFRIENDLY"
-            />
-          </option>
-        </select>
-      </div>
-      <div className={'form-control'}>
-        <label className={'label'} htmlFor="safetyRisk">
-          <FormattedMessage
-            defaultMessage={'Sicherheitsrisiko'}
-            id="overview_filters_label_safety_risk"
-          />
-        </label>
+  const handleClusteringToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    store.mapSettings.setClusteringEnabled(e.target.checked);
+  };
 
-        <select
-          className={'select select-bordered'}
-          name="safetyRisk"
-          onChange={handleChange}
-          value={state.safetyRisk}
+  const handleRiskyPinsToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    store.mapSettings.setShowRiskyPinsUnclustered(e.target.checked);
+  };
+
+  // Count active filters
+  const activeFilterCount = [
+    state.canton !== AllFilter,
+    state.municipality !== AllFilter,
+    state.otterFriendly !== AllFilter,
+    state.safetyRisk !== AllFilter,
+  ].filter(Boolean).length;
+
+  return (
+    <div className="flex gap-2">
+      {/* Filter Dropdown */}
+      <div className="relative" ref={filterRef}>
+        <button
+          className="btn btn-sm bg-white/90 hover:bg-white border-gray-300 gap-1"
+          onClick={() => {
+            setFilterOpen(!filterOpen);
+            setViewOpen(false);
+          }}
         >
-          <option value={AllFilter}>
-            <FormattedMessage
-              defaultMessage={'Alle'}
-              id="overview_filters_select_ALL"
+          <svg
+            className="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
-          </option>
-          {Object.keys(SafetyRisk).map((safetyRisk) => (
-            <option key={safetyRisk} value={safetyRisk}>
-              <FormattedMessage
-                defaultMessage={safetyRisk}
-                id={`safety_risk_${safetyRisk}`}
-              />
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <button className={'btn btn-circle btn-ghost'} onClick={handleReset}>
-          {CloseChar}
+          </svg>
+          <FormattedMessage
+            defaultMessage="Filter"
+            id="overview_filters_title"
+          />
+          {activeFilterCount > 0 && (
+            <span className="badge badge-primary badge-sm">
+              {activeFilterCount}
+            </span>
+          )}
         </button>
+
+        {filterOpen && (
+          <div className="absolute top-full left-0 mt-2 bg-base-100 rounded-box z-50 w-64 p-4 shadow-lg">
+            <div className="flex items-center justify-between mb-3">
+              <span className="font-medium text-sm">
+                <FormattedMessage
+                  defaultMessage="Filter"
+                  id="overview_filters_header"
+                />
+              </span>
+              <button
+                className="btn btn-ghost btn-xs"
+                onClick={() => {
+                  handleReset();
+                  setFilterOpen(false);
+                }}
+              >
+                <FormattedMessage
+                  defaultMessage="Zurücksetzen"
+                  id="overview_filters_reset"
+                />
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              <label className="form-control w-full">
+                <div className="label">
+                  <span className="label-text">
+                    <FormattedMessage
+                      defaultMessage="Kanton"
+                      id="overview_filters_label_canton"
+                    />
+                  </span>
+                </div>
+                <select
+                  className="select select-bordered w-full"
+                  name="canton"
+                  onChange={handleChange}
+                  value={state.canton}
+                >
+                  <option value={AllFilter}>Alle</option>
+                  {store.cantonMunicipality.cantons.map((canton: string) => (
+                    <option key={canton} value={canton}>
+                      {canton}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="form-control w-full">
+                <div className="label">
+                  <span className="label-text">
+                    <FormattedMessage
+                      defaultMessage="Gemeinde"
+                      id="overview_filters_label_municipality"
+                    />
+                  </span>
+                </div>
+                <select
+                  className="select select-bordered w-full"
+                  name="municipality"
+                  onChange={handleChange}
+                  value={state.municipality}
+                >
+                  <option value={AllFilter}>Alle</option>
+                  {store.cantonMunicipality.municipalities
+                    .filter(
+                      (m: Municipality) =>
+                        state.canton === AllFilter || state.canton === m.canton
+                    )
+                    .map((municipality: Municipality) => (
+                      <option
+                        key={municipality.canton + '_' + municipality.name}
+                        value={municipality.name}
+                      >
+                        {municipality.name}
+                      </option>
+                    ))}
+                </select>
+              </label>
+
+              <label className="form-control w-full">
+                <div className="label">
+                  <span className="label-text">
+                    <FormattedMessage
+                      defaultMessage="Otterfreundlich"
+                      id="overview_filters_label_otter_friendly"
+                    />
+                  </span>
+                </div>
+                <select
+                  className="select select-bordered w-full"
+                  name="otterFriendly"
+                  onChange={handleChange}
+                  value={state.otterFriendly}
+                >
+                  <option value={AllFilter}>Alle</option>
+                  <option value="FRIENDLY">Freundlich</option>
+                  <option value="UNFRIENDLY">Unfreundlich</option>
+                </select>
+              </label>
+
+              <label className="form-control w-full">
+                <div className="label">
+                  <span className="label-text">
+                    <FormattedMessage
+                      defaultMessage="Sicherheitsrisiko"
+                      id="overview_filters_label_safety_risk"
+                    />
+                  </span>
+                </div>
+                <select
+                  className="select select-bordered w-full"
+                  name="safetyRisk"
+                  onChange={handleChange}
+                  value={state.safetyRisk}
+                >
+                  <option value={AllFilter}>Alle</option>
+                  {Object.keys(SafetyRisk).map((safetyRisk) => (
+                    <option key={safetyRisk} value={safetyRisk}>
+                      {safetyRisk}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* View Options Dropdown */}
+      <div className="relative" ref={viewRef}>
+        <button
+          className="btn btn-sm bg-white/90 hover:bg-white border-gray-300 gap-1"
+          onClick={() => {
+            setViewOpen(!viewOpen);
+            setFilterOpen(false);
+          }}
+        >
+          <svg
+            className="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <FormattedMessage
+            defaultMessage="Ansicht"
+            id="overview_filters_view"
+          />
+        </button>
+
+        {viewOpen && (
+          <div className="absolute top-full left-0 mt-2 bg-base-100 rounded-box z-50 w-56 p-4 shadow-lg">
+            <div className="font-medium text-sm mb-3">
+              <FormattedMessage
+                defaultMessage="Ansicht"
+                id="overview_filters_view_header"
+              />
+            </div>
+
+            <label className="flex items-center justify-between cursor-pointer py-2">
+              <span className="label-text">
+                <FormattedMessage
+                  defaultMessage="Pins gruppieren"
+                  id="overview_filters_clustering"
+                />
+              </span>
+              <input
+                checked={store.mapSettings.clusteringEnabled}
+                className="checkbox checkbox-sm checkbox-primary"
+                onChange={handleClusteringToggle}
+                type="checkbox"
+              />
+            </label>
+
+            <label className="flex items-center justify-between cursor-pointer py-2">
+              <span className="label-text">
+                <FormattedMessage
+                  defaultMessage="Riskante Brücken immer zeigen"
+                  id="overview_filters_show_risky"
+                />
+              </span>
+              <input
+                checked={store.mapSettings.showRiskyPinsUnclustered}
+                className="checkbox checkbox-sm checkbox-primary"
+                onChange={handleRiskyPinsToggle}
+                type="checkbox"
+              />
+            </label>
+          </div>
+        )}
       </div>
     </div>
   );

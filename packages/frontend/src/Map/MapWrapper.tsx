@@ -7,6 +7,7 @@ import type VectorSource from 'ol/source/Vector';
 import * as ol from 'ol';
 import { Feature } from 'ol';
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
+import { boundingExtent } from 'ol/extent';
 import { Select } from 'ol/interaction';
 import VectorLayer from 'ol/layer/Vector';
 import React, { useEffect, useRef, useState } from 'react';
@@ -15,6 +16,7 @@ import { useStore } from '../Store/Store';
 import { BridgeSidebar } from './BridgeSidebar';
 import { Map } from './Map';
 import { MapContext } from './MapContext';
+import { MapDebugInfo } from './MapDebugInfo';
 
 type Props = {
   children?: React.ReactNode;
@@ -41,6 +43,8 @@ export const MapWrapper = ({ children, variant }: Props) => {
       overlays: [],
       view: new ol.View({
         center: store.mapSettings.center,
+        maxZoom: 18,
+        minZoom: 8.5,
         projection: 'EPSG:3857',
         zoom: store.mapSettings.zoom,
       }),
@@ -58,10 +62,39 @@ export const MapWrapper = ({ children, variant }: Props) => {
     select.on('select', (event) => {
       const selectedFeature = event.selected[0] as Feature<Point>;
       if (selectedFeature) {
-        const bridgePinObjectId = selectedFeature.get(
-          'bridgePinObjectId'
-        ) as string;
-        store.mapSettings.setSelectedBridgePinObjectId(bridgePinObjectId);
+        // Check if this is a cluster feature (has 'features' property)
+        const clusteredFeatures = selectedFeature.get('features') as
+          | Feature<Point>[]
+          | undefined;
+
+        if (clusteredFeatures && clusteredFeatures.length > 1) {
+          // Multi-feature cluster: zoom to show all features
+          const extent = boundingExtent(
+            clusteredFeatures.map((f) =>
+              (f.getGeometry() as Point).getCoordinates()
+            )
+          );
+          mapContext.getView().fit(extent, {
+            duration: 300,
+            maxZoom: 18,
+            padding: [50, 50, 50, 50],
+          });
+          // Clear selection so we can re-click after zoom
+          select.getFeatures().clear();
+          store.mapSettings.setSelectedBridgePinObjectId(null);
+        } else if (clusteredFeatures && clusteredFeatures.length === 1) {
+          // Single feature cluster: select the bridge
+          const bridgePinObjectId = clusteredFeatures[0].get(
+            'bridgePinObjectId'
+          ) as string;
+          store.mapSettings.setSelectedBridgePinObjectId(bridgePinObjectId);
+        } else {
+          // Non-clustered feature (e.g., new bridge pin)
+          const bridgePinObjectId = selectedFeature.get(
+            'bridgePinObjectId'
+          ) as string;
+          store.mapSettings.setSelectedBridgePinObjectId(bridgePinObjectId);
+        }
       } else {
         store.mapSettings.setSelectedBridgePinObjectId(null);
       }
@@ -166,6 +199,7 @@ export const MapWrapper = ({ children, variant }: Props) => {
             ref={mapRef}
           >
             <Map></Map>
+            <MapDebugInfo />
             {children}
           </div>
         </div>
