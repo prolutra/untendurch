@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { CloseChar } from '../lib/closeChar';
 import { getThumbnail } from './GetThumbnail';
 import type { BridgePin } from '../Store/BridgePin';
+import { ConfirmDialog } from '../components/ConfirmDialog';
 
 interface BridgePinInfoProps {
   closeFn?: () => void;
@@ -17,6 +18,7 @@ export const BridgePinInfo = observer(({ closeFn }: BridgePinInfoProps) => {
   const [bridgePin, setBridgePin] = useState<BridgePin | null>(null);
   const [objectId, setObjectId] = useState<string | null>(null);
   const [lv95, setLv95] = useState<{ east: number; west: number } | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     setObjectId(store.mapSettings.selectedBridgePinObjectId);
@@ -40,16 +42,19 @@ export const BridgePinInfo = observer(({ closeFn }: BridgePinInfoProps) => {
     }
   };
 
-  const deleteBridgeConfirmation = () => {
+  const handleDeleteClick = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const handleDeleteConfirm = () => {
     if (objectId) {
-      if (
-        window.confirm(
-          'Are you sure you want to delete this bridge? This action cannot be undone.'
-        )
-      ) {
-        store.existingBridges.deleteBridge(objectId);
-      }
+      store.existingBridges.deleteBridge(objectId);
     }
+    setShowDeleteConfirm(false);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteConfirm(false);
   };
 
   if (!bridgePin || !lv95 || !objectId) {
@@ -183,7 +188,7 @@ export const BridgePinInfo = observer(({ closeFn }: BridgePinInfoProps) => {
             )}
             <button
               className={'btn btn-error w-full'}
-              onClick={deleteBridgeConfirmation}
+              onClick={handleDeleteClick}
             >
               <FormattedMessage
                 id="bridge_pin_info_button_delete"
@@ -193,6 +198,30 @@ export const BridgePinInfo = observer(({ closeFn }: BridgePinInfoProps) => {
           </>
         )}
       </div>
+      <ConfirmDialog
+        isOpen={showDeleteConfirm}
+        title={
+          <FormattedMessage
+            id="bridge_pin_info_delete_confirm_title"
+            defaultMessage="Brücke löschen"
+          />
+        }
+        message={
+          <FormattedMessage
+            id="bridge_pin_info_delete_confirm_message"
+            defaultMessage="Sind Sie sicher, dass Sie diese Brücke löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+          />
+        }
+        confirmLabel={
+          <FormattedMessage
+            id="bridge_pin_info_delete_confirm_button"
+            defaultMessage="Löschen"
+          />
+        }
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        variant="danger"
+      />
     </div>
   );
 });

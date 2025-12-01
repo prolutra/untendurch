@@ -71,25 +71,60 @@ async function fetchPointMunicipalityInformation(
   );
 }
 
-export async function fetchPointInformation(
+async function fetchPointInformationInternal(
   point: Point
 ): Promise<PointInformation> {
-  return Promise.all([
-    fetchPointMunicipalityInformation(point),
-    fetchWaterBodiesInformation(point),
-    fetchTrafficInformation(point),
-  ]).then(
-    ([municipalityResultAttributes, waterBodies, trafficInformation]) => ({
-      canton: municipalityResultAttributes[0].kanton,
-      municipality: municipalityResultAttributes[0].gemname,
-      waterBodies: waterBodies
-        .filter((w) => w.objektart === 4)
-        .map((w) => w.name)
-        .filter((value, index, self) => self.indexOf(value) === index),
-      averageDailyTraffic:
-        trafficInformation.length > 0
-          ? trafficInformation[0].dtv_fzg
-          : undefined,
-    })
-  );
+  const [municipalityResultAttributes, waterBodies, trafficInformation] =
+    await Promise.all([
+      fetchPointMunicipalityInformation(point),
+      fetchWaterBodiesInformation(point),
+      fetchTrafficInformation(point),
+    ]);
+
+  return {
+    canton: municipalityResultAttributes[0]?.kanton ?? '',
+    municipality: municipalityResultAttributes[0]?.gemname ?? '',
+    waterBodies: waterBodies
+      .filter((w) => w.objektart === 4)
+      .map((w) => w.name)
+      .filter((value, index, self) => self.indexOf(value) === index),
+    averageDailyTraffic:
+      trafficInformation.length > 0 ? trafficInformation[0].dtv_fzg : undefined,
+  };
+}
+
+// Debounced version to prevent API hammering during pin dragging
+const DEBOUNCE_MS = 300;
+
+let pendingResolve: ((value: PointInformation) => void) | null = null;
+let pendingReject: ((reason: unknown) => void) | null = null;
+let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+function debouncedFetch(point: Point) {
+  if (debounceTimer) {
+    clearTimeout(debounceTimer);
+  }
+  debounceTimer = setTimeout(async () => {
+    try {
+      const result = await fetchPointInformationInternal(point);
+      if (pendingResolve) {
+        pendingResolve(result);
+      }
+    } catch (error) {
+      if (pendingReject) {
+        pendingReject(error);
+      }
+    } finally {
+      pendingResolve = null;
+      pendingReject = null;
+    }
+  }, DEBOUNCE_MS);
+}
+
+export function fetchPointInformation(point: Point): Promise<PointInformation> {
+  return new Promise((resolve, reject) => {
+    pendingResolve = resolve;
+    pendingReject = reject;
+    debouncedFetch(point);
+  });
 }

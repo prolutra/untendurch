@@ -3,7 +3,6 @@ import type { FC } from 'react';
 import React, { useEffect, useRef, useState } from 'react';
 import type { BridgeFormState } from '../BridgeFormState';
 import type Parse from 'parse';
-import { compact, uniqBy } from 'lodash-es';
 
 type DisplayFile = {
   isNew?: boolean;
@@ -29,19 +28,22 @@ export const BridgeImages: FC<Props> = ({ state, setState }) => {
   useEffect(() => {
     if (state.images && state.images.length > 0) {
       setParseFiles(parseFiles);
-      setDisplayFiles((previousFiles) =>
-        uniqBy(
-          [
-            ...previousFiles,
-            ...state.images.map((file) => ({
-              isParse: true,
-              name: file.name(),
-              url: file.url(),
-            })),
-          ],
-          'url'
-        )
-      );
+      setDisplayFiles((previousFiles) => {
+        const combined = [
+          ...previousFiles,
+          ...state.images.map((file) => ({
+            isParse: true,
+            name: file.name(),
+            url: file.url(),
+          })),
+        ];
+        const seen = new Set<string | undefined>();
+        return combined.filter((item) => {
+          if (seen.has(item.url)) return false;
+          seen.add(item.url);
+          return true;
+        });
+      });
     }
   }, [state.images]);
 
@@ -92,8 +94,8 @@ export const BridgeImages: FC<Props> = ({ state, setState }) => {
 
     const uploadedFiles = await uploadImages(files);
 
-    const newFiles = compact(
-      uploadedFiles.map((file) => {
+    const newFiles = uploadedFiles
+      .map((file) => {
         if (file.isValid) {
           return {
             isNew: true,
@@ -105,7 +107,7 @@ export const BridgeImages: FC<Props> = ({ state, setState }) => {
           return null;
         }
       })
-    );
+      .filter((file): file is NonNullable<typeof file> => file !== null);
 
     setNewFiles(newFiles);
     setDisplayFiles((previousFiles) => [...previousFiles, ...newFiles]);

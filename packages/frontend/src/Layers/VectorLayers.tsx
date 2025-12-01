@@ -14,6 +14,25 @@ import { MapContext } from '../Map/MapContext';
 import { OverlayContext } from '../Map/OverlayContext';
 import VectorSource from 'ol/source/Vector';
 
+/**
+ * Pin icon dimensions and styling constants
+ * The SVG pin icon is 214px wide x 240px tall at original size
+ */
+const PIN_ICON = {
+  // Anchor at horizontal center (0.5 = 50% of width)
+  ANCHOR_X: 0.5,
+  // Anchor at bottom tip of pin (107px from top at default scale)
+  ANCHOR_Y_DEFAULT: 107,
+  // Slightly higher anchor when hovered (pin appears to lift)
+  ANCHOR_Y_HOVERED: 98,
+  // Default scale factor (icon scaled to ~45% of original)
+  SCALE_DEFAULT: 0.45,
+  // Hovered scale factor (icon scaled to ~55% of original)
+  SCALE_HOVERED: 0.55,
+  // Hovered pins appear on top of all others
+  Z_INDEX_HOVERED: 10000,
+} as const;
+
 type VectorLayerProps = {
   zIndex: number;
   features: Feature<Geometry>[];
@@ -40,23 +59,23 @@ export const VectorLayer: FC<VectorLayerProps> = observer(
 
       const style = new Style({
         image: new Icon({
-          anchor: [0.5, 107],
+          anchor: [PIN_ICON.ANCHOR_X, PIN_ICON.ANCHOR_Y_DEFAULT],
           anchorXUnits: 'fraction',
           anchorYUnits: 'pixels',
           src: iconSrc,
-          scale: 0.45,
+          scale: PIN_ICON.SCALE_DEFAULT,
         }),
       });
 
       const styleHovered = new Style({
         image: new Icon({
-          anchor: [0.5, 98],
+          anchor: [PIN_ICON.ANCHOR_X, PIN_ICON.ANCHOR_Y_HOVERED],
           anchorXUnits: 'fraction',
           anchorYUnits: 'pixels',
           src: iconSrc,
-          scale: 0.55,
+          scale: PIN_ICON.SCALE_HOVERED,
         }),
-        zIndex: 10000,
+        zIndex: PIN_ICON.Z_INDEX_HOVERED,
       });
 
       const styleFunction: StyleFunction = (feature) => {

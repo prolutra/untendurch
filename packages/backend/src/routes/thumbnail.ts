@@ -3,7 +3,6 @@ import axios from 'axios';
 import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
-import { isString, toNumber } from 'lodash-es';
 import { thumbnailDirectory } from '../directories.js';
 import { PARSE_SERVER_URL } from '../config.js';
 
@@ -17,14 +16,14 @@ type Query = {
 thumbnailRoute.get('/thumbnail', async (req, res) => {
   const { url, devicePixels } = req.query as Query;
 
-  const width = Math.ceil(320 * (toNumber(devicePixels) || 1));
-  const height = Math.ceil(200 * (toNumber(devicePixels) || 1));
+  const width = Math.ceil(320 * (Number(devicePixels) || 1));
+  const height = Math.ceil(200 * (Number(devicePixels) || 1));
 
   if (!url) {
     return res.status(400).send({ error: 'Missing URL parameter' });
   }
 
-  if (!isString(url)) {
+  if (typeof url !== 'string') {
     return res.status(400).send({ error: 'URL parameter must be a string' });
   }
 

@@ -1,6 +1,5 @@
 import axios from 'axios';
 import sharp from 'sharp';
-import { compact } from 'lodash-es';
 import https from 'https';
 
 const agent = new https.Agent({
@@ -131,7 +130,7 @@ Parse.Cloud.job(
 
       if (newImages.length > 0) {
         log.info('Setting new images:', newImages.length);
-        const images = compact(newImages || []);
+        const images = (newImages || []).filter(Boolean);
         doc.set('images', images);
         const json = doc.toJSON();
         log.info(`Saving document ${json.objectId}`);

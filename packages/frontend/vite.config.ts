@@ -15,7 +15,6 @@ export default defineConfig(() => {
           manualChunks: {
             ol: ['ol'],
             react: ['react', 'react-dom'],
-            lodash: ['lodash-es'],
             mobx: ['mobx', 'mobx-keystone'],
             parse: ['parse'],
           },
@@ -24,7 +23,7 @@ export default defineConfig(() => {
       }
     },
     optimizeDeps: {
-      include: ['ol', 'react', 'react-dom', 'lodash-es', 'mobx', 'mobx-keystone', 'parse'],
+      include: ['ol', 'react', 'react-dom', 'mobx', 'mobx-keystone', 'parse'],
     },
     plugins: [
       react({

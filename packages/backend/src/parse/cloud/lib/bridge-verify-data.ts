@@ -1,5 +1,3 @@
-import { ceil } from 'lodash-es';
-
 export async function bridgeVerifyData(
   request: Parse.Cloud.BeforeSaveRequest<Parse.Object<Parse.Attributes>>
 ) {
@@ -19,7 +17,8 @@ export async function bridgeVerifyData(
   const bridgeIndex = manualBridgeIndex
     ? manualBridgeIndex
     : (bridgeWidth * bridgeHeight) / bridgeLength;
-  request.object.set('bridgeIndex', ceil(bridgeIndex, 3));
+  const factor = Math.pow(10, 3);
+  request.object.set('bridgeIndex', Math.ceil(bridgeIndex * factor) / factor);
 
   // the following calculations only take place if it is not manually overridden
   const isManualOverride = request.object.get('isManualOverride');

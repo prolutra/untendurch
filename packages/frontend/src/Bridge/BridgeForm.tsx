@@ -18,7 +18,6 @@ import { BridgeShape } from './form/BridgeShape';
 import { BridgeImages } from './form/BridgeImages';
 import { uploadFiles } from './ReportBridgeImageUploader';
 import { BridgeTraffic } from './form/BridgeTraffic';
-import { remove } from 'lodash-es';
 
 type BridgeFormProps = {
   bridgeFormState: BridgeFormState;
@@ -152,7 +151,10 @@ export const BridgeForm: FC<BridgeFormProps> = observer(
               return await Parse.Cloud.run('deleteFile', {
                 filename: file.name(),
               }).then(() => {
-                remove(currentImages, (f) => f.name() === file.name());
+                const idx = currentImages.findIndex(
+                  (f) => f.name() === file.name()
+                );
+                if (idx !== -1) currentImages.splice(idx, 1);
               });
             })
           );

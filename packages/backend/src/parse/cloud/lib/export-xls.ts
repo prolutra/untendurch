@@ -1,12 +1,3 @@
-import {
-  compact,
-  isArray,
-  isBoolean,
-  isDate,
-  isNumber,
-  isObject,
-  padStart,
-} from 'lodash-es';
 import path from 'path';
 import fs from 'fs';
 import writeXlsxFile from 'write-excel-file/node';
@@ -21,11 +12,11 @@ import { PARSE_SERVER_ROOT_URL } from '../../../config.js';
 function getTimestamp() {
   const date = new Date();
   const year = date.getFullYear();
-  const month = padStart((date.getMonth() + 1).toString(), 2, '0');
-  const day = padStart(date.getDate().toString(), 2, '0');
-  const hours = padStart(date.getHours().toString(), 2, '0');
-  const minutes = padStart(date.getMinutes().toString(), 2, '0');
-  const seconds = padStart(date.getSeconds().toString(), 2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
 
   return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
 }
@@ -108,7 +99,7 @@ Parse.Cloud.define('export-xls', async (req) => {
         };
       }
       // Test if the value is a date
-      if (isDate(value)) {
+      if (value instanceof Date) {
         return {
           type: Date,
           value: value,
@@ -116,28 +107,28 @@ Parse.Cloud.define('export-xls', async (req) => {
         };
       }
       // Test if the value is a boolean
-      if (isBoolean(value)) {
+      if (typeof value === 'boolean') {
         return {
           type: Boolean,
           value: value,
         };
       }
       // Test if the value is a number
-      if (isNumber(value)) {
+      if (typeof value === 'number' && !Number.isNaN(value)) {
         return {
           type: Number,
           value: value,
         };
       }
       // Test if the value is an array
-      if (isArray(value)) {
+      if (Array.isArray(value)) {
         if (value.length === 0) {
           return {
             type: String,
             value: '',
           };
         }
-        const output = compact(value).map((item) => {
+        const output = value.filter(Boolean).map((item) => {
           if (typeof item === 'object') {
             return JSON.stringify(item);
           }
@@ -149,7 +140,7 @@ Parse.Cloud.define('export-xls', async (req) => {
         };
       }
       // Test if the value is an object
-      if (isObject(value)) {
+      if (value !== null && typeof value === 'object') {
         // test if the object is an r2 point
         if ('latitude' in value && 'longitude' in value) {
           return {
