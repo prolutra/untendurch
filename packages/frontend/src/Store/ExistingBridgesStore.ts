@@ -56,14 +56,14 @@ export class ExistingBridgesStore extends Model({
               'averageDailyTraffic'
             ] as number;
 
-            const imageUrl = images && images[0] ? images[0].url() : '';
+            const imageUrl = images && images[0] ? (images[0].url() ?? '') : '';
 
             return new BridgePin({
               latLon: new LatLon({
                 lat: position.latitude,
                 lon: position.longitude,
               }),
-              objectId: objectId,
+              objectId: objectId ?? '',
               name: name,
               safetyRisk: safetyRisk,
               cantons: cantons,

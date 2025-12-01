@@ -38,10 +38,17 @@ const serverOptions = {
   fileUpload: {
     enableForPublic: true,
   },
+  // Set to future defaults
+  encodeParseObjectInCloudFunction: true,
+  enableInsecureAuthAdapters: false,
+  // Use PagesRouter instead of deprecated PublicAPIRouter
+  pages: {
+    enableRouter: true,
+  },
 };
 
 const parseServer = new ParseServer(serverOptions);
-parseServer.start();
+await parseServer.start();
 
 app.use(PARSE_SERVER_MOUNT_PATH, parseServer.app);
 

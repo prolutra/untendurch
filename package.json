@@ -10,7 +10,14 @@
   "scripts": {
     "self-update": "yarn set version stable && yarn install",
     "up": "yarn upgrade-interactive",
-    "build-frontend": "yarn workspace @untendurch/frontend run build"
+    "build-frontend": "yarn workspace @untendurch/frontend run build",
+    "db:download": "yarn workspace @untendurch/tools run db:download",
+    "db:import": "yarn workspace @untendurch/tools run db:import",
+    "db:sync": "yarn workspace @untendurch/tools run db:sync",
+    "files:download": "yarn workspace @untendurch/tools run files:download",
+    "files:import": "yarn workspace @untendurch/tools run files:import",
+    "files:sync": "yarn workspace @untendurch/tools run files:sync",
+    "sync": "yarn workspace @untendurch/tools run sync"
   },
-  "packageManager": "yarn@4.2.2"
+  "packageManager": "yarn@4.12.0"
 }

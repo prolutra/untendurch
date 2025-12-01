@@ -110,7 +110,7 @@ export const BridgeForm: FC<BridgeFormProps> = observer(
       // saving the bridge first as it is the important part
       // then storing the images and referencing them afterwards
       const persistedBridge = (await reportedBridge.save()) as Parse.Object;
-      if (!persistedBridge) {
+      if (!persistedBridge || !persistedBridge.id) {
         setSaveStatus('error');
         console.error('Error while saving bridge');
         return;

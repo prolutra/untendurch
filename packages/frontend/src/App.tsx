@@ -13,14 +13,14 @@ import { AdminRoute } from './Auth/AdminRoute';
 import Parse from 'parse';
 
 export const App = () => {
-  Parse.initialize('untendurch');
+  Parse.initialize('untendurch', '');
   Parse.serverURL =
-    `${import.meta.env.VITE_REACT_APP_PARSE_SERVER_URL}` ||
+    import.meta.env.VITE_REACT_APP_PARSE_SERVER_URL ||
     'http://localhost:1337/parse';
 
   return (
     <React.StrictMode>
-      <Router>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <StoreProvider>
           <Routes>
             <Route path="/" element={<RootRoute />} />

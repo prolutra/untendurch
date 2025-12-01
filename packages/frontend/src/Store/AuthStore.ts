@@ -32,6 +32,6 @@ export class AuthStore extends Model({
 
   @computed
   get currentUser(): Parse.User | undefined {
-    return Parse.User.current();
+    return Parse.User.current() ?? undefined;
   }
 }

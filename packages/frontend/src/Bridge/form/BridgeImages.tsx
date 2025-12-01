@@ -1,7 +1,7 @@
 import { FormattedMessage } from 'react-intl';
 import type { FC } from 'react';
 import React, { useEffect, useRef, useState } from 'react';
-import type { BridgeFormState, PersistedFile } from '../BridgeFormState';
+import type { BridgeFormState } from '../BridgeFormState';
 import type Parse from 'parse';
 import { compact, uniqBy } from 'lodash-es';
 
@@ -9,7 +9,7 @@ type DisplayFile = {
   isNew?: boolean;
   isParse?: boolean;
   name: string;
-  url: string;
+  url: string | undefined;
 };
 
 type Props = {
@@ -117,7 +117,7 @@ export const BridgeImages: FC<Props> = ({ state, setState }) => {
     setIsBusy(false);
   };
 
-  function removeFile(file: PersistedFile) {
+  function removeFile(file: DisplayFile) {
     setDisplayFiles((previousFiles) => {
       return previousFiles.filter((f) => f.url !== file.url);
     });

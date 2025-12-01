@@ -1,4 +1,4 @@
-FROM node:20 AS builder
+FROM node:24 AS builder
 
 ARG CI_COMMIT_SHORT_SHA
 ARG ENVIRONMENT
@@ -20,7 +20,7 @@ RUN yarn workspaces focus @untendurch/backend --production
 
 #RUN rm -rf .git && rm -rf *.lock
 
-FROM node:20-slim AS runner
+FROM node:24-slim AS runner
 ARG CI_COMMIT_SHORT_SHA
 ARG ENVIRONMENT
 LABEL git-commit=$CI_COMMIT_SHORT_SHA

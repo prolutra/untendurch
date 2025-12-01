@@ -1,0 +1,27 @@
+{
+  "name": "@untendurch/tools",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "license": "AGPL-3.0",
+  "scripts": {
+    "build": "tsc",
+    "db:download": "node --import tsx src/db-download.ts",
+    "db:import": "node --import tsx src/db-import.ts",
+    "db:sync": "yarn db:download && yarn db:import",
+    "files:download": "node --import tsx src/files-download.ts",
+    "files:import": "node --import tsx src/files-import.ts",
+    "files:sync": "yarn files:download && yarn files:import",
+    "sync": "yarn db:sync && yarn files:sync"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "zx": "^8.8.5"
+  },
+  "devDependencies": {
+    "@tsconfig/node24": "^24.0.3",
+    "@types/node": "^20.19.25",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
