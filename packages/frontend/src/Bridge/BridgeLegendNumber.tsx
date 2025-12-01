@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+
 import React from 'react';
 
 export const BridgeLegendNumber: FC<{ n: number }> = ({ n }) => {

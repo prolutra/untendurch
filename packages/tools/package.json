@@ -6,6 +6,9 @@
   "license": "AGPL-3.0",
   "scripts": {
     "build": "tsc",
+    "check": "tsc --noEmit && eslint . --fix && prettier --write \"src/**/*.ts\"",
+    "lint": "eslint .",
+    "format": "prettier --write \"src/**/*.ts\"",
     "db:download": "node --import tsx src/db-download.ts",
     "db:import": "node --import tsx src/db-import.ts",
     "db:sync": "yarn db:download && yarn db:import",

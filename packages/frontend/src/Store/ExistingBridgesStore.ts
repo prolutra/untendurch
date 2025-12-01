@@ -1,3 +1,6 @@
+import type { GeoPoint } from 'parse';
+
+import { computed } from 'mobx';
 import {
   _async,
   _await,
@@ -7,27 +10,40 @@ import {
   modelFlow,
   prop,
 } from 'mobx-keystone';
-import type { GeoPoint } from 'parse';
 import Parse from 'parse';
+
+import type { BridgeStatus } from './BridgeStatus';
+import type { SafetyRisk } from './SafetyRisk';
+import type { RootStore } from './Store';
+
+import { AllFilter } from './AllFilter';
 import { BridgePin } from './BridgePin';
 import { LatLon } from './LatLon';
-import type { SafetyRisk } from './SafetyRisk';
-import type { BridgeStatus } from './BridgeStatus';
-import type { RootStore } from './Store';
 import { rootStore } from './Store';
-import { computed } from 'mobx';
-import { AllFilter } from './AllFilter';
 
 @model('untendurch/ExistingBridges')
 export class ExistingBridgesStore extends Model({
   bridgePins: prop<BridgePin[]>(() => []).withSetter(),
 }) {
-  private store!: RootStore;
+  @modelFlow
+  deleteBridge = _async(function* (
+    this: ExistingBridgesStore,
+    objectId: string
+  ) {
+    const query = new Parse.Query('Bridge');
 
-  onAttachedToRootStore() {
-    this.store = getRootStore<RootStore>(rootStore) as RootStore;
-    this.fetchExistingBridges();
-  }
+    yield* _await(
+      query.get(objectId).then((existingBridge) => {
+        return existingBridge.destroy();
+      })
+    );
+
+    const data = this.bridgePins.filter(
+      (bridgePin) => bridgePin.objectId !== objectId
+    );
+
+    this.setBridgePins(data);
+  });
 
   @modelFlow
   fetchExistingBridges = _async(function* (this: ExistingBridgesStore) {
@@ -59,26 +75,50 @@ export class ExistingBridgesStore extends Model({
             const imageUrl = images && images[0] ? (images[0].url() ?? '') : '';
 
             return new BridgePin({
+              averageDailyTraffic: averageDailyTraffic,
+              bridgeIndex: bridgeIndex,
+              cantons: cantons,
+              imageUrl: imageUrl,
               latLon: new LatLon({
                 lat: position.latitude,
                 lon: position.longitude,
               }),
-              objectId: objectId ?? '',
-              name: name,
-              safetyRisk: safetyRisk,
-              cantons: cantons,
               municipalities: municipality,
-              status: status,
-              bridgeIndex: bridgeIndex,
-              otterFriendly: otterFriendly,
-              imageUrl: imageUrl,
+              name: name,
               nickname: nickname,
+              objectId: objectId ?? '',
+              otterFriendly: otterFriendly,
+              safetyRisk: safetyRisk,
               shape: shape,
-              averageDailyTraffic: averageDailyTraffic,
+              status: status,
             });
           })
         )
     );
+
+    this.setBridgePins(data);
+  });
+
+  @modelFlow
+  verifyBridge = _async(function* (
+    this: ExistingBridgesStore,
+    objectId: string
+  ) {
+    const query = new Parse.Query('Bridge');
+
+    yield* _await(
+      query.get(objectId).then((existingBridge) => {
+        existingBridge.set('status', 'VERIFIED');
+        return existingBridge.save();
+      })
+    );
+
+    const data = this.bridgePins.map((bridgePin) => {
+      if (bridgePin.objectId === objectId) {
+        bridgePin.status = 'VERIFIED';
+      }
+      return bridgePin;
+    });
 
     this.setBridgePins(data);
   });
@@ -113,53 +153,16 @@ export class ExistingBridgesStore extends Model({
       );
   }
 
+  private store!: RootStore;
+
   bridgeById(objectId: string) {
     return this.filteredBridges.find(
       (bridgePin) => bridgePin.objectId === objectId
     );
   }
 
-  @modelFlow
-  verifyBridge = _async(function* (
-    this: ExistingBridgesStore,
-    objectId: string
-  ) {
-    const query = new Parse.Query('Bridge');
-
-    yield* _await(
-      query.get(objectId).then((existingBridge) => {
-        existingBridge.set('status', 'VERIFIED');
-        return existingBridge.save();
-      })
-    );
-
-    const data = this.bridgePins.map((bridgePin) => {
-      if (bridgePin.objectId === objectId) {
-        bridgePin.status = 'VERIFIED';
-      }
-      return bridgePin;
-    });
-
-    this.setBridgePins(data);
-  });
-
-  @modelFlow
-  deleteBridge = _async(function* (
-    this: ExistingBridgesStore,
-    objectId: string
-  ) {
-    const query = new Parse.Query('Bridge');
-
-    yield* _await(
-      query.get(objectId).then((existingBridge) => {
-        return existingBridge.destroy();
-      })
-    );
-
-    const data = this.bridgePins.filter(
-      (bridgePin) => bridgePin.objectId !== objectId
-    );
-
-    this.setBridgePins(data);
-  });
+  onAttachedToRootStore() {
+    this.store = getRootStore<RootStore>(rootStore) as RootStore;
+    this.fetchExistingBridges();
+  }
 }

@@ -4,12 +4,11 @@ import Parse from 'parse';
 
 @model('untendurch/Auth')
 export class AuthStore extends Model({
-  sessionToken: prop<string | null>(() => null).withSetter(),
+  sessionToken: prop<null | string>(() => null).withSetter(),
 }) {
-  onAttachedToRootStore() {
-    if (this.currentUser) {
-      this.setSessionToken(this.currentUser.getSessionToken());
-    }
+  @computed
+  get currentUser(): Parse.User | undefined {
+    return Parse.User.current() ?? undefined;
   }
 
   @modelAction
@@ -30,8 +29,9 @@ export class AuthStore extends Model({
     return Parse.User.logOut();
   }
 
-  @computed
-  get currentUser(): Parse.User | undefined {
-    return Parse.User.current() ?? undefined;
+  onAttachedToRootStore() {
+    if (this.currentUser) {
+      this.setSessionToken(this.currentUser.getSessionToken());
+    }
   }
 }

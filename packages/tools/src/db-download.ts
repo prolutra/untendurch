@@ -1,11 +1,12 @@
 #!/usr/bin/env node
-import { $ } from 'zx';
-import { CONFIG, validateConfig } from './config.js';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
+import { $ } from 'zx';
+
+import { CONFIG, validateConfig } from './config.js';
 
 validateConfig();
 
-const { remote, local } = CONFIG;
+const { local, remote } = CONFIG;
 
 // Ensure local backup directory exists
 if (!existsSync(local.backupDir)) {

@@ -1,14 +1,15 @@
-import { observer } from 'mobx-react-lite';
-import 'ol/ol.css';
-
 import type { FC } from 'react';
+
+import 'ol/ol.css';
+import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
-import { useStore } from '../Store/Store';
 import { FormattedMessage } from 'react-intl';
+import { useSearchParams } from 'react-router-dom';
+
+import { CloseChar } from '../lib/closeChar';
 import { AllFilter } from '../Store/AllFilter';
 import { SafetyRisk } from '../Store/SafetyRisk';
-import { useSearchParams } from 'react-router-dom';
-import { CloseChar } from '../lib/closeChar';
+import { useStore } from '../Store/Store';
 
 export const OverviewFilters: FC = observer(() => {
   const store = useStore();
@@ -72,15 +73,15 @@ export const OverviewFilters: FC = observer(() => {
         (municipality) => value === municipality.name
       );
       setState((previousState) => ({
-        municipality: value,
         canton: municipality ? municipality.canton : AllFilter,
+        municipality: value,
         otterFriendly: previousState.otterFriendly,
         safetyRisk: previousState.safetyRisk,
       }));
     } else if ('canton' === name) {
       setState((previousState) => ({
-        municipality: AllFilter,
         canton: value,
+        municipality: AllFilter,
         otterFriendly: previousState.otterFriendly,
         safetyRisk: previousState.safetyRisk,
       }));
@@ -110,20 +111,20 @@ export const OverviewFilters: FC = observer(() => {
       <div className={'form-control'}>
         <label className={'label'} htmlFor="canton">
           <FormattedMessage
-            id="overview_filters_label_canton"
             defaultMessage={'Kanton'}
+            id="overview_filters_label_canton"
           />
         </label>
         <select
           className={'select select-bordered'}
           name="canton"
-          value={state.canton}
           onChange={handleChange}
+          value={state.canton}
         >
           <option value={AllFilter}>
             <FormattedMessage
-              id="overview_filters_select_ALL"
               defaultMessage={'Alle'}
+              id="overview_filters_select_ALL"
             />
           </option>
           {store.cantonMunicipality.cantons.map((canton) => (
@@ -136,20 +137,20 @@ export const OverviewFilters: FC = observer(() => {
       <div className={'form-control'}>
         <label className={'label'} htmlFor="municipality">
           <FormattedMessage
-            id="overview_filters_label_municipality"
             defaultMessage={'Gemeinde'}
+            id="overview_filters_label_municipality"
           />
         </label>
         <select
           className={'select select-bordered'}
           name="municipality"
-          value={state.municipality}
           onChange={handleChange}
+          value={state.municipality}
         >
           <option value={AllFilter}>
             <FormattedMessage
-              id="overview_filters_select_ALL"
               defaultMessage={'Alle'}
+              id="overview_filters_select_ALL"
             />
           </option>
           {store.cantonMunicipality.municipalities
@@ -171,32 +172,32 @@ export const OverviewFilters: FC = observer(() => {
       <div className={'form-control'}>
         <label className={'label'} htmlFor="otterFriendly">
           <FormattedMessage
-            id="overview_filters_label_otter_friendly"
             defaultMessage={'Otterfreundlich'}
+            id="overview_filters_label_otter_friendly"
           />
         </label>
         <select
           className={'select select-bordered'}
           name="otterFriendly"
-          value={state.otterFriendly}
           onChange={handleChange}
+          value={state.otterFriendly}
         >
           <option value={AllFilter}>
             <FormattedMessage
-              id="overview_filters_select_ALL"
               defaultMessage={'Alle'}
+              id="overview_filters_select_ALL"
             />
           </option>
           <option value={'FRIENDLY'}>
             <FormattedMessage
-              id="otter_friendly_FRIENDLY"
               defaultMessage={'Freundlich'}
+              id="otter_friendly_FRIENDLY"
             />
           </option>
           <option value={'UNFRIENDLY'}>
             <FormattedMessage
-              id="otter_friendly_UNFRIENDLY"
               defaultMessage={'Unfreundlich'}
+              id="otter_friendly_UNFRIENDLY"
             />
           </option>
         </select>
@@ -204,28 +205,28 @@ export const OverviewFilters: FC = observer(() => {
       <div className={'form-control'}>
         <label className={'label'} htmlFor="safetyRisk">
           <FormattedMessage
-            id="overview_filters_label_safety_risk"
             defaultMessage={'Sicherheitsrisiko'}
+            id="overview_filters_label_safety_risk"
           />
         </label>
 
         <select
           className={'select select-bordered'}
           name="safetyRisk"
-          value={state.safetyRisk}
           onChange={handleChange}
+          value={state.safetyRisk}
         >
           <option value={AllFilter}>
             <FormattedMessage
-              id="overview_filters_select_ALL"
               defaultMessage={'Alle'}
+              id="overview_filters_select_ALL"
             />
           </option>
           {Object.keys(SafetyRisk).map((safetyRisk) => (
             <option key={safetyRisk} value={safetyRisk}>
               <FormattedMessage
-                id={`safety_risk_${safetyRisk}`}
                 defaultMessage={safetyRisk}
+                id={`safety_risk_${safetyRisk}`}
               />
             </option>
           ))}

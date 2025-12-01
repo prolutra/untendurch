@@ -1,47 +1,50 @@
-import React, { useEffect, useRef, useState } from 'react';
+import type { FeatureLike } from 'ol/Feature';
+
 import './Map.css';
+import type { Geometry, Point } from 'ol/geom';
+import type VectorSource from 'ol/source/Vector';
+
+import { observer } from 'mobx-react-lite';
 import * as ol from 'ol';
 import { Feature } from 'ol';
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
-import { useStore } from '../Store/Store';
-import { observer } from 'mobx-react-lite';
 import { Select } from 'ol/interaction';
-import type { Point, Geometry } from 'ol/geom';
-import type { FeatureLike } from 'ol/Feature';
 import VectorLayer from 'ol/layer/Vector';
-import type VectorSource from 'ol/source/Vector';
-import { MapContext } from './MapContext';
-import { Map } from './Map';
+import React, { useEffect, useRef, useState } from 'react';
+
+import { useStore } from '../Store/Store';
 import { BridgeSidebar } from './BridgeSidebar';
+import { Map } from './Map';
+import { MapContext } from './MapContext';
 
 type Props = {
-  variant?: 'small';
   children?: React.ReactNode;
+  variant?: 'small';
 };
 
-export const MapWrapper = observer(({ variant, children }: Props) => {
+export const MapWrapper = observer(({ children, variant }: Props) => {
   const store = useStore();
 
   const mapRef = useRef<HTMLDivElement>(null);
-  const [mapContext, setMapContext] = useState<ol.Map | null>(null);
-  const [selectContext, setSelectContext] = useState<Select | null>(null);
+  const [mapContext, setMapContext] = useState<null | ol.Map>(null);
+  const [selectContext, setSelectContext] = useState<null | Select>(null);
 
   useEffect(() => {
     if (!mapRef.current) throw Error('mapRef is not assigned');
 
     const options = {
-      view: new ol.View({
-        projection: 'EPSG:3857',
-        center: store.mapSettings.center,
-        zoom: store.mapSettings.zoom,
-      }),
-      layers: [],
       controls: defaultControls().extend([
         new ScaleLine({
           units: 'metric',
         }),
       ]),
+      layers: [],
       overlays: [],
+      view: new ol.View({
+        center: store.mapSettings.center,
+        projection: 'EPSG:3857',
+        zoom: store.mapSettings.zoom,
+      }),
     };
     const mapObject = new ol.Map(options);
 
@@ -77,7 +80,7 @@ export const MapWrapper = observer(({ variant, children }: Props) => {
     if (!mapContext) return;
     // Add a pointermove handler to the map to change the cursor to a pointer on hover over any feature
     mapContext.on('pointermove', function (evt) {
-      let activeFeature: FeatureLike | Feature | undefined;
+      let activeFeature: Feature | FeatureLike | undefined;
       const hit = mapContext.forEachFeatureAtPixel(evt.pixel, (feature) => {
         activeFeature = feature;
         return true;
@@ -85,9 +88,9 @@ export const MapWrapper = observer(({ variant, children }: Props) => {
 
       mapContext.getLayers().forEach(function (layer) {
         if (layer instanceof VectorLayer) {
-          const source = layer.getSource() as VectorSource<
+          const source = layer.getSource() as null | VectorSource<
             Feature<Geometry>
-          > | null;
+          >;
           source?.forEachFeature(function (feature) {
             feature.set('hovered', false);
           });

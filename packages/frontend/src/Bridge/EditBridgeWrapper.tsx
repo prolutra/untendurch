@@ -1,14 +1,16 @@
 import type { GeoPoint } from 'parse';
-import Parse from 'parse';
 import type { FC } from 'react';
+
+import Parse from 'parse';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useStore } from '../Store/Store';
-import { LatLon } from '../Store/LatLon';
-import type { BridgeFormState } from './BridgeFormState';
-import { latLonToPoint } from '../GeoAdmin/PointTransformations';
 import type { BridgeLogItem } from '../Store/BridgeSchema';
+import type { BridgeFormState } from './BridgeFormState';
+
+import { latLonToPoint } from '../GeoAdmin/PointTransformations';
+import { LatLon } from '../Store/LatLon';
+import { useStore } from '../Store/Store';
 import { BridgeForm } from './BridgeForm';
 
 export const EditBridgeWrapper: FC = () => {
@@ -56,28 +58,28 @@ export const EditBridgeWrapper: FC = () => {
       );
 
       setState({
-        objectId: id,
-        name: name,
-        shape: shape,
-        hasBanquet: hasBanquet,
-        hasMinimalBanquetWidth: hasMinimalBanquetWidth,
-        hasStones: hasStones,
-        bridgeWidth: bridgeWidth,
+        barriers: barriers,
         bridgeHeight: bridgeHeight,
         bridgeLength: bridgeLength,
-        hasContinuousShore: hasContinuousShore,
-        hasSlopes: hasSlopes,
-        traffic: traffic,
-        speedLimit: speedLimit,
-        barriers: barriers,
-        nickname: nickname,
-        email: email,
-        commentReporter: commentReporter,
-        commentAdmin: commentAdmin,
-        images: images,
+        bridgeWidth: bridgeWidth,
         cantons: cantons.join(', '),
-        municipalities: municipalities.join(', '),
+        commentAdmin: commentAdmin,
+        commentReporter: commentReporter,
+        email: email,
+        hasBanquet: hasBanquet,
+        hasContinuousShore: hasContinuousShore,
+        hasMinimalBanquetWidth: hasMinimalBanquetWidth,
+        hasSlopes: hasSlopes,
+        hasStones: hasStones,
+        images: images,
         itemLog,
+        municipalities: municipalities.join(', '),
+        name: name,
+        nickname: nickname,
+        objectId: id,
+        shape: shape,
+        speedLimit: speedLimit,
+        traffic: traffic,
       });
 
       store.mapSettings.setCenter(

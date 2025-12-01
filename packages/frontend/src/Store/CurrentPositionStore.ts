@@ -1,35 +1,32 @@
+import type { Point } from 'ol/geom';
+
 import { computed } from 'mobx';
 import { getRootStore, model, Model, modelAction, prop } from 'mobx-keystone';
-import type { Point } from 'ol/geom';
+
+import type { RootStore } from './Store';
+
 import { fetchPointInformation } from '../GeoAdmin/FetchPointInformation';
 import { latLonToPoint } from '../GeoAdmin/PointTransformations';
 import { LatLon } from './LatLon';
-import type { RootStore } from './Store';
 import { rootStore } from './Store';
 
 export type GeolocationErrorType =
+  | 'not_supported'
   | 'permission_denied'
   | 'position_unavailable'
   | 'timeout'
-  | 'not_supported'
   | null;
 
 @model('untendurch/CurrentPosition')
 export class CurrentPositionStore extends Model({
-  latLon: prop<LatLon | null>(() => null).withSetter(),
-  currentCanton: prop<string | null>(() => null).withSetter(),
-  currentMunicipality: prop<string | null>(() => null).withSetter(),
-  navigatorWithoutLocationSupport: prop<boolean>(() => false).withSetter(),
+  currentCanton: prop<null | string>(() => null).withSetter(),
+  currentMunicipality: prop<null | string>(() => null).withSetter(),
   geolocationError: prop<GeolocationErrorType>(() => null).withSetter(),
+  latLon: prop<LatLon | null>(() => null).withSetter(),
+  navigatorWithoutLocationSupport: prop<boolean>(() => false).withSetter(),
 }) {
-  private store!: RootStore;
-
-  onAttachedToRootStore() {
-    this.store = getRootStore<RootStore>(rootStore) as RootStore;
-  }
-
   @computed
-  get currentPoint(): Point | null {
+  get currentPoint(): null | Point {
     if (this.latLon) {
       return latLonToPoint(this.latLon);
     } else {
@@ -37,14 +34,23 @@ export class CurrentPositionStore extends Model({
     }
   }
 
-  @modelAction
-  async setPosition(latLon: LatLon) {
-    return fetchPointInformation(latLonToPoint(latLon)).then((result) => {
-      this.setLatLon(latLon);
-      this.setCurrentCanton(result.canton);
-      this.setCurrentMunicipality(result.municipality);
-    });
+  @computed
+  get geolocationErrorMessage(): null | string {
+    switch (this.geolocationError) {
+      case 'not_supported':
+        return 'Geolocation wird von Ihrem Browser nicht unterstützt.';
+      case 'permission_denied':
+        return 'Standortzugriff wurde verweigert. Bitte erlauben Sie den Zugriff in Ihren Browsereinstellungen.';
+      case 'position_unavailable':
+        return 'Standort konnte nicht ermittelt werden.';
+      case 'timeout':
+        return 'Zeitüberschreitung bei der Standortabfrage.';
+      default:
+        return null;
+    }
   }
+
+  private store!: RootStore;
 
   async getCurrentPosition(): Promise<GeolocationPosition> {
     // Clear previous error
@@ -80,8 +86,8 @@ export class CurrentPositionStore extends Model({
         },
         {
           enableHighAccuracy: true,
-          timeout: 10000,
           maximumAge: 60000,
+          timeout: 10000,
         }
       );
     });
@@ -98,19 +104,16 @@ export class CurrentPositionStore extends Model({
     );
   }
 
-  @computed
-  get geolocationErrorMessage(): string | null {
-    switch (this.geolocationError) {
-      case 'permission_denied':
-        return 'Standortzugriff wurde verweigert. Bitte erlauben Sie den Zugriff in Ihren Browsereinstellungen.';
-      case 'position_unavailable':
-        return 'Standort konnte nicht ermittelt werden.';
-      case 'timeout':
-        return 'Zeitüberschreitung bei der Standortabfrage.';
-      case 'not_supported':
-        return 'Geolocation wird von Ihrem Browser nicht unterstützt.';
-      default:
-        return null;
-    }
+  onAttachedToRootStore() {
+    this.store = getRootStore<RootStore>(rootStore) as RootStore;
+  }
+
+  @modelAction
+  async setPosition(latLon: LatLon) {
+    return fetchPointInformation(latLonToPoint(latLon)).then((result) => {
+      this.setLatLon(latLon);
+      this.setCurrentCanton(result.canton);
+      this.setCurrentMunicipality(result.municipality);
+    });
   }
 }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import { useStore } from '../Store/Store';
 
 export const LocateMe = () => {
@@ -13,17 +14,17 @@ export const LocateMe = () => {
 
   return (
     <button
-      type={'button'}
       className={
-        'btn btn-lg btn-circle rounded-full btn-success relative drop-shadow'
+        'btn btn-md md:btn-lg btn-circle rounded-full btn-success relative drop-shadow'
       }
       onClick={locateMe}
       title={'Locate me'}
+      type={'button'}
     >
       <img
-        src={'/user-location-line.svg'}
-        className={'z-10 w-auto h-3/4'}
         alt={'Locate me'}
+        className={'z-10 w-auto h-3/4'}
+        src={'/user-location-line.svg'}
       />
       {isBusy && (
         <div

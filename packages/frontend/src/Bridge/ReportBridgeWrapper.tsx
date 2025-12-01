@@ -1,38 +1,40 @@
 import type { FC } from 'react';
+
+import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 
-import { useStore } from '../Store/Store';
-import { observer } from 'mobx-react-lite';
-import { LatLon } from '../Store/LatLon';
 import type { BridgeFormState } from './BridgeFormState';
+
+import { LatLon } from '../Store/LatLon';
+import { useStore } from '../Store/Store';
 import { BridgeForm } from './BridgeForm';
 
 export const ReportBridgeWrapper: FC = observer(() => {
   const store = useStore();
 
   const defaultState: BridgeFormState = {
-    objectId: '',
-    name: '',
-    shape: '',
-    bridgeWidth: 0,
+    barriers: 'NONE',
     bridgeHeight: 0,
     bridgeLength: 0,
-    nickname: '',
-    email: '',
-    itemLog: [],
-    commentReporter: '',
-    commentAdmin: '',
-    hasBanquet: false,
-    hasMinimalBanquetWidth: false,
-    hasStones: false,
-    hasContinuousShore: false,
-    hasSlopes: false,
-    traffic: 'MEDIUM_TRAFFIC',
-    speedLimit: '40_50',
-    barriers: 'NONE',
-    images: [],
+    bridgeWidth: 0,
     cantons: '',
+    commentAdmin: '',
+    commentReporter: '',
+    email: '',
+    hasBanquet: false,
+    hasContinuousShore: false,
+    hasMinimalBanquetWidth: false,
+    hasSlopes: false,
+    hasStones: false,
+    images: [],
+    itemLog: [],
     municipalities: '',
+    name: '',
+    nickname: '',
+    objectId: '',
+    shape: '',
+    speedLimit: '40_50',
+    traffic: 'MEDIUM_TRAFFIC',
   };
 
   useEffect(() => {

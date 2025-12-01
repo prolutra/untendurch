@@ -1,8 +1,9 @@
 #!/usr/bin/env node
-import { $ } from 'zx';
-import { CONFIG } from './config.js';
 import { existsSync, readdirSync, statSync } from 'fs';
 import { resolve } from 'path';
+import { $ } from 'zx';
+
+import { CONFIG } from './config.js';
 
 $.verbose = false;
 
@@ -19,9 +20,9 @@ if (!existsSync(local.backupDir)) {
 const backupFiles = readdirSync(local.backupDir)
   .filter((f) => f.endsWith('.gz') && !f.endsWith('.md5'))
   .map((f) => ({
+    mtime: statSync(resolve(local.backupDir, f)).mtime,
     name: f,
     path: resolve(local.backupDir, f),
-    mtime: statSync(resolve(local.backupDir, f)).mtime,
   }))
   .sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
 
@@ -44,7 +45,9 @@ try {
   }
 } catch {
   console.error(`MongoDB container "${local.mongoContainer}" is not running.`);
-  console.error('Start it with: yarn workspace @untendurch/backend run db:start');
+  console.error(
+    'Start it with: yarn workspace @untendurch/backend run db:start'
+  );
   process.exit(1);
 }
 

@@ -16,8 +16,8 @@ export const LocaleSelect = ({ setLang }: LocaleSelectProps) => {
     <select
       className={'select select-bordered'}
       name="locale"
-      value={intl.locale}
       onChange={handleChange}
+      value={intl.locale}
     >
       <option value={'de'}>DE</option>
       <option value={'fr'}>FR</option>

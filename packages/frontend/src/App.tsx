@@ -1,16 +1,15 @@
 import './App.css';
 import 'ol/ol.css';
-
+import Parse from 'parse';
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { StoreProvider } from './Store/Store';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
 import './extensions/ArrayExtensions';
+import { AdminRoute } from './Auth/AdminRoute';
+import { EditBridgeRoute } from './Bridge/EditBridgeRoute';
 import { ReportBridgeRoute } from './Bridge/ReportBridgeRoute';
 import { RootRoute } from './Overview/RootRoute';
-import { EditBridgeRoute } from './Bridge/EditBridgeRoute';
-import { AdminRoute } from './Auth/AdminRoute';
-import Parse from 'parse';
+import { StoreProvider } from './Store/Store';
 
 export const App = () => {
   Parse.initialize('untendurch', '');
@@ -20,13 +19,13 @@ export const App = () => {
 
   return (
     <React.StrictMode>
-      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <Router future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
         <StoreProvider>
           <Routes>
-            <Route path="/" element={<RootRoute />} />
-            <Route path="/bridges/new" element={<ReportBridgeRoute />} />
-            <Route path="/bridges/:id" element={<EditBridgeRoute />} />
-            <Route path="/admin" element={<AdminRoute />} />
+            <Route element={<RootRoute />} path="/" />
+            <Route element={<ReportBridgeRoute />} path="/bridges/new" />
+            <Route element={<EditBridgeRoute />} path="/bridges/:id" />
+            <Route element={<AdminRoute />} path="/admin" />
           </Routes>
         </StoreProvider>
       </Router>

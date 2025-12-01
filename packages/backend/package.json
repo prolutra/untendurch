@@ -7,7 +7,9 @@
     "start": "dotenv -e .env node ./dist/server.js",
     "dev": "tsc -w & dotenv -e .env nodemon ./dist/server.js",
     "build": "tsc",
-    "lint": "eslint ./src/**/*.{js,ts,jsx,tsx,html}",
+    "check": "tsc --noEmit && eslint . --fix && prettier --write \"src/**/*.{ts,js,json}\"",
+    "lint": "eslint .",
+    "format": "prettier --write \"src/**/*.{ts,js,json}\"",
     "db:start": "docker compose -f docker-compose.dev.yml up -d",
     "db:stop": "docker compose -f docker-compose.dev.yml down",
     "db:clean": "docker volume rm backend_untendurch_mongodb_data"
@@ -32,14 +34,8 @@
     "@types/multer": "^1.4.13",
     "@types/parse": "^3.0.9",
     "@types/uuid": "^10.0.0",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "7.18.0",
     "dotenv-cli": "^7.4.4",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^9.1.2",
-    "eslint-plugin-prettier": "^5.5.4",
     "nodemon": "^3.1.11",
-    "prettier": "^3.7.3",
     "typescript": "^5.9.3"
   }
 }

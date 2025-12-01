@@ -1,11 +1,11 @@
 type i18nConfig = {
-  defaultLocale: string;
   availableLocales: string[];
+  defaultLocale: string;
 };
 
 class LocaleService {
-  private readonly defaultLocale: string;
   private readonly availableLocales: string[];
+  private readonly defaultLocale: string;
 
   constructor(config: i18nConfig) {
     this.defaultLocale = config.defaultLocale;
@@ -38,6 +38,6 @@ class LocaleService {
 }
 
 export default new LocaleService({
-  defaultLocale: 'de',
   availableLocales: ['de', 'fr', 'it', 'en'],
+  defaultLocale: 'de',
 });

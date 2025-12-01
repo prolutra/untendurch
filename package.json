@@ -11,6 +11,11 @@
     "self-update": "yarn set version stable && yarn install",
     "up": "yarn upgrade-interactive",
     "build-frontend": "yarn workspace @untendurch/frontend run build",
+    "check": "yarn workspaces foreach -A run check",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"packages/**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "format:check": "prettier --check \"packages/**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "db:download": "yarn workspace @untendurch/tools run db:download",
     "db:import": "yarn workspace @untendurch/tools run db:import",
     "db:sync": "yarn workspace @untendurch/tools run db:sync",
@@ -18,6 +23,15 @@
     "files:import": "yarn workspace @untendurch/tools run files:import",
     "files:sync": "yarn workspace @untendurch/tools run files:sync",
     "sync": "yarn workspace @untendurch/tools run sync"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint": "^9.17.0",
+    "eslint-plugin-perfectionist": "^4.15.1",
+    "eslint-plugin-react": "^7.37.2",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
+    "typescript-eslint": "^8.18.1"
   },
   "packageManager": "yarn@4.12.0"
 }

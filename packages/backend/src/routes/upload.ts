@@ -1,12 +1,13 @@
-import express from 'express';
-import sharp from 'sharp';
-import fs from 'fs';
-import path from 'path';
-import multer from 'multer';
 import cors from 'cors';
+import express from 'express';
+import fs from 'fs';
+import multer from 'multer';
+import path from 'path';
+import sharp from 'sharp';
 import { v4 as uuidv4 } from 'uuid';
-import { uploadsDirectory } from '../directories.js';
+
 import { PARSE_SERVER_ROOT_URL } from '../config.js';
+import { uploadsDirectory } from '../directories.js';
 
 const uploadRoute = express.Router();
 
@@ -69,12 +70,12 @@ uploadRoute.post(
         if (newMeta.width && newMeta.height && newMeta.width > newMeta.height) {
           fs.writeFileSync(uploadPathFilename, processedImage);
           const url = `${PARSE_SERVER_ROOT_URL}/uploads/${file.filename}`;
-          processedImages.push({ isValid: true, url, name: file.originalname });
+          processedImages.push({ isValid: true, name: file.originalname, url });
         } else {
           processedImages.push({
-            isValid: false,
             error:
               'Images in portrait mode are not supported and will be automatically rejected. Please upload images in landscape mode.',
+            isValid: false,
           });
         }
       }

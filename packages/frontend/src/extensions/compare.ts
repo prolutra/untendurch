@@ -1,7 +1,3 @@
-export function compareI18n(a: string, b: string): number {
-  return new Intl.Collator([], { numeric: true }).compare(a, b);
-}
-
 export function compareBoolean(
   a: boolean,
   b: boolean,
@@ -14,4 +10,8 @@ export function compareBoolean(
   } else {
     return whenEqual();
   }
+}
+
+export function compareI18n(a: string, b: string): number {
+  return new Intl.Collator([], { numeric: true }).compare(a, b);
 }

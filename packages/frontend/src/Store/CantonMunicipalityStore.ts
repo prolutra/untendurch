@@ -1,18 +1,14 @@
 import { _async, _await, model, Model, modelFlow, prop } from 'mobx-keystone';
 import Parse from 'parse';
-import { Municipality } from './Municipality';
+
 import cantons from './cantons.json';
+import { Municipality } from './Municipality';
 
 @model('untendurch/CantonMunicipality')
 export class CantonMunicipalityStore extends Model({
   cantons: prop<string[]>(() => []).withSetter(),
   municipalities: prop<Municipality[]>(() => []).withSetter(),
 }) {
-  onAttachedToRootStore() {
-    this.setCantons(cantons.map((canton) => canton.ak).sortedI18n());
-    this.fetchMunicipalities();
-  }
-
   @modelFlow
   fetchMunicipalities = _async(function* (this: CantonMunicipalityStore) {
     const query = new Parse.Query('Municipality');
@@ -26,8 +22,8 @@ export class CantonMunicipalityStore extends Model({
             const canton = municipality.attributes['canton'] as string;
 
             return new Municipality({
-              name: name,
               canton: canton,
+              name: name,
             });
           })
         )
@@ -39,4 +35,9 @@ export class CantonMunicipalityStore extends Model({
 
     this.setMunicipalities(data.sortI18n((a, b) => [a.name, b.name]));
   });
+
+  onAttachedToRootStore() {
+    this.setCantons(cantons.map((canton) => canton.ak).sortedI18n());
+    this.fetchMunicipalities();
+  }
 }

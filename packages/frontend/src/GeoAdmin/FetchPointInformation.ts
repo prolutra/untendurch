@@ -1,15 +1,16 @@
 import type { Point } from 'ol/geom';
+
 import type { IdentityResponse } from './IdentityResponse';
 import type { IdentityResultEntries } from './IdentityResultEntries';
+import type { LayerBodIdType } from './LayerBodIdType';
 import type { MunicipalityResultEntry } from './MunicipalityResultEntry';
 import type { PointInformation } from './PointInformation';
 import type { TrafficResultEntry } from './TrafficResultEntry';
 import type { WaterBodiesResultEntry } from './WaterBodiesResultEntry';
-import type { LayerBodIdType } from './LayerBodIdType';
 
 async function fetchAdditionalInformation<T>(
   point: Point,
-  urlType: 'api' | 'all',
+  urlType: 'all' | 'api',
   layer: LayerBodIdType,
   tolerance = 0
 ): Promise<T[]> {
@@ -38,14 +39,36 @@ async function fetchAdditionalInformation<T>(
     });
 }
 
-async function fetchWaterBodiesInformation(
+async function fetchPointInformationInternal(
   point: Point
-): Promise<WaterBodiesResultEntry[]> {
-  return fetchAdditionalInformation<WaterBodiesResultEntry>(
+): Promise<PointInformation> {
+  const [municipalityResultAttributes, waterBodies, trafficInformation] =
+    await Promise.all([
+      fetchPointMunicipalityInformation(point),
+      fetchWaterBodiesInformation(point),
+      fetchTrafficInformation(point),
+    ]);
+
+  return {
+    averageDailyTraffic:
+      trafficInformation.length > 0 ? trafficInformation[0].dtv_fzg : undefined,
+    canton: municipalityResultAttributes[0]?.kanton ?? '',
+    municipality: municipalityResultAttributes[0]?.gemname ?? '',
+    waterBodies: waterBodies
+      .filter((w) => w.objektart === 4)
+      .map((w) => w.name)
+      .filter((value, index, self) => self.indexOf(value) === index),
+  };
+}
+
+async function fetchPointMunicipalityInformation(
+  point: Point
+): Promise<MunicipalityResultEntry[]> {
+  return fetchAdditionalInformation<MunicipalityResultEntry>(
     point,
-    'all',
-    'ch.swisstopo.swisstlm3d-gewaessernetz',
-    20
+    'api',
+    'ch.swisstopo.swissboundaries3d-gemeinde-flaeche.fill',
+    0
   );
 }
 
@@ -60,37 +83,15 @@ async function fetchTrafficInformation(
   );
 }
 
-async function fetchPointMunicipalityInformation(
+async function fetchWaterBodiesInformation(
   point: Point
-): Promise<MunicipalityResultEntry[]> {
-  return fetchAdditionalInformation<MunicipalityResultEntry>(
+): Promise<WaterBodiesResultEntry[]> {
+  return fetchAdditionalInformation<WaterBodiesResultEntry>(
     point,
-    'api',
-    'ch.swisstopo.swissboundaries3d-gemeinde-flaeche.fill',
-    0
+    'all',
+    'ch.swisstopo.swisstlm3d-gewaessernetz',
+    20
   );
-}
-
-async function fetchPointInformationInternal(
-  point: Point
-): Promise<PointInformation> {
-  const [municipalityResultAttributes, waterBodies, trafficInformation] =
-    await Promise.all([
-      fetchPointMunicipalityInformation(point),
-      fetchWaterBodiesInformation(point),
-      fetchTrafficInformation(point),
-    ]);
-
-  return {
-    canton: municipalityResultAttributes[0]?.kanton ?? '',
-    municipality: municipalityResultAttributes[0]?.gemname ?? '',
-    waterBodies: waterBodies
-      .filter((w) => w.objektart === 4)
-      .map((w) => w.name)
-      .filter((value, index, self) => self.indexOf(value) === index),
-    averageDailyTraffic:
-      trafficInformation.length > 0 ? trafficInformation[0].dtv_fzg : undefined,
-  };
 }
 
 // Debounced version to prevent API hammering during pin dragging
@@ -98,7 +99,15 @@ const DEBOUNCE_MS = 300;
 
 let pendingResolve: ((value: PointInformation) => void) | null = null;
 let pendingReject: ((reason: unknown) => void) | null = null;
-let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+let debounceTimer: null | ReturnType<typeof setTimeout> = null;
+
+export function fetchPointInformation(point: Point): Promise<PointInformation> {
+  return new Promise((resolve, reject) => {
+    pendingResolve = resolve;
+    pendingReject = reject;
+    debouncedFetch(point);
+  });
+}
 
 function debouncedFetch(point: Point) {
   if (debounceTimer) {
@@ -119,12 +128,4 @@ function debouncedFetch(point: Point) {
       pendingReject = null;
     }
   }, DEBOUNCE_MS);
-}
-
-export function fetchPointInformation(point: Point): Promise<PointInformation> {
-  return new Promise((resolve, reject) => {
-    pendingResolve = resolve;
-    pendingReject = reject;
-    debouncedFetch(point);
-  });
 }

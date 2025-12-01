@@ -1,8 +1,9 @@
-import { Logo } from './Logo';
-import { AdminLogoutButton } from './Auth/AdminLogoutButton';
 import React from 'react';
+
+import { AdminLogoutButton } from './Auth/AdminLogoutButton';
 import { LocaleSelect } from './i18n/LocaleSelect';
 import { LocateMe } from './Location/LocateMe';
+import { Logo } from './Logo';
 
 export function Header(props: {
   lang: (value: ((prevState: string) => string) | string) => void;
@@ -22,7 +23,7 @@ export function Header(props: {
         <div className={'grow'}>
           <h1 className={'text-xl'}>Untendurch</h1>
         </div>
-        <div className={'flex justify-end items-center gap-8'}>
+        <div className={'flex justify-end items-center gap-4 md:gap-8'}>
           <LocateMe></LocateMe>
           <LocaleSelect setLang={props.lang}></LocaleSelect>
           <AdminLogoutButton></AdminLogoutButton>

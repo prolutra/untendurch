@@ -1,7 +1,10 @@
 export const getThumbnail = (url: string) => {
   if (!url) return '';
   const devicePixels = window.devicePixelRatio || 1;
-  const baseUrl = import.meta.env.VITE_REACT_APP_PARSE_SERVER_URL.replace('/parse', '');
+  const baseUrl = import.meta.env.VITE_REACT_APP_PARSE_SERVER_URL.replace(
+    '/parse',
+    ''
+  );
 
   // In development, replace production domain with localhost
   let imageUrl = url;

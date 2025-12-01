@@ -1,24 +1,26 @@
-import { observer } from 'mobx-react-lite';
 import type { FC, FormEvent } from 'react';
+
+import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
-import { useStore } from '../Store/Store';
+
 import { CloseChar } from '../lib/closeChar';
+import { useStore } from '../Store/Store';
 
 type LoginFormState = {
-  username: string;
   password: string;
+  username: string;
 };
 const defaultState = {
-  username: '',
   password: '',
+  username: '',
 } as LoginFormState;
 
 export const AdminLogin: FC = observer(() => {
   const store = useStore();
   const navigate = useNavigate();
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<null | string>(null);
   const [state, setState] = useState<LoginFormState>(defaultState);
 
   const login = async (event: FormEvent) => {
@@ -29,23 +31,18 @@ export const AdminLogin: FC = observer(() => {
         navigate('/');
         navigate(0);
       });
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Unknown error');
     }
   };
 
   const handleChange = (e: FormEvent<HTMLInputElement>): void => {
-    /* eslint-disable */
-    const name = e.currentTarget.name;
+    const name = e.currentTarget.name as keyof LoginFormState;
     const value = e.currentTarget.value;
-    setState(
-      (previousState) =>
-        ({
-          ...previousState,
-          [name]: value,
-        }) as any
-    );
-    /* eslint-enable */
+    setState((previousState) => ({
+      ...previousState,
+      [name]: value,
+    }));
   };
 
   return (
@@ -60,8 +57,8 @@ export const AdminLogin: FC = observer(() => {
           <div className={'flex justify-between items-center'}>
             <h3>
               <FormattedMessage
-                id="admin_heading_login"
                 defaultMessage={'Login'}
+                id="admin_heading_login"
               />
             </h3>
             <button className={'btn btn-circle'} onClick={() => navigate('/')}>
@@ -71,37 +68,37 @@ export const AdminLogin: FC = observer(() => {
           <div className={'form-control'}>
             <label htmlFor="username">
               <FormattedMessage
-                id="admin_label_username"
                 defaultMessage={'Benutzername'}
+                id="admin_label_username"
               />
             </label>
             <input
               className={'input input-bordered'}
-              type={'text'}
               name="username"
-              value={state.username ? state.username : ''}
               onChange={handleChange}
+              type={'text'}
+              value={state.username ? state.username : ''}
             />
           </div>
           <div className={'form-control'}>
             <label htmlFor="password">
               <FormattedMessage
-                id="admin_label_password"
                 defaultMessage={'Passwort'}
+                id="admin_label_password"
               />
             </label>
             <input
               className={'input input-bordered'}
-              type={'password'}
               name="password"
-              value={state.password ? state.password : ''}
               onChange={handleChange}
+              type={'password'}
+              value={state.password ? state.password : ''}
             />
           </div>
           <button className={'btn btn-primary'}>
             <FormattedMessage
-              id="admin_button_login"
               defaultMessage={'Anmelden'}
+              id="admin_button_login"
             />
           </button>
         </form>

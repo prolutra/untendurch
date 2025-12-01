@@ -1,5 +1,5 @@
-import path, { resolve } from 'path';
 import fs from 'fs';
+import path, { resolve } from 'path';
 
 const __dirname = import.meta.dirname;
 const projectRoot = resolve(__dirname, '../');

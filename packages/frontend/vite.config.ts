@@ -1,9 +1,9 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import viteTsconfigPaths from 'vite-tsconfig-paths';
 import * as path from "path";
-import checker from "vite-plugin-checker";
 import { terser } from "rollup-plugin-terser";
+import { defineConfig } from 'vite';
+import checker from "vite-plugin-checker";
+import viteTsconfigPaths from 'vite-tsconfig-paths';
 // import { analyzer } from "vite-bundle-analyzer";
 
 export default defineConfig(() => {
@@ -13,10 +13,10 @@ export default defineConfig(() => {
         output: {
           experimentalMinChunkSize: 20000,
           manualChunks: {
-            ol: ['ol'],
-            react: ['react', 'react-dom'],
             mobx: ['mobx', 'mobx-keystone'],
+            ol: ['ol'],
             parse: ['parse'],
+            react: ['react', 'react-dom'],
           },
           plugins: [terser()]
         }
@@ -39,10 +39,11 @@ export default defineConfig(() => {
       }),
       viteTsconfigPaths(),
       checker({
-        typescript: true,
         eslint: {
           lintCommand: 'eslint "./src/**/*.{ts,tsx}"',
+          useFlatConfig: true,
         },
+        typescript: true,
       }),
       // analyzer(),
     ],

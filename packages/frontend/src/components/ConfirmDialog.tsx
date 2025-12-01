@@ -2,24 +2,24 @@ import React, { useEffect, useRef } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 interface ConfirmDialogProps {
+  cancelLabel?: React.ReactNode | string;
+  confirmLabel?: React.ReactNode | string;
   isOpen: boolean;
-  title: string | React.ReactNode;
-  message: string | React.ReactNode;
-  confirmLabel?: string | React.ReactNode;
-  cancelLabel?: string | React.ReactNode;
-  onConfirm: () => void;
+  message: React.ReactNode | string;
   onCancel: () => void;
-  variant?: 'danger' | 'warning' | 'info';
+  onConfirm: () => void;
+  title: React.ReactNode | string;
+  variant?: 'danger' | 'info' | 'warning';
 }
 
 export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
-  isOpen,
-  title,
-  message,
-  confirmLabel,
   cancelLabel,
-  onConfirm,
+  confirmLabel,
+  isOpen,
+  message,
   onCancel,
+  onConfirm,
+  title,
   variant = 'danger',
 }) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -43,7 +43,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         : 'btn btn-primary';
 
   return (
-    <dialog ref={dialogRef} className="modal" onClose={onCancel}>
+    <dialog className="modal" onClose={onCancel} ref={dialogRef}>
       <div className="modal-box">
         <h3 className="font-bold text-lg">{title}</h3>
         <p className="py-4">{message}</p>
@@ -51,22 +51,22 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           <button className="btn" onClick={onCancel}>
             {cancelLabel || (
               <FormattedMessage
-                id="confirm_dialog_cancel"
                 defaultMessage="Abbrechen"
+                id="confirm_dialog_cancel"
               />
             )}
           </button>
           <button className={confirmButtonClass} onClick={onConfirm}>
             {confirmLabel || (
               <FormattedMessage
-                id="confirm_dialog_confirm"
                 defaultMessage="Bestätigen"
+                id="confirm_dialog_confirm"
               />
             )}
           </button>
         </div>
       </div>
-      <form method="dialog" className="modal-backdrop">
+      <form className="modal-backdrop" method="dialog">
         <button onClick={onCancel}>close</button>
       </form>
     </dialog>

@@ -1,11 +1,11 @@
 import { observer } from 'mobx-react-lite';
 import 'ol/ol.css';
-
-import React, { useState } from 'react';
-import { useStore } from '../Store/Store';
-import { AllFilter } from '../Store/AllFilter';
 import Parse from 'parse';
+import React, { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
+
+import { AllFilter } from '../Store/AllFilter';
+import { useStore } from '../Store/Store';
 // import JSZip from 'jszip';
 //
 // async function runPromisesInBatches(
@@ -111,7 +111,7 @@ export const OverviewExport = observer(() => {
         disabled={isBusy}
         onClick={shareLink}
       >
-        <img src={'/share-line.svg'} alt={'share'} width={48} height={48} />
+        <img alt={'share'} height={48} src={'/share-line.svg'} width={48} />
       </button>
       <button
         className={'btn btn-circle btn-ghost relative'}
@@ -119,10 +119,10 @@ export const OverviewExport = observer(() => {
         onClick={exportXls}
       >
         <img
+          alt={'XLS export'}
+          height={48}
           src={'/table-line.svg'}
           width={48}
-          height={48}
-          alt={'XLS export'}
         />
         {isBusy && (
           <div
@@ -135,8 +135,8 @@ export const OverviewExport = observer(() => {
       {isAlerting && (
         <div className={'alert alert-success'}>
           <FormattedMessage
-            id="overview_export_alert_copied_to_clipboard"
             defaultMessage={'Der Link wurde in die Zwischenablage kopiert.'}
+            id="overview_export_alert_copied_to_clipboard"
           />
         </div>
       )}

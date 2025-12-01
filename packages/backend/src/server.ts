@@ -1,10 +1,9 @@
-import express from 'express';
-import { ParseServer } from 'parse-server';
-import ParseDashboard from 'parse-dashboard';
-import { thumbnailRoute } from './routes/thumbnail.js';
 import FSFilesAdapter from '@parse/fs-files-adapter';
-import { uploadRoute } from './routes/upload.js';
 import cors from 'cors';
+import express from 'express';
+import ParseDashboard from 'parse-dashboard';
+import { ParseServer } from 'parse-server';
+
 import {
   PARSE_SERVER_APP_NAME,
   PARSE_SERVER_APPLICATION_ID,
@@ -17,6 +16,8 @@ import {
   PARSE_SERVER_URL,
 } from './config.js';
 import { uploadsDirectory } from './directories.js';
+import { thumbnailRoute } from './routes/thumbnail.js';
+import { uploadRoute } from './routes/upload.js';
 
 const app = express();
 
@@ -25,26 +26,26 @@ const fsAdapter = new FSFilesAdapter({
 });
 
 const serverOptions = {
-  databaseURI: PARSE_SERVER_DATABASE_URI,
+  appId: PARSE_SERVER_APPLICATION_ID,
   cloud: function () {
     import('./parse/cloud/main.js');
   },
-  appId: PARSE_SERVER_APPLICATION_ID,
-  masterKey: PARSE_SERVER_MASTER_KEY,
+  databaseURI: PARSE_SERVER_DATABASE_URI,
+  enableInsecureAuthAdapters: false,
+  // Set to future defaults
+  encodeParseObjectInCloudFunction: true,
   filesAdapter: fsAdapter,
-  serverURL: PARSE_SERVER_URL,
-  publicServerURL: PARSE_SERVER_URL,
-  masterKeyIps: ['0.0.0.0/0', '::/0'],
   fileUpload: {
     enableForPublic: true,
   },
-  // Set to future defaults
-  encodeParseObjectInCloudFunction: true,
-  enableInsecureAuthAdapters: false,
+  masterKey: PARSE_SERVER_MASTER_KEY,
+  masterKeyIps: ['0.0.0.0/0', '::/0'],
   // Use PagesRouter instead of deprecated PublicAPIRouter
   pages: {
     enableRouter: true,
   },
+  publicServerURL: PARSE_SERVER_URL,
+  serverURL: PARSE_SERVER_URL,
 };
 
 const parseServer = new ParseServer(serverOptions);
@@ -56,21 +57,21 @@ const dashboard = new ParseDashboard(
   {
     apps: [
       {
-        serverURL: PARSE_SERVER_URL,
         appId: PARSE_SERVER_APPLICATION_ID,
-        masterKey: PARSE_SERVER_MASTER_KEY,
         appName: PARSE_SERVER_APP_NAME,
+        masterKey: PARSE_SERVER_MASTER_KEY,
+        serverURL: PARSE_SERVER_URL,
       },
     ],
     users: [
       {
-        user: PARSE_SERVER_DASHBOARD_USER_ID,
-        pass: PARSE_SERVER_DASHBOARD_USER_PASSWORD,
         apps: [
           {
             appId: PARSE_SERVER_APPLICATION_ID,
           },
         ],
+        pass: PARSE_SERVER_DASHBOARD_USER_PASSWORD,
+        user: PARSE_SERVER_DASHBOARD_USER_ID,
       },
     ],
   },

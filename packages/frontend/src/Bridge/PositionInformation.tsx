@@ -1,8 +1,11 @@
 import type { FC } from 'react';
-import React from 'react';
+
 import { observer } from 'mobx-react-lite';
-import type { ReportBridgeStore } from '../Store/ReportBridgeStore';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
+
+import type { ReportBridgeStore } from '../Store/ReportBridgeStore';
+
 import { LocateMe } from '../Location/LocateMe';
 
 type PositionInformationProps = {
@@ -17,10 +20,10 @@ export const PositionInformation: FC<PositionInformationProps> = observer(
           <LocateMe />
           <div>
             <FormattedMessage
-              id="report_bridge_no_position"
               defaultMessage={
                 'Benutzen Sie die GPS-Funktion Ihres Geräts um die aktuelle Position zu bestimmen.'
               }
+              id="report_bridge_no_position"
             />
           </div>
         </div>
@@ -29,17 +32,16 @@ export const PositionInformation: FC<PositionInformationProps> = observer(
     return (
       <div className="flex flex-col md:flex-row gap-1 md:items-end justify-stretch">
         <div>
-          <label htmlFor="position" className="label">
+          <label className="label" htmlFor="position">
             <FormattedMessage
-              id="report_bridge_label_position"
               defaultMessage={'Position'}
+              id="report_bridge_label_position"
             />
           </label>
           <input
             className="input input-bordered"
-            name="position"
             disabled={true}
-            readOnly={true}
+            name="position"
             placeholder={
               reportedBridge.latLon
                 ? reportedBridge.latLon.asLv95.east.toFixed(2) +
@@ -47,22 +49,23 @@ export const PositionInformation: FC<PositionInformationProps> = observer(
                   reportedBridge.latLon.asLv95.west.toFixed(2)
                 : ''
             }
+            readOnly={true}
           />
         </div>
 
         <input
           className="input input-bordered grow-0"
-          name="canton"
           disabled={true}
-          readOnly={true}
+          name="canton"
           placeholder={reportedBridge.canton}
+          readOnly={true}
         />
         <input
           className="input input-bordered grow"
-          name="municipality"
           disabled={true}
-          readOnly={true}
+          name="municipality"
           placeholder={reportedBridge.municipality}
+          readOnly={true}
         />
       </div>
     );

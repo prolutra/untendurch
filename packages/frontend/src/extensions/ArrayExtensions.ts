@@ -2,17 +2,17 @@ import { compareI18n } from './compare';
 
 declare global {
   interface Array<T> {
-    sortI18n<T>(
-      this: T[],
-      propertyAccessFn?: (x: T, y: T) => [string, string]
-    ): T[];
+    groupBy<K>(this: T[], keyGetter: (input: T) => K): Map<K, T[]>;
 
     sortedI18n<T>(
       this: T[],
       propertyAccessFn?: (x: T, y: T) => [string, string]
     ): T[];
 
-    groupBy<K>(this: T[], keyGetter: (input: T) => K): Map<K, T[]>;
+    sortI18n<T>(
+      this: T[],
+      propertyAccessFn?: (x: T, y: T) => [string, string]
+    ): T[];
   }
 }
 

@@ -1,5 +1,6 @@
-import proj4 from 'proj4';
 import { fromLonLat } from 'ol/proj';
+import proj4 from 'proj4';
+
 import type { Lv95 } from '../Store/Lv95';
 
 // EPSG:3857 - WGS 84 / Pseudo-Mercator (Web Mercator)

@@ -1,20 +1,21 @@
 import { model, Model, prop } from 'mobx-keystone';
+
 import type { LatLon } from './LatLon';
 import type { SafetyRisk } from './SafetyRisk';
 
 @model('untendurch/BridgePin')
 export class BridgePin extends Model({
-  latLon: prop<LatLon>(),
-  objectId: prop<string>(),
-  name: prop<string>(),
-  safetyRisk: prop<SafetyRisk | undefined>(() => undefined),
-  cantons: prop<string[]>(() => []),
-  municipalities: prop<string[]>(() => []),
-  status: prop<string>(),
-  bridgeIndex: prop<number>(),
-  otterFriendly: prop<string>(),
-  imageUrl: prop<string>(),
-  nickname: prop<string>(),
-  shape: prop<string>(),
   averageDailyTraffic: prop<number | undefined>(() => undefined),
+  bridgeIndex: prop<number>(),
+  cantons: prop<string[]>(() => []),
+  imageUrl: prop<string>(),
+  latLon: prop<LatLon>(),
+  municipalities: prop<string[]>(() => []),
+  name: prop<string>(),
+  nickname: prop<string>(),
+  objectId: prop<string>(),
+  otterFriendly: prop<string>(),
+  safetyRisk: prop<SafetyRisk | undefined>(() => undefined),
+  shape: prop<string>(),
+  status: prop<string>(),
 }) {}

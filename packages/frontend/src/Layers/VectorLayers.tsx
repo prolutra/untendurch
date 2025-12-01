@@ -1,17 +1,19 @@
 import type { Feature } from 'ol';
 import type { Geometry, Point } from 'ol/geom';
-import OLVectorLayer from 'ol/layer/Vector';
-import { Icon, Style } from 'ol/style';
-import { Modify } from 'ol/interaction';
-import type { FC } from 'react';
-import React, { useCallback, useContext, useEffect } from 'react';
-import { useStore } from '../Store/Store';
-import { observer } from 'mobx-react-lite';
-import { toLonLat } from 'ol/proj';
-import { LatLon } from '../Store/LatLon';
 import type { StyleFunction } from 'ol/style/Style';
-import { MapContext } from '../Map/MapContext';
+import type { FC } from 'react';
+
+import { observer } from 'mobx-react-lite';
+import { Modify } from 'ol/interaction';
+import OLVectorLayer from 'ol/layer/Vector';
+import { toLonLat } from 'ol/proj';
 import VectorSource from 'ol/source/Vector';
+import { Icon, Style } from 'ol/style';
+import React, { useCallback, useContext, useEffect } from 'react';
+
+import { MapContext } from '../Map/MapContext';
+import { LatLon } from '../Store/LatLon';
+import { useStore } from '../Store/Store';
 
 /**
  * Pin icon dimensions and styling constants
@@ -33,14 +35,14 @@ const PIN_ICON = {
 } as const;
 
 type VectorLayerProps = {
-  zIndex: number;
+  draggable: boolean;
   features: Feature<Geometry>[];
   iconSrc: string;
-  draggable: boolean;
+  zIndex: number;
 };
 
 export const VectorLayer: FC<VectorLayerProps> = observer(
-  ({ zIndex, features, iconSrc, draggable }) => {
+  ({ draggable, features, iconSrc, zIndex }) => {
     const store = useStore();
 
     const mapContext = useContext(MapContext);
@@ -60,8 +62,8 @@ export const VectorLayer: FC<VectorLayerProps> = observer(
           anchor: [PIN_ICON.ANCHOR_X, PIN_ICON.ANCHOR_Y_DEFAULT],
           anchorXUnits: 'fraction',
           anchorYUnits: 'pixels',
-          src: iconSrc,
           scale: PIN_ICON.SCALE_DEFAULT,
+          src: iconSrc,
         }),
       });
 
@@ -70,8 +72,8 @@ export const VectorLayer: FC<VectorLayerProps> = observer(
           anchor: [PIN_ICON.ANCHOR_X, PIN_ICON.ANCHOR_Y_HOVERED],
           anchorXUnits: 'fraction',
           anchorYUnits: 'pixels',
-          src: iconSrc,
           scale: PIN_ICON.SCALE_HOVERED,
+          src: iconSrc,
         }),
         zIndex: PIN_ICON.Z_INDEX_HOVERED,
       });
@@ -89,8 +91,8 @@ export const VectorLayer: FC<VectorLayerProps> = observer(
       mapContext.addLayer(layer);
 
       const interaction = new Modify({
-        source: source,
         hitDetection: layer,
+        source: source,
       });
 
       if (draggable) {

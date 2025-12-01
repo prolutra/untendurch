@@ -1,13 +1,14 @@
 #!/usr/bin/env node
-import { $ } from 'zx';
-import { CONFIG, validateConfig } from './config.js';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
+import { $ } from 'zx';
+
+import { CONFIG, validateConfig } from './config.js';
 
 $.verbose = false;
 
 validateConfig();
 
-const { remote, local } = CONFIG;
+const { local, remote } = CONFIG;
 
 if (!remote.volumeBackupPath) {
   console.error('REMOTE_VOLUME_BACKUP_PATH not configured in .env');

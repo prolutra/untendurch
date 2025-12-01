@@ -1,14 +1,16 @@
-import type { FC } from 'react';
-import React, { useMemo } from 'react';
-import { observer } from 'mobx-react-lite';
-import { useStore } from '../Store/Store';
-import { Feature } from 'ol';
 import type { Point } from 'ol/geom';
+import type { FC } from 'react';
+
+import { observer } from 'mobx-react-lite';
+import { Feature } from 'ol';
+import React, { useMemo } from 'react';
+
 import { latLonToPoint } from '../GeoAdmin/PointTransformations';
-import { SafetyRisk } from '../Store/SafetyRisk';
-import { VectorLayer } from '../Layers/VectorLayers';
 import { Layers } from '../Layers/Layers';
 import { TileLayer } from '../Layers/TileLayers';
+import { VectorLayer } from '../Layers/VectorLayers';
+import { SafetyRisk } from '../Store/SafetyRisk';
+import { useStore } from '../Store/Store';
 
 export const Map: FC = observer(() => {
   const store = useStore();
@@ -29,8 +31,8 @@ export const Map: FC = observer(() => {
         const features = bridges.map(
           (bridge) =>
             new Feature({
-              geometry: latLonToPoint(bridge.latLon),
               bridgePinObjectId: bridge.objectId,
+              geometry: latLonToPoint(bridge.latLon),
             })
         );
         // the higher the safety risk the higher up in zIndex
@@ -46,19 +48,19 @@ export const Map: FC = observer(() => {
       <TileLayer zIndex={0} />
       {vectorLayersBySafety.map(([features, iconSrc, zIndex]) => (
         <VectorLayer
-          key={iconSrc}
-          zIndex={zIndex}
+          draggable={false}
           features={features}
           iconSrc={iconSrc}
-          draggable={false}
+          key={iconSrc}
+          zIndex={zIndex}
         />
       ))}
       {store.reportBridge.reportedFeature && (
         <VectorLayer
-          zIndex={99}
+          draggable={true}
           features={[store.reportBridge.reportedFeature]}
           iconSrc={'/bridge_pin_new.svg'}
-          draggable={true}
+          zIndex={99}
         />
       )}
     </Layers>

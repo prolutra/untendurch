@@ -1,40 +1,41 @@
 import type { GeoPoint } from 'parse';
+
 import type { BridgeStatus } from './BridgeStatus';
 
 export type BridgeLogItem = {
   date: string;
   message: string;
-  type: 'info' | 'warning' | 'error';
+  type: 'error' | 'info' | 'warning';
 };
 
 export interface BridgeSchema {
-  objectId: string;
-  position: GeoPoint;
-  waterBodies: string[];
-  name: string;
-  shape: string;
-  hasBanquet: boolean;
-  hasStones: boolean;
-  bridgeWidth: number;
+  barriers: string;
   bridgeHeight: number;
+  bridgeIndex: null;
   bridgeLength: number;
+  bridgeWidth: number;
+  cantons: string[];
+  createdAt: string;
+  hasBanquet: boolean;
   hasContinuousShore: boolean;
   hasSlopes: boolean;
-  traffic: string;
-  speedLimit: string;
-  barriers: string;
-  nickname: string;
-  bridgeIndex: null;
-  otterFriendly: string;
-  safetyRisk: string;
+  hasStones: boolean;
   images: [{ name: string; url: string }];
   isManualOverride: boolean;
-  createdAt: string;
-  updatedAt: string;
-  cantons: string[];
-  municipalities: string[];
-  status: BridgeStatus;
   itemLog?: BridgeLogItem[];
+  municipalities: string[];
+  name: string;
+  nickname: string;
+  objectId: string;
+  otterFriendly: string;
+  position: GeoPoint;
+  safetyRisk: string;
+  shape: string;
+  speedLimit: string;
+  status: BridgeStatus;
+  traffic: string;
+  updatedAt: string;
+  waterBodies: string[];
 }
 
 export const BridgeSchemaFields: (keyof BridgeSchema)[] = [

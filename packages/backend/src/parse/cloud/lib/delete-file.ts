@@ -9,7 +9,7 @@ Parse.Cloud.define('deleteFile', async (req) => {
   try {
     await file.destroy({ useMasterKey: true });
     return 'File deleted successfully';
-  } catch (error) {
+  } catch {
     throw new Error('Failed to delete file');
   }
 });

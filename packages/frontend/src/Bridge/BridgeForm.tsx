@@ -1,23 +1,25 @@
 import type { Point } from 'ol/geom';
-import Parse, { GeoPoint } from 'parse';
 import type { FC } from 'react';
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
+import { observer } from 'mobx-react-lite';
 import { toLonLat } from 'ol/proj';
+import Parse, { GeoPoint } from 'parse';
+import React, { useEffect, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
+
+import type { BridgeLogItem } from '../Store/BridgeSchema';
+import type { BridgeFormState } from './BridgeFormState';
 
 import { fetchPointInformation } from '../GeoAdmin/FetchPointInformation';
-import { useStore } from '../Store/Store';
-import { observer } from 'mobx-react-lite';
-import { FormattedMessage, useIntl } from 'react-intl';
-import type { BridgeFormState } from './BridgeFormState';
-import type { BridgeLogItem } from '../Store/BridgeSchema';
-import { PositionInformation } from './PositionInformation';
-import { BridgeLegendNumber } from './BridgeLegendNumber';
 import { CloseChar } from '../lib/closeChar';
-import { BridgeShape } from './form/BridgeShape';
+import { useStore } from '../Store/Store';
+import { BridgeLegendNumber } from './BridgeLegendNumber';
 import { BridgeImages } from './form/BridgeImages';
-import { uploadFiles } from './ReportBridgeImageUploader';
+import { BridgeShape } from './form/BridgeShape';
 import { BridgeTraffic } from './form/BridgeTraffic';
+import { PositionInformation } from './PositionInformation';
+import { uploadFiles } from './ReportBridgeImageUploader';
 
 type BridgeFormProps = {
   bridgeFormState: BridgeFormState;
@@ -30,7 +32,7 @@ export const BridgeForm: FC<BridgeFormProps> = observer(
     const intl = useIntl();
     const [state, setState] = useState<BridgeFormState>(bridgeFormState);
     const [saveStatus, setSaveStatus] = useState<
-      'preparing' | 'saving' | 'saved' | 'error' | undefined
+      'error' | 'preparing' | 'saved' | 'saving' | undefined
     >();
     const [isBusy, setIsBusy] = useState<boolean>(false);
 
@@ -53,17 +55,17 @@ export const BridgeForm: FC<BridgeFormProps> = observer(
         reportedBridge.set('id', state.objectId);
         reportedBridge.set('itemLog', [
           {
-            type: 'info',
-            message: 'Bridge reported on webapp',
             date: new Date().toISOString(),
+            message: 'Bridge reported on webapp',
+            type: 'info',
           },
         ] as BridgeLogItem[]);
       } else {
         reportedBridge.set('itemLog', [
           {
-            type: 'info',
-            message: 'Bridge reported on webapp',
             date: new Date().toISOString(),
+            message: 'Bridge reported on webapp',
+            type: 'info',
           },
         ] as BridgeLogItem[]);
       }
@@ -127,13 +129,13 @@ export const BridgeForm: FC<BridgeFormProps> = observer(
             state.imagesToUpload
           );
           currentImages.push(...uploadedFiles);
-        } catch (error) {
+        } catch {
           setSaveStatus('error');
           alert('Beim Hochladen der Bilder ist ein Fehler aufgetreten');
           const failedFilePersistenceLog: BridgeLogItem = {
-            type: 'error',
-            message: 'Error while uploading images',
             date: new Date().toISOString(),
+            message: 'Error while uploading images',
+            type: 'error',
           };
           persistedBridge.set('itemLog', [
             ...itemLog,
@@ -158,14 +160,14 @@ export const BridgeForm: FC<BridgeFormProps> = observer(
               });
             })
           );
-        } catch (error) {
+        } catch (err) {
           setSaveStatus('error');
-          console.error(error);
+          console.error(err);
           alert('Beim Löschen der Bilder ist ein Fehler aufgetreten');
           const failedFilePersistenceLog: BridgeLogItem = {
-            type: 'error',
-            message: 'Error while deleting images',
             date: new Date().toISOString(),
+            message: 'Error while deleting images',
+            type: 'error',
           };
           persistedBridge.set('itemLog', [
             ...itemLog,
@@ -205,15 +207,12 @@ export const BridgeForm: FC<BridgeFormProps> = observer(
       const name = e.currentTarget.name;
       const value =
         e.currentTarget.type === 'checkbox'
-          ? (e.currentTarget as any).checked
+          ? (e.currentTarget as HTMLInputElement).checked
           : e.currentTarget.value;
-      setState(
-        (previousState) =>
-          ({
-            ...previousState,
-            [name]: value,
-          }) as any
-      );
+      setState((previousState) => ({
+        ...previousState,
+        [name]: value,
+      }));
     }
 
     useEffect(() => {
@@ -225,12 +224,12 @@ export const BridgeForm: FC<BridgeFormProps> = observer(
 
     return (
       <div className={'mx-auto w-5/6 md:w-4/5 lg:w-1/2 select-none mb-8'}>
-        <form onSubmit={saveBridge} className={'flex flex-col gap-12 p-4'}>
+        <form className={'flex flex-col gap-12 p-4'} onSubmit={saveBridge}>
           <div className={'flex flex-row w-full justify-between items-center'}>
             <h2>
               <FormattedMessage
-                id="report_bridge_heading_info"
                 defaultMessage={'Informationen zur Brücke'}
+                id="report_bridge_heading_info"
               />
             </h2>
             <button
@@ -247,8 +246,8 @@ export const BridgeForm: FC<BridgeFormProps> = observer(
             <div className={'flex flex-col gap-4'}>
               <h3>
                 <FormattedMessage
-                  id="report_bridge_heading_admin"
                   defaultMessage={'Admin'}
+                  id="report_bridge_heading_admin"
                 />
               </h3>
               <div>
@@ -264,132 +263,132 @@ export const BridgeForm: FC<BridgeFormProps> = observer(
               </div>
               <p className={'italic'}>
                 <FormattedMessage
-                  id="report_bridge_label_position_hint"
                   defaultMessage={
                     'Die jeweiligen Listen von Kantonen und Gemeinden werden mit den ermittelten Werten des gesetzten Punkts vereint.'
                   }
+                  id="report_bridge_label_position_hint"
                 />
               </p>
               <label className={'label'} htmlFor="cantons">
                 <FormattedMessage
-                  id="report_bridge_label_cantons"
                   defaultMessage={'Liste der Kantone (kommasepariert)'}
+                  id="report_bridge_label_cantons"
                 />
               </label>
               <input
                 className={'input input-bordered'}
                 name="cantons"
-                value={state.cantons}
                 onChange={handleChange}
+                value={state.cantons}
               />
               <label className={'label'} htmlFor="municipalities">
                 <FormattedMessage
-                  id="report_bridge_label_municipalities"
                   defaultMessage={'Liste der Gemeinden (kommasepariert)'}
+                  id="report_bridge_label_municipalities"
                 />
               </label>
               <input
                 className={'input input-bordered'}
                 name="municipalities"
-                value={state.municipalities}
                 onChange={handleChange}
+                value={state.municipalities}
               />
             </div>
           )}
           <div className={'form-control'}>
             <label className={'label'} htmlFor="name">
               <FormattedMessage
-                id="report_bridge_label_name"
                 defaultMessage={'Name der Brücke (optional)'}
+                id="report_bridge_label_name"
               />
             </label>
             <input
               className={'input input-bordered'}
               name="name"
-              value={state.name ? state.name : ''}
               onChange={handleChange}
+              value={state.name ? state.name : ''}
             />
           </div>
-          <div className={'flex flex-col gap-3'}>
-            <h3>
+          <div className={'flex flex-col gap-3 pt-4 border-t border-gray-200'}>
+            <h3 className={'text-lg font-semibold'}>
               <FormattedMessage
-                id="report_bridge_label_form"
                 defaultMessage={'Brückenform'}
+                id="report_bridge_label_form"
               />
             </h3>
             {!state.shape && (
               <p className={'italic'}>
                 <FormattedMessage
-                  id="report_bridge_shape_required"
                   defaultMessage={'Bitte Brückenform wählen'}
+                  id="report_bridge_shape_required"
                 />
               </p>
             )}
-            <BridgeShape state={state} onChange={handleChange} />
-            <div className="form-control w-72">
-              <label className="label cursor-pointer">
+            <BridgeShape onChange={handleChange} state={state} />
+            <div className="form-control w-full md:w-72">
+              <label className="label cursor-pointer justify-start gap-4 py-3">
+                <input
+                  checked={state.hasBanquet}
+                  className="checkbox checkbox-primary"
+                  name="hasBanquet"
+                  onChange={handleChange}
+                  type="checkbox"
+                />
                 <span className="label-text">
                   <FormattedMessage
-                    id="report_bridge_label_hasBanquet"
                     defaultMessage={'Durchgängiges Bankett?'}
+                    id="report_bridge_label_hasBanquet"
                   />
                 </span>
-                <input
-                  type="checkbox"
-                  name="hasBanquet"
-                  checked={state.hasBanquet}
-                  onChange={handleChange}
-                  className="checkbox"
-                />
               </label>
             </div>
             {state.hasBanquet && (
-              <div className="form-control w-72">
-                <label className="label cursor-pointer">
+              <div className="form-control w-full md:w-72">
+                <label className="label cursor-pointer justify-start gap-4 py-3">
+                  <input
+                    checked={state.hasMinimalBanquetWidth}
+                    className="checkbox checkbox-primary"
+                    name="hasMinimalBanquetWidth"
+                    onChange={handleChange}
+                    type="checkbox"
+                  />
                   <span className="label-text">
                     <FormattedMessage
-                      id="report_bridge_label_hasMinimalBanquetWidth"
                       defaultMessage={'Bankettbreite grösser 30cm'}
+                      id="report_bridge_label_hasMinimalBanquetWidth"
                     />
                   </span>
-                  <input
-                    type="checkbox"
-                    name="hasMinimalBanquetWidth"
-                    checked={state.hasMinimalBanquetWidth}
-                    onChange={handleChange}
-                    className="checkbox"
-                  />
                 </label>
               </div>
             )}
-            <div className="form-control w-72">
-              <label className="label cursor-pointer">
+            <div className="form-control w-full md:w-72">
+              <label className="label cursor-pointer justify-start gap-4 py-3">
+                <input
+                  checked={state.hasStones}
+                  className="checkbox checkbox-primary"
+                  name="hasStones"
+                  onChange={handleChange}
+                  type="checkbox"
+                />
                 <span className="label-text">
                   <FormattedMessage
-                    id="report_bridge_label_hasStones"
                     defaultMessage={'Steine vorhanden?'}
+                    id="report_bridge_label_hasStones"
                   />
                 </span>
-                <input
-                  type="checkbox"
-                  name="hasStones"
-                  checked={state.hasStones}
-                  onChange={handleChange}
-                  className="checkbox"
-                />
               </label>
             </div>
           </div>
-          <BridgeImages state={state} setState={setState} />
-          <div className={'flex flex-col gap-3'}>
-            <h3>
+          <BridgeImages setState={setState} state={state} />
+          <div className={'flex flex-col gap-3 pt-4 border-t border-gray-200'}>
+            <h3 className={'text-lg font-semibold'}>
               <FormattedMessage
-                id="report_bridge_heading_dimensions"
                 defaultMessage={'Brückendimensionen'}
+                id="report_bridge_heading_dimensions"
               />
             </h3>
             <div className={'grid grid-cols-1 md:grid-cols-2 gap-4'}>
-              <img src={'/bridge_index.jpg'} alt={'bridge'} />
+              <img alt={'bridge'} src={'/bridge_index.jpg'} />
               <div className={'flex flex-col gap-4'}>
                 <div
                   className={'flex flex-row gap-2 items-center justify-start'}
@@ -397,15 +396,15 @@ export const BridgeForm: FC<BridgeFormProps> = observer(
                   <BridgeLegendNumber n={1} />
                   <input
                     className={'input input-bordered grow'}
-                    type={'number'}
                     name="bridgeWidth"
+                    onChange={handleChange}
                     placeholder={intl.formatMessage({
-                      id: 'report_bridge_placeholder_bridgeWidth',
                       defaultMessage: 'breiteste Stelle in m',
+                      id: 'report_bridge_placeholder_bridgeWidth',
                     })}
                     required
+                    type={'number'}
                     value={state.bridgeWidth ? state.bridgeWidth : ''}
-                    onChange={handleChange}
                   />
                 </div>
                 <div
@@ -413,17 +412,17 @@ export const BridgeForm: FC<BridgeFormProps> = observer(
                 >
                   <BridgeLegendNumber n={2} />
                   <input
-                    type={'number'}
                     className={'input input-bordered grow'}
                     name="bridgeHeight"
+                    onChange={handleChange}
                     placeholder={intl.formatMessage({
-                      id: 'report_bridge_placeholder_bridgeHeight',
                       defaultMessage:
                         'höchste Stelle ab Mittelwasserlinie in m',
+                      id: 'report_bridge_placeholder_bridgeHeight',
                     })}
                     required
+                    type={'number'}
                     value={state.bridgeHeight ? state.bridgeHeight : ''}
-                    onChange={handleChange}
                   />
                 </div>
                 <div
@@ -431,178 +430,184 @@ export const BridgeForm: FC<BridgeFormProps> = observer(
                 >
                   <BridgeLegendNumber n={3} />
                   <input
-                    type={'number'}
-                    name="bridgeLength"
                     className={'input input-bordered grow'}
+                    name="bridgeLength"
+                    onChange={handleChange}
                     placeholder={intl.formatMessage({
-                      id: 'report_bridge_placeholder_bridgeLength',
                       defaultMessage: 'Tiefe (Strassenbreite) in m',
+                      id: 'report_bridge_placeholder_bridgeLength',
                     })}
                     required
+                    type={'number'}
                     value={state.bridgeLength ? state.bridgeLength : ''}
-                    onChange={handleChange}
                   />
                 </div>
               </div>
             </div>
           </div>
-          <div className={'flex flex-col gap-3'}>
-            <h3>
+          <div className={'flex flex-col gap-3 pt-4 border-t border-gray-200'}>
+            <h3 className={'text-lg font-semibold'}>
               <FormattedMessage
-                id="report_bridge_heading_surrounding"
                 defaultMessage={'Umgebung Brücke'}
+                id="report_bridge_heading_surrounding"
               />
             </h3>
-            <div>
-              <div className={'form-control md:w-96'}>
-                <label className="label cursor-pointer">
+            <div className="flex flex-col gap-2">
+              <div className={'form-control w-full'}>
+                <label className="label cursor-pointer justify-start gap-4 py-3">
+                  <input
+                    checked={state.hasContinuousShore}
+                    className="checkbox checkbox-primary flex-shrink-0"
+                    name="hasContinuousShore"
+                    onChange={handleChange}
+                    type="checkbox"
+                  />
                   <span className="label-text">
                     <FormattedMessage
-                      id="report_bridge_label_hasContinuousShore"
                       defaultMessage={
                         'Uferbereich mind. einseitig durchgehend vor- und nach der Brücke?'
                       }
+                      id="report_bridge_label_hasContinuousShore"
                     />
                   </span>
-                  <input
-                    type="checkbox"
-                    name="hasContinuousShore"
-                    checked={state.hasContinuousShore}
-                    onChange={handleChange}
-                    className="checkbox"
-                  />
                 </label>
               </div>
-              <div className={'form-control md:w-96'}>
-                <label className="label cursor-pointer">
+              <div className={'form-control w-full'}>
+                <label className="label cursor-pointer justify-start gap-4 py-3">
+                  <input
+                    checked={state.hasSlopes}
+                    className="checkbox checkbox-primary flex-shrink-0"
+                    name="hasSlopes"
+                    onChange={handleChange}
+                    type="checkbox"
+                  />
                   <span className="label-text">
                     <FormattedMessage
-                      id="report_bridge_label_hasSlopes"
                       defaultMessage={
                         'Schwellen / Abstürze von 1m Höhe innerhalb Distanz von 20m zur Brücke?'
                       }
+                      id="report_bridge_label_hasSlopes"
                     />
                   </span>
-                  <input
-                    type="checkbox"
-                    name="hasSlopes"
-                    checked={state.hasSlopes}
-                    onChange={handleChange}
-                    className="checkbox"
-                  />
                 </label>
               </div>
             </div>
           </div>
-          <BridgeTraffic state={state} onChange={handleChange} />
-          <div className={'flex flex-col gap-3'}>
-            <h3>
+          <BridgeTraffic onChange={handleChange} state={state} />
+          <div className={'flex flex-col gap-3 pt-4 border-t border-gray-200'}>
+            <h3 className={'text-lg font-semibold'}>
               <FormattedMessage
-                id="report_bridge_heading_varia"
                 defaultMessage={'Sonstiges'}
+                id="report_bridge_heading_varia"
               />
             </h3>
             <div className={'form-control'}>
               <label className={'label'} htmlFor="nickname">
                 <FormattedMessage
-                  id="report_bridge_label_nickname"
                   defaultMessage={'Nickname (öffentlich)'}
+                  id="report_bridge_label_nickname"
                 />
               </label>
               <input
-                type="text"
                 className={'input input-bordered'}
                 name="nickname"
-                value={state.nickname ? state.nickname : ''}
                 onChange={handleChange}
+                type="text"
+                value={state.nickname ? state.nickname : ''}
               />
             </div>
             <div className={'form-control'}>
               <label className={'label'} htmlFor="email">
                 <FormattedMessage
-                  id="report_bridge_label_email"
                   defaultMessage={'E-Mail (nicht sichtbar)'}
+                  id="report_bridge_label_email"
                 />
               </label>
               <input
-                type="email"
                 className={'input input-bordered'}
                 name="email"
-                value={state.email ? state.email : ''}
                 onChange={handleChange}
+                type="email"
+                value={state.email ? state.email : ''}
               />
             </div>
             <div className={'form-control'}>
               <label className={'label'} htmlFor="commentReporter">
                 <FormattedMessage
-                  id="report_bridge_label_commentReporter"
                   defaultMessage={'Bemerkungen'}
+                  id="report_bridge_label_commentReporter"
                 />
               </label>
               <textarea
                 className={'textarea textarea-bordered'}
                 name="commentReporter"
+                onChange={handleChange}
                 rows={8}
                 value={state.commentReporter ? state.commentReporter : ''}
-                onChange={handleChange}
               />
             </div>
             {store.auth.sessionToken && (
               <div className={'form-control'}>
                 <label className={'label'} htmlFor="commentAdmin">
                   <FormattedMessage
-                    id="report_bridge_label_commentAdmin"
                     defaultMessage={'Bemerkungen (Admin)'}
+                    id="report_bridge_label_commentAdmin"
                   />
                 </label>
                 <textarea
                   className={'textarea textarea-bordered'}
                   name="commentAdmin"
+                  onChange={handleChange}
                   rows={8}
                   value={state.commentAdmin ? state.commentAdmin : ''}
-                  onChange={handleChange}
                 />
               </div>
             )}
           </div>
-          <div className={'flex flex-col md:flex-row gap-3'}>
-            {state.objectId && (
+          <div
+            className={
+              'sticky bottom-0 bg-white py-4 border-t border-gray-200 -mx-4 px-4 md:relative md:border-0 md:mx-0 md:px-0 md:py-0'
+            }
+          >
+            <div className={'flex flex-col-reverse md:flex-row gap-3'}>
               <button
-                className={'btn btn-primary'}
-                type={'submit'}
-                disabled={isBusy}
+                className={'btn btn-outline w-full md:w-auto'}
+                onClick={() => navigate('/')}
+                type={'button'}
               >
                 <FormattedMessage
-                  id="report_bridge_button_save"
-                  defaultMessage={'Speichern'}
+                  defaultMessage={'Abbrechen'}
+                  id="report_bridge_button_cancel"
                 />
               </button>
-            )}
-            {!state.objectId && (
-              <button
-                className={'btn btn-primary'}
-                type={'submit'}
-                disabled={isBusy}
-              >
-                <FormattedMessage
-                  id="report_bridge_button_report"
-                  defaultMessage={'Erfassen'}
-                />
-              </button>
-            )}
-            <button
-              className={'btn btn-outline'}
-              type={'button'}
-              onClick={() => navigate('/')}
-            >
-              <FormattedMessage
-                id="report_bridge_button_cancel"
-                defaultMessage={'Abbrechen'}
-              />
-            </button>
+              {state.objectId && (
+                <button
+                  className={'btn btn-primary btn-lg md:btn-md w-full md:w-auto'}
+                  disabled={isBusy}
+                  type={'submit'}
+                >
+                  <FormattedMessage
+                    defaultMessage={'Speichern'}
+                    id="report_bridge_button_save"
+                  />
+                </button>
+              )}
+              {!state.objectId && (
+                <button
+                  className={'btn btn-primary btn-lg md:btn-md w-full md:w-auto'}
+                  disabled={isBusy}
+                  type={'submit'}
+                >
+                  <FormattedMessage
+                    defaultMessage={'Erfassen'}
+                    id="report_bridge_button_report"
+                  />
+                </button>
+              )}
+            </div>
             {isBusy && (
-              <div className={'absolute inset-0'}>
-                <div className={'loading loading-spinner'}></div>
+              <div className={'absolute inset-0 bg-white/50 flex items-center justify-center'}>
+                <div className={'loading loading-spinner loading-lg'}></div>
               </div>
             )}
           </div>

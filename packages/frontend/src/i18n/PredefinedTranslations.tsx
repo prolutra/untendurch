@@ -6,34 +6,34 @@ const PredefinedTranslations = () => {
 
   // SafetyRisk
   intl.formatMessage({
-    id: 'safety_risk_NO_RISK',
     defaultMessage: 'Ungefährlich',
+    id: 'safety_risk_NO_RISK',
   });
   intl.formatMessage({
-    id: 'safety_risk_LOW_RISK',
     defaultMessage: 'Kaum gefährlich',
+    id: 'safety_risk_LOW_RISK',
   });
   intl.formatMessage({
-    id: 'safety_risk_MEDIUM_RISK',
     defaultMessage: 'Gefährlich',
+    id: 'safety_risk_MEDIUM_RISK',
   });
   intl.formatMessage({
-    id: 'safety_risk_HIGH_RISK',
     defaultMessage: 'Sehr gefährlich',
+    id: 'safety_risk_HIGH_RISK',
   });
   intl.formatMessage({
-    id: 'safety_risk_VERY_HIGH_RISK',
     defaultMessage: 'Äusserst gefährlich',
+    id: 'safety_risk_VERY_HIGH_RISK',
   });
 
   // OtterFriendly
   intl.formatMessage({
-    id: 'otter_friendly_FRIENDLY',
     defaultMessage: 'Freundlich',
+    id: 'otter_friendly_FRIENDLY',
   });
   intl.formatMessage({
-    id: 'otter_friendly_UNFRIENDLY',
     defaultMessage: 'Unfreundlich',
+    id: 'otter_friendly_UNFRIENDLY',
   });
 
   return <></>;

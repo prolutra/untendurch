@@ -1,8 +1,10 @@
-import { FormattedMessage } from 'react-intl';
-import type { FC } from 'react';
-import React, { useEffect, useRef, useState } from 'react';
-import type { BridgeFormState } from '../BridgeFormState';
 import type Parse from 'parse';
+import type { FC } from 'react';
+
+import React, { useEffect, useRef, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
+
+import type { BridgeFormState } from '../BridgeFormState';
 
 type DisplayFile = {
   isNew?: boolean;
@@ -12,18 +14,17 @@ type DisplayFile = {
 };
 
 type Props = {
-  state: BridgeFormState;
   setState: React.Dispatch<React.SetStateAction<BridgeFormState>>;
+  state: BridgeFormState;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const BridgeImages: FC<Props> = ({ state, setState }) => {
+export const BridgeImages: FC<Props> = ({ setState, state }) => {
   const hiddenFileInputRef = useRef<HTMLInputElement>(null);
   const [parseFiles, setParseFiles] = useState<Parse.File[]>();
   const [newFiles, setNewFiles] = useState<DisplayFile[]>([]);
   const [displayFiles, setDisplayFiles] = useState<DisplayFile[]>([]);
   const [isBusy, setIsBusy] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<null | string>(null);
 
   useEffect(() => {
     if (state.images && state.images.length > 0) {
@@ -49,13 +50,13 @@ export const BridgeImages: FC<Props> = ({ state, setState }) => {
 
   type UploadedImage =
     | {
+        error: string;
+        isValid: false;
+      }
+    | {
         isValid: true;
         name: string;
         url: string;
-      }
-    | {
-        isValid: false;
-        error: string;
       };
 
   const uploadImages = async (files: FileList): Promise<UploadedImage[]> => {
@@ -71,8 +72,8 @@ export const BridgeImages: FC<Props> = ({ state, setState }) => {
       const response = await fetch(
         `${import.meta.env.VITE_REACT_APP_PARSE_SERVER_URL.replace('/parse', '')}/upload`,
         {
-          method: 'POST',
           body: formData,
+          method: 'POST',
         }
       );
 
@@ -81,7 +82,7 @@ export const BridgeImages: FC<Props> = ({ state, setState }) => {
         return json.images;
       }
       return [];
-    } catch (error) {
+    } catch {
       return [];
     }
   };
@@ -143,7 +144,11 @@ export const BridgeImages: FC<Props> = ({ state, setState }) => {
   }
 
   return (
-    <div className={'flex flex-col gap-3 relative'}>
+    <div
+      className={
+        'flex flex-col gap-3 relative pt-4 border-t border-gray-200'
+      }
+    >
       {isBusy && (
         <div
           className={
@@ -153,10 +158,10 @@ export const BridgeImages: FC<Props> = ({ state, setState }) => {
           <div className={'loading loading-spinner'}></div>
         </div>
       )}
-      <h3>
+      <h3 className={'text-lg font-semibold'}>
         <FormattedMessage
-          id="report_bridge_label_images"
           defaultMessage={'Bilder'}
+          id="report_bridge_label_images"
         />
       </h3>
       {uploadError && (
@@ -168,14 +173,14 @@ export const BridgeImages: FC<Props> = ({ state, setState }) => {
         <>
           <p className={'italic'}>
             <FormattedMessage
-              id="report_bridge_images_required"
               defaultMessage={'Es muss mindestens ein Bild ausgewählt werden'}
+              id="report_bridge_images_required"
             />
           </p>
           <p className={'italic'}>
             <FormattedMessage
-              id="report_bridge_images_request_landscape"
               defaultMessage={'Bitte Bilder im Querformat hochladen.'}
+              id="report_bridge_images_request_landscape"
             />
           </p>
         </>
@@ -184,31 +189,31 @@ export const BridgeImages: FC<Props> = ({ state, setState }) => {
         {hiddenFileInputRef && (
           <div>
             <button
-              type="button"
               className="btn btn-primary"
               disabled={displayFiles.length >= 5}
               onClick={(e) => {
                 e.preventDefault();
                 hiddenFileInputRef.current?.click();
               }}
+              type="button"
             >
               <FormattedMessage
-                id="report_bridge_button_upload"
                 defaultMessage={'Bild auswählen'}
+                id="report_bridge_button_upload"
               />
             </button>
           </div>
         )}
         <input
-          name="files"
+          accept=".jpg,.jpeg,.png"
           className="hidden"
+          id="fileInput"
+          multiple
+          name="files"
           onChange={onFileChange}
           ref={hiddenFileInputRef}
-          id="fileInput"
-          type={'file'}
-          accept=".jpg,.jpeg,.png"
           required={displayFiles.length === 0}
-          multiple
+          type={'file'}
         />
       </div>
       <div className={'grid grid-cols-3 gap-4'}>
@@ -216,15 +221,15 @@ export const BridgeImages: FC<Props> = ({ state, setState }) => {
           displayFiles.map((file) => {
             return (
               <div className={'relative'} key={'wrap-' + file.name}>
-                <img src={file.url} alt={''} />
+                <img alt={''} src={file.url} />
                 <button
-                  type="button"
-                  key={'remove-' + file.name}
                   className={'btn btn-sm btn-circle absolute top-2 right-2'}
+                  key={'remove-' + file.name}
                   onClick={(e) => {
                     e.preventDefault();
                     removeFile(file);
                   }}
+                  type="button"
                 >
                   ✕
                 </button>

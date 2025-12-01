@@ -1,13 +1,14 @@
-import path from 'path';
-import fs from 'fs';
-import writeXlsxFile from 'write-excel-file/node';
 import archiver from 'archiver';
+import fs from 'fs';
+import path from 'path';
+import writeXlsxFile from 'write-excel-file/node';
+
+import { PARSE_SERVER_ROOT_URL } from '../../../config.js';
 import {
   exportDirectory,
   imagesDirectory,
   uploadsDirectory,
 } from '../../../directories.js';
-import { PARSE_SERVER_ROOT_URL } from '../../../config.js';
 
 function getTimestamp() {
   const date = new Date();
@@ -85,9 +86,9 @@ Parse.Cloud.define('export-xls', async (req) => {
       // Test if the value is an image
       if (fieldName === 'images') {
         if (value.length > 0) {
-          const output: string[] = value.map((item: any) => {
-            return item.name;
-          });
+          const output: string[] = value.map(
+            (item: { name: string }) => item.name
+          );
           files.push(...output);
           return {
             type: String,
@@ -101,9 +102,9 @@ Parse.Cloud.define('export-xls', async (req) => {
       // Test if the value is a date
       if (value instanceof Date) {
         return {
+          format: 'dd/mm/yyyy hh:mm:ss',
           type: Date,
           value: value,
-          format: 'dd/mm/yyyy hh:mm:ss',
         };
       }
       // Test if the value is a boolean
@@ -194,7 +195,7 @@ Parse.Cloud.define('export-xls', async (req) => {
     return new Promise<void>((resolve, reject) => {
       archive
         .directory(sourceDir, false)
-        .on('error', (err: any) => reject(err))
+        .on('error', (err: Error) => reject(err))
         .pipe(stream);
 
       stream.on('close', () => resolve());
@@ -207,7 +208,7 @@ Parse.Cloud.define('export-xls', async (req) => {
   await zipDirectory(tmpDir, zipFilePath);
 
   // clean up
-  fs.rmSync(tmpDir, { recursive: true, force: true });
+  fs.rmSync(tmpDir, { force: true, recursive: true });
 
   const zipFileUrl = `${PARSE_SERVER_ROOT_URL}/uploads/${zipFileName}`;
 

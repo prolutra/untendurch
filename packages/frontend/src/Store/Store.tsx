@@ -1,30 +1,35 @@
 import { model, Model, prop, registerRootStore } from 'mobx-keystone';
 import React, { createContext, useContext, useState } from 'react';
-import { CurrentPositionStore } from './CurrentPositionStore';
-import { ReportBridgeStore } from './ReportBridgeStore';
-import { ExistingBridgesStore } from './ExistingBridgesStore';
-import { MapStore as MapSettingsStore } from './MapSettingsStore';
+
 import { AuthStore } from './AuthStore';
 import { CantonMunicipalityStore } from './CantonMunicipalityStore';
+import { CurrentPositionStore } from './CurrentPositionStore';
+import { ExistingBridgesStore } from './ExistingBridgesStore';
+import { MapStore as MapSettingsStore } from './MapSettingsStore';
+import { ReportBridgeStore } from './ReportBridgeStore';
 
 @model('untendurch/RootStore')
 export class RootStore extends Model({
+  auth: prop<AuthStore>(() => new AuthStore({})),
+  cantonMunicipality: prop<CantonMunicipalityStore>(
+    () => new CantonMunicipalityStore({})
+  ),
   currentPosition: prop<CurrentPositionStore>(
     () => new CurrentPositionStore({})
   ),
   existingBridges: prop<ExistingBridgesStore>(
     () => new ExistingBridgesStore({})
   ),
-  reportBridge: prop<ReportBridgeStore>(() => new ReportBridgeStore({})),
   mapSettings: prop<MapSettingsStore>(() => new MapSettingsStore({})),
-  auth: prop<AuthStore>(() => new AuthStore({})),
-  cantonMunicipality: prop<CantonMunicipalityStore>(
-    () => new CantonMunicipalityStore({})
-  ),
+  reportBridge: prop<ReportBridgeStore>(() => new ReportBridgeStore({})),
 }) {}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-let rootStore: RootStore | any = null;
+let rootStore: any | RootStore = null;
+
+interface StoreProviderProps {
+  children: React.ReactNode;
+}
 
 export function initStore(): RootStore {
   rootStore = new RootStore({});
@@ -34,11 +39,7 @@ export function initStore(): RootStore {
   return rootStore;
 }
 
-interface StoreProviderProps {
-  children: React.ReactNode;
-}
-
-const StoreContext = createContext<RootStore | null>(null);
+const StoreContext = createContext<null | RootStore>(null);
 
 export const StoreProvider = ({ children }: StoreProviderProps) => {
   const [storeContext] = useState(() => initStore());

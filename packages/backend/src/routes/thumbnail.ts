@@ -1,20 +1,21 @@
-import express from 'express';
 import axios from 'axios';
-import sharp from 'sharp';
+import express from 'express';
 import fs from 'fs';
 import path from 'path';
-import { thumbnailDirectory } from '../directories.js';
+import sharp from 'sharp';
+
 import { PARSE_SERVER_URL } from '../config.js';
+import { thumbnailDirectory } from '../directories.js';
 
 const thumbnailRoute = express.Router();
 
 type Query = {
-  url: string;
   devicePixels: string;
+  url: string;
 };
 
 thumbnailRoute.get('/thumbnail', async (req, res) => {
-  const { url, devicePixels } = req.query as Query;
+  const { devicePixels, url } = req.query as Query;
 
   const width = Math.ceil(320 * (Number(devicePixels) || 1));
   const height = Math.ceil(200 * (Number(devicePixels) || 1));
@@ -30,8 +31,8 @@ thumbnailRoute.get('/thumbnail', async (req, res) => {
   if (!url.includes(PARSE_SERVER_URL.split('//')[1])) {
     return res.status(400).send({
       error: 'Invalid URL',
-      url,
       serverUrl: PARSE_SERVER_URL,
+      url,
     });
   }
 
@@ -50,7 +51,7 @@ thumbnailRoute.get('/thumbnail', async (req, res) => {
     const imgSharp = sharp(buffer);
     const thumbnail = await imgSharp
       .rotate()
-      .resize({ width, height, fit: 'inside' })
+      .resize({ fit: 'inside', height, width })
       .sharpen()
       .jpeg({ quality: 70 })
       .toBuffer();

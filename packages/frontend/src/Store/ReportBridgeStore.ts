@@ -1,19 +1,30 @@
+import type { Point } from 'ol/geom';
+
 import { computed } from 'mobx';
 import { model, Model, modelAction, prop } from 'mobx-keystone';
 import { Feature } from 'ol';
-import type { Point } from 'ol/geom';
+
 import type { LatLon } from './LatLon';
-import { fetchPointInformation } from '../GeoAdmin/FetchPointInformation';
 import type { Lv95 } from './Lv95';
+
+import { fetchPointInformation } from '../GeoAdmin/FetchPointInformation';
 import { latLonToPoint } from '../GeoAdmin/PointTransformations';
 import { transformToLv95 } from '../GeoAdmin/projections';
 
 @model('untendurch/ReportBridgeRoute')
 export class ReportBridgeStore extends Model({
-  latLon: prop<LatLon | null>(() => null).withSetter(),
   canton: prop<string>(() => '').withSetter(),
+  latLon: prop<LatLon | null>(() => null).withSetter(),
   municipality: prop<string>(() => '').withSetter(),
 }) {
+  @computed
+  get asLv95(): Lv95 | null {
+    if (this.latLon) {
+      return transformToLv95(this.latLon.lon, this.latLon.lat);
+    }
+    return null;
+  }
+
   @computed
   get reportedFeature(): Feature<Point> | null {
     if (this.latLon) {
@@ -34,13 +45,5 @@ export class ReportBridgeStore extends Model({
       this.setCanton(result.canton);
       this.setMunicipality(result.municipality);
     });
-  }
-
-  @computed
-  get asLv95(): Lv95 | null {
-    if (this.latLon) {
-      return transformToLv95(this.latLon.lon, this.latLon.lat);
-    }
-    return null;
   }
 }

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import sharp from 'sharp';
 import https from 'https';
+import sharp from 'sharp';
 
 const agent = new https.Agent({
   rejectUnauthorized: false,
@@ -11,7 +11,7 @@ Parse.Cloud.job(
   async (request) => {
     //  @ts-expect-error outdated types
     //  eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { params, headers, log, message } = request;
+    const { headers, log, message, params } = request;
 
     const maxSide = 2000;
 
@@ -70,12 +70,19 @@ Parse.Cloud.job(
 
           try {
             response = await axios.get(imageUrl, {
-              timeout: 2000,
-              responseType: 'arraybuffer',
               httpsAgent: agent,
+              responseType: 'arraybuffer',
+              timeout: 2000,
             });
-          } catch (error: any) {
-            log.error(error.code, error.config.url);
+          } catch (error: unknown) {
+            const axiosError = error as {
+              code?: string;
+              config?: { url?: string };
+            };
+            log.error(
+              axiosError.code ?? 'UNKNOWN',
+              axiosError.config?.url ?? 'unknown url'
+            );
             newImages.push(null);
             continue;
           }
@@ -95,7 +102,7 @@ Parse.Cloud.job(
           ) {
             const resizedBuffer = await imgSharp
               .rotate()
-              .resize({ width: maxSide, height: maxSide, fit: 'inside' })
+              .resize({ fit: 'inside', height: maxSide, width: maxSide })
               .toFormat('jpeg', { quality: 75 })
               .toBuffer();
             log.info(
@@ -110,11 +117,11 @@ Parse.Cloud.job(
             newImages.push(file); // Add the new image to the newImages array
 
             resizedImages.push({
-              url: imageUrl,
+              height: metadata.height,
               size: metadata.size,
               sizeAfter: resizedBuffer.length,
+              url: imageUrl,
               width: metadata.width,
-              height: metadata.height,
             });
           } else {
             log.info('Image is already small enough');

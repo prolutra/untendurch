@@ -1,7 +1,9 @@
 import type { FC } from 'react';
-import { useContext, useEffect } from 'react';
+
 import OLTileLayer from 'ol/layer/Tile';
 import { XYZ } from 'ol/source';
+import { useContext, useEffect } from 'react';
+
 import { MapContext } from '../Map/MapContext';
 
 type TileLayerProps = {

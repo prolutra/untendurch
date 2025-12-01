@@ -42,11 +42,8 @@ export async function bridgeVerifyData(
     } else {
       otterFriendly = 'UNFRIENDLY';
       switch (traffic) {
-        case 'NO_TRAFFIC':
-          safetyRisk = 'NO_RISK';
-          break;
-        case 'VERY_LIGHT_TRAFFIC':
-          safetyRisk = 'LOW_RISK';
+        case 'HEAVY_TRAFFIC':
+          safetyRisk = 'HIGH_RISK';
           break;
         case 'LIGHT_TRAFFIC':
           safetyRisk = 'MEDIUM_RISK';
@@ -54,11 +51,14 @@ export async function bridgeVerifyData(
         case 'MEDIUM_TRAFFIC':
           safetyRisk = 'MEDIUM_RISK';
           break;
-        case 'HEAVY_TRAFFIC':
-          safetyRisk = 'HIGH_RISK';
+        case 'NO_TRAFFIC':
+          safetyRisk = 'NO_RISK';
           break;
         case 'VERY_HEAVY_TRAFFIC':
           safetyRisk = 'VERY_HIGH_RISK';
+          break;
+        case 'VERY_LIGHT_TRAFFIC':
+          safetyRisk = 'LOW_RISK';
           break;
 
         default:

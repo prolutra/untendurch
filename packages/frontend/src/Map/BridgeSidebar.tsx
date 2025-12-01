@@ -1,5 +1,6 @@
-import React from 'react';
 import { observer } from 'mobx-react-lite';
+import React from 'react';
+
 import { useStore } from '../Store/Store';
 import { BridgePinInfo } from './BridgePinInfo';
 
@@ -16,14 +17,14 @@ export const BridgeSidebar = observer(({ onClose }: BridgeSidebarProps) => {
       {/* Desktop: Left Sidebar - part of flex layout, pushes map */}
       <div
         className={`
-          hidden md:block
+          hidden md:flex md:flex-col
           h-full bg-white shadow-xl
-          overflow-y-auto overflow-x-hidden
+          overflow-hidden
           transition-[width] duration-300 ease-in-out
           ${isOpen ? 'w-96' : 'w-0'}
         `}
       >
-        <div className="w-96">
+        <div className="w-96 h-full overflow-y-auto">
           {isOpen && <BridgePinInfo closeFn={onClose} />}
         </div>
       </div>
@@ -36,15 +37,18 @@ export const BridgeSidebar = observer(({ onClose }: BridgeSidebarProps) => {
           bg-white shadow-xl rounded-t-2xl
           transform transition-transform duration-300 ease-in-out
           z-50
-          max-h-[80vh] overflow-y-auto
+          flex flex-col
           ${isOpen ? 'translate-y-0' : 'translate-y-full'}
         `}
+        style={{ maxHeight: '80dvh' }}
       >
         {/* Drag handle indicator */}
-        <div className="sticky top-0 bg-white pt-3 pb-2 rounded-t-2xl">
+        <div className="flex-shrink-0 pt-3 pb-2 rounded-t-2xl">
           <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto" />
         </div>
-        {isOpen && <BridgePinInfo closeFn={onClose} />}
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain -webkit-overflow-scrolling-touch">
+          {isOpen && <BridgePinInfo closeFn={onClose} />}
+        </div>
       </div>
 
       {/* Backdrop for mobile */}

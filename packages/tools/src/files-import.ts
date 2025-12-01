@@ -1,15 +1,16 @@
 #!/usr/bin/env node
-import { $ } from 'zx';
-import { CONFIG } from './config.js';
 import {
   existsSync,
-  readdirSync,
-  statSync,
   mkdirSync,
-  rmSync,
+  readdirSync,
   renameSync,
+  rmSync,
+  statSync,
 } from 'fs';
 import { resolve } from 'path';
+import { $ } from 'zx';
+
+import { CONFIG } from './config.js';
 
 $.verbose = false;
 
@@ -26,9 +27,9 @@ if (!existsSync(local.backupDir)) {
 const backupFiles = readdirSync(local.backupDir)
   .filter((f) => f.startsWith('backup-') && f.endsWith('.tar.gz'))
   .map((f) => ({
+    mtime: statSync(resolve(local.backupDir, f)).mtime,
     name: f,
     path: resolve(local.backupDir, f),
-    mtime: statSync(resolve(local.backupDir, f)).mtime,
   }))
   .sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
 
