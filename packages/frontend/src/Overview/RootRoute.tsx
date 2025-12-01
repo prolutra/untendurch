@@ -20,25 +20,26 @@ export const RootRoute: FC = observer(() => {
 
   return (
     <Layout>
-      <MapWrapper></MapWrapper>
-      <div className={'absolute top-3 left-12 hidden md:block z-10'}>
-        <OverviewFilters></OverviewFilters>
-      </div>
-      {store.auth.sessionToken && (
-        <div className={'absolute z-10 top-4 right-4'}>
-          <OverviewExport></OverviewExport>
+      <MapWrapper>
+        <div className={'absolute top-3 left-16 hidden md:block z-10'}>
+          <OverviewFilters></OverviewFilters>
         </div>
-      )}
-      <div className={'absolute z-10 bottom-4 right-4'}>
-        <Link to="/bridges/new">
-          <button className="btn btn-primary btn-lg">
-            <FormattedMessage
-              id="overview_button_report"
-              defaultMessage={'Brücke erfassen'}
-            />
-          </button>
-        </Link>
-      </div>
+        {store.auth.sessionToken && (
+          <div className={'absolute z-10 top-4 right-4'}>
+            <OverviewExport></OverviewExport>
+          </div>
+        )}
+        <div className={'absolute z-10 bottom-4 right-4'}>
+          <Link to="/bridges/new">
+            <button className="btn btn-primary btn-lg">
+              <FormattedMessage
+                id="overview_button_report"
+                defaultMessage={'Brücke erfassen'}
+              />
+            </button>
+          </Link>
+        </div>
+      </MapWrapper>
     </Layout>
   );
 });

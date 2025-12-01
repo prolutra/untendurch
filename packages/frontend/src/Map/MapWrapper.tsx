@@ -11,40 +11,23 @@ import type { FeatureLike } from 'ol/Feature';
 import VectorLayer from 'ol/layer/Vector';
 import type VectorSource from 'ol/source/Vector';
 import { MapContext } from './MapContext';
-import { OverlayContext } from './OverlayContext';
 import { Map } from './Map';
-import { BridgePinInfo } from './BridgePinInfo';
+import { BridgeSidebar } from './BridgeSidebar';
 
 type Props = {
   variant?: 'small';
+  children?: React.ReactNode;
 };
 
-export const MapWrapper = observer(({ variant }: Props) => {
+export const MapWrapper = observer(({ variant, children }: Props) => {
   const store = useStore();
 
   const mapRef = useRef<HTMLDivElement>(null);
-  const popoverRef = useRef<HTMLDivElement>(null);
   const [mapContext, setMapContext] = useState<ol.Map | null>(null);
-  const [overlayContext, setOverlayContext] = useState<ol.Overlay | null>(null);
-  const [selectedFeature, setSelectedFeature] = useState<Feature<Point> | null>(
-    null
-  );
   const [selectContext, setSelectContext] = useState<Select | null>(null);
 
   useEffect(() => {
-    if (!popoverRef.current) throw Error('popoverRef is not assigned');
     if (!mapRef.current) throw Error('mapRef is not assigned');
-
-    const overlay = new ol.Overlay({
-      element: popoverRef.current,
-      autoPan: {
-        animation: {
-          duration: 250,
-        },
-      },
-    });
-
-    setOverlayContext(overlay);
 
     const options = {
       view: new ol.View({
@@ -58,7 +41,7 @@ export const MapWrapper = observer(({ variant }: Props) => {
           units: 'metric',
         }),
       ]),
-      overlays: [overlay],
+      overlays: [],
     };
     const mapObject = new ol.Map(options);
 
@@ -68,21 +51,17 @@ export const MapWrapper = observer(({ variant }: Props) => {
   }, []);
 
   useEffect(() => {
-    if (!mapContext || !overlayContext) return;
+    if (!mapContext) return;
     const select = new Select({ style: null });
     select.on('select', (event) => {
       const selectedFeature = event.selected[0] as Feature<Point>;
       if (selectedFeature) {
-        setSelectedFeature(selectedFeature);
-        const coordinates = selectedFeature?.getGeometry()?.getCoordinates();
         const bridgePinObjectId = selectedFeature.get(
           'bridgePinObjectId'
         ) as string;
         store.mapSettings.setSelectedBridgePinObjectId(bridgePinObjectId);
-        overlayContext.setPosition(coordinates);
       } else {
-        overlayContext.setPosition(undefined);
-        setSelectedFeature(null);
+        store.mapSettings.setSelectedBridgePinObjectId(null);
       }
     });
 
@@ -92,7 +71,7 @@ export const MapWrapper = observer(({ variant }: Props) => {
     return () => {
       mapContext.removeInteraction(select);
     };
-  }, [mapContext, overlayContext]);
+  }, [mapContext]);
 
   useEffect(() => {
     if (!mapContext) return;
@@ -155,40 +134,40 @@ export const MapWrapper = observer(({ variant }: Props) => {
     }
   }, [store.mapSettings.center]);
 
+  // Update map size when sidebar opens/closes
+  useEffect(() => {
+    if (mapContext) {
+      // Wait for CSS transition to complete (300ms)
+      const timeout = setTimeout(() => {
+        mapContext.updateSize();
+      }, 310);
+      return () => clearTimeout(timeout);
+    }
+  }, [store.mapSettings.selectedBridgePinObjectId, mapContext]);
+
   function deselectBridgePin() {
     selectContext?.getFeatures().clear();
-    setSelectedFeature(null);
+    store.mapSettings.setSelectedBridgePinObjectId(null);
   }
 
   return (
     <MapContext.Provider value={mapContext}>
-      <OverlayContext.Provider value={overlayContext}>
-        {store.mapSettings.mode !== 'NONE' && (
-          <>
-            <div
-              draggable
-              className={`z-40 absolute bg-white shadow-md rounded-xl w-80 -translate-x-1/2`}
-              ref={popoverRef}
-            >
-              {selectedFeature && (
-                <div id="popoverContent">
-                  <BridgePinInfo closeFn={deselectBridgePin}></BridgePinInfo>
-                </div>
-              )}
-            </div>
-            <div
-              className={
-                variant === 'small'
-                  ? 'z-0 relative w-full h-[200px] sm:h-[300px]'
-                  : 'z-0 h-full w-full'
-              }
-              ref={mapRef}
-            >
-              <Map></Map>
-            </div>
-          </>
-        )}
-      </OverlayContext.Provider>
+      {store.mapSettings.mode !== 'NONE' && (
+        <div className={variant === 'small' ? '' : 'flex h-full w-full'}>
+          <BridgeSidebar onClose={deselectBridgePin} />
+          <div
+            className={
+              variant === 'small'
+                ? 'z-0 relative w-full h-[200px] sm:h-[300px]'
+                : 'z-0 h-full flex-1 min-w-0 relative'
+            }
+            ref={mapRef}
+          >
+            <Map></Map>
+            {children}
+          </div>
+        </div>
+      )}
     </MapContext.Provider>
   );
 });

@@ -1,7 +1,14 @@
 #!/usr/bin/env node
 import { $ } from 'zx';
 import { CONFIG } from './config.js';
-import { existsSync, readdirSync, statSync, mkdirSync } from 'fs';
+import {
+  existsSync,
+  readdirSync,
+  statSync,
+  mkdirSync,
+  rmSync,
+  renameSync,
+} from 'fs';
 import { resolve } from 'path';
 
 $.verbose = false;
@@ -40,29 +47,58 @@ if (!existsSync(local.filesDir)) {
   mkdirSync(local.filesDir, { recursive: true });
 }
 
-console.log(`\nExtracting to: ${local.filesDir}`);
+const imagesDir = resolve(local.filesDir, 'images');
+const tempExtractDir = resolve(local.filesDir, '_extract_temp');
+
+console.log(`\nExtracting to: ${imagesDir}`);
 
 try {
-  // Extract the tarball
-  // The volume backup contains parse_uploads/* so we need to strip that prefix
-  await $`tar -xzf ${latestBackup.path} -C ${local.filesDir} --strip-components=1`;
+  // Clean up temp directory if it exists
+  if (existsSync(tempExtractDir)) {
+    rmSync(tempExtractDir, { recursive: true });
+  }
+  mkdirSync(tempExtractDir, { recursive: true });
+
+  // Extract the tarball to temp directory
+  // The volume backup contains /backup/parse_uploads/images/*
+  await $`tar -xzf ${latestBackup.path} -C ${tempExtractDir}`;
+
+  // The extracted structure is: _extract_temp/backup/parse_uploads/images/*
+  const extractedImagesDir = resolve(
+    tempExtractDir,
+    'backup',
+    'parse_uploads',
+    'images'
+  );
+
+  if (!existsSync(extractedImagesDir)) {
+    throw new Error(
+      `Expected images directory not found at: ${extractedImagesDir}`
+    );
+  }
+
+  // Remove old images directory and replace with extracted one
+  if (existsSync(imagesDir)) {
+    console.log('Removing old images directory...');
+    rmSync(imagesDir, { recursive: true });
+  }
+
+  // Move extracted images to final location
+  renameSync(extractedImagesDir, imagesDir);
+
+  // Clean up temp directory
+  rmSync(tempExtractDir, { recursive: true });
 
   console.log('\nExtraction complete!');
 
   // Show what was extracted
-  const extractedDirs = readdirSync(local.filesDir);
-  console.log('\nExtracted contents:');
-  for (const dir of extractedDirs) {
-    const dirPath = resolve(local.filesDir, dir);
-    const stat = statSync(dirPath);
-    if (stat.isDirectory()) {
-      const files = readdirSync(dirPath);
-      console.log(`  ${dir}/ (${files.length} files)`);
-    } else {
-      console.log(`  ${dir}`);
-    }
-  }
+  const files = readdirSync(imagesDir);
+  console.log(`\nExtracted ${files.length} images to ${imagesDir}`);
 } catch (error) {
   console.error('Failed to extract volume backup:', error);
+  // Clean up temp directory on error
+  if (existsSync(tempExtractDir)) {
+    rmSync(tempExtractDir, { recursive: true });
+  }
   process.exit(1);
 }

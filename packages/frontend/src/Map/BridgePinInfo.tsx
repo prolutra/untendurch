@@ -63,7 +63,7 @@ export const BridgePinInfo = observer(({ closeFn }: BridgePinInfoProps) => {
 
   return (
     <div>
-      <div className={`p-2 rounded-t-lg bg-safety-${bridgePin.safetyRisk}`}>
+      <div className={`p-2 bg-safety-${bridgePin.safetyRisk}`}>
         <div className={'flex flex-row justify-between items-center'}>
           <div className={'text-white font-bold'}>{bridgePin.name}</div>
           <div>
@@ -80,9 +80,7 @@ export const BridgePinInfo = observer(({ closeFn }: BridgePinInfoProps) => {
         <div className={'overflow-hidden'}>
           <img
             alt={bridgePin.name}
-            width={320}
-            height={200}
-            className={'object-cover'}
+            className={'w-full h-auto object-cover'}
             src={getThumbnail(bridgePin.imageUrl)}
           />
         </div>

@@ -11,7 +11,6 @@ import { toLonLat } from 'ol/proj';
 import { LatLon } from '../Store/LatLon';
 import type { StyleFunction } from 'ol/style/Style';
 import { MapContext } from '../Map/MapContext';
-import { OverlayContext } from '../Map/OverlayContext';
 import VectorSource from 'ol/source/Vector';
 
 /**
@@ -45,13 +44,12 @@ export const VectorLayer: FC<VectorLayerProps> = observer(
     const store = useStore();
 
     const mapContext = useContext(MapContext);
-    const overlayContext = useContext(OverlayContext);
 
     const addFeaturesToMap = useCallback((): [
       OLVectorLayer<Feature<Geometry>> | undefined,
       Modify | undefined,
     ] => {
-      if (!mapContext || !overlayContext) return [undefined, undefined];
+      if (!mapContext) return [undefined, undefined];
 
       const source = new VectorSource({
         features: features,
@@ -121,7 +119,7 @@ export const VectorLayer: FC<VectorLayerProps> = observer(
       }
 
       return [layer, undefined];
-    }, [mapContext, overlayContext, features]);
+    }, [mapContext, features]);
 
     useEffect(() => {
       if (store.currentPosition.currentPoint) {
