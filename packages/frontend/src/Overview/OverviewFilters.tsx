@@ -16,7 +16,6 @@ export const OverviewFilters: FC = observer(() => {
   type OverviewFiltersState = {
     canton: string;
     municipality: string;
-    status: string;
     otterFriendly: string;
     safetyRisk: string;
   };
@@ -24,7 +23,6 @@ export const OverviewFilters: FC = observer(() => {
   const defaultState = {
     canton: AllFilter,
     municipality: AllFilter,
-    status: AllFilter,
     otterFriendly: AllFilter,
     safetyRisk: AllFilter,
   } as OverviewFiltersState;
@@ -55,11 +53,6 @@ export const OverviewFilters: FC = observer(() => {
   }, [state.municipality]);
 
   useEffect(() => {
-    store.mapSettings.setFilterStatus(state.status);
-    setSearchParams(state);
-  }, [state.status]);
-
-  useEffect(() => {
     store.mapSettings.setFilterOtterFriendly(state.otterFriendly);
     setSearchParams(state);
   }, [state.otterFriendly]);
@@ -81,7 +74,6 @@ export const OverviewFilters: FC = observer(() => {
       setState((previousState) => ({
         municipality: value,
         canton: municipality ? municipality.canton : AllFilter,
-        status: previousState.status,
         otterFriendly: previousState.otterFriendly,
         safetyRisk: previousState.safetyRisk,
       }));
@@ -89,7 +81,6 @@ export const OverviewFilters: FC = observer(() => {
       setState((previousState) => ({
         municipality: AllFilter,
         canton: value,
-        status: previousState.status,
         otterFriendly: previousState.otterFriendly,
         safetyRisk: previousState.safetyRisk,
       }));
@@ -175,39 +166,6 @@ export const OverviewFilters: FC = observer(() => {
                 {municipality.name}
               </option>
             ))}
-        </select>
-      </div>
-      <div className={'form-control'}>
-        <label className={'label'} htmlFor="status">
-          <FormattedMessage
-            id="overview_filters_label_status"
-            defaultMessage={'Status'}
-          />
-        </label>
-        <select
-          className={'select select-bordered'}
-          name="status"
-          value={state.status}
-          onChange={handleChange}
-        >
-          <option value={AllFilter}>
-            <FormattedMessage
-              id="overview_filters_select_ALL"
-              defaultMessage={'Alle'}
-            />
-          </option>
-          <option value={'UNVERIFIED'}>
-            <FormattedMessage
-              id="overview_filters_select_status_unverified"
-              defaultMessage={'Nicht verifiziert'}
-            />
-          </option>
-          <option value={'VERIFIED'}>
-            <FormattedMessage
-              id="overview_filters_select_status_verified"
-              defaultMessage={'Verifiziert'}
-            />
-          </option>
         </select>
       </div>
       <div className={'form-control'}>
