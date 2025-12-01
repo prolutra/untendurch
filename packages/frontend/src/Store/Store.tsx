@@ -1,64 +1,36 @@
-import { model, Model, prop, registerRootStore } from 'mobx-keystone';
-import React, { createContext, useContext, useState } from 'react';
+import React from 'react';
 
-import { AuthStore } from './AuthStore';
-import { CantonMunicipalityStore } from './CantonMunicipalityStore';
-import { CurrentPositionStore } from './CurrentPositionStore';
-import { ExistingBridgesStore } from './ExistingBridgesStore';
-import { MapStore as MapSettingsStore } from './MapSettingsStore';
-import { ReportBridgeStore } from './ReportBridgeStore';
+import { useAuthStore } from './AuthStore';
+import { useCantonMunicipalityStore } from './CantonMunicipalityStore';
+import { useCurrentPositionStore } from './CurrentPositionStore';
+import { useExistingBridgesStore } from './ExistingBridgesStore';
+import { useMapSettingsStore } from './MapSettingsStore';
+import { useReportBridgeStore } from './ReportBridgeStore';
 
-@model('untendurch/RootStore')
-export class RootStore extends Model({
-  auth: prop<AuthStore>(() => new AuthStore({})),
-  cantonMunicipality: prop<CantonMunicipalityStore>(
-    () => new CantonMunicipalityStore({})
-  ),
-  currentPosition: prop<CurrentPositionStore>(
-    () => new CurrentPositionStore({})
-  ),
-  existingBridges: prop<ExistingBridgesStore>(
-    () => new ExistingBridgesStore({})
-  ),
-  mapSettings: prop<MapSettingsStore>(() => new MapSettingsStore({})),
-  reportBridge: prop<ReportBridgeStore>(() => new ReportBridgeStore({})),
-}) {}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let rootStore: any | RootStore = null;
-
-interface StoreProviderProps {
-  children: React.ReactNode;
-}
-
-export function initStore(): RootStore {
-  rootStore = new RootStore({});
-
-  registerRootStore(rootStore);
-
-  return rootStore;
-}
-
-const StoreContext = createContext<null | RootStore>(null);
-
-export const StoreProvider = ({ children }: StoreProviderProps) => {
-  const [storeContext] = useState(() => initStore());
-
-  return (
-    <StoreContext.Provider value={storeContext}>
-      {children}
-    </StoreContext.Provider>
-  );
+// Re-export all stores for easy access
+export {
+  useAuthStore,
+  useCantonMunicipalityStore,
+  useCurrentPositionStore,
+  useExistingBridgesStore,
+  useMapSettingsStore,
+  useReportBridgeStore,
 };
 
-export function useStore(): RootStore {
-  const store: RootStore = useContext(StoreContext) as RootStore;
-
-  if (!store) {
-    throw new Error('[store][useStore][usageOutsideStoreProvider]');
-  }
-
-  return store;
+// Combined store hook for backward compatibility
+export function useStore() {
+  return {
+    auth: useAuthStore(),
+    cantonMunicipality: useCantonMunicipalityStore(),
+    currentPosition: useCurrentPositionStore(),
+    existingBridges: useExistingBridgesStore(),
+    mapSettings: useMapSettingsStore(),
+    reportBridge: useReportBridgeStore(),
+  };
 }
 
-export { rootStore };
+// StoreProvider is no longer needed with Zustand
+// but kept for backward compatibility with App.tsx
+export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
+  return <>{children}</>;
+};

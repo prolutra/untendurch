@@ -13,6 +13,8 @@ export const EditBridgeRoute: FC = () => {
   const store = useStore();
 
   useEffect(() => {
+    // Save main map state before entering edit bridge view
+    store.mapSettings.saveMainMapState();
     // Clear any selected bridge pin when entering the edit bridge page
     store.mapSettings.setSelectedBridgePinObjectId(null);
   }, []);

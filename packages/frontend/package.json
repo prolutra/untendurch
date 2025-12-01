@@ -7,9 +7,6 @@
   "dependencies": {
     "@mdx-js/react": "^3.1.1",
     "lucide-react": "^0.555.0",
-    "mobx": "6.15.0",
-    "mobx-keystone": "^1.11.5",
-    "mobx-react-lite": "^4.1.1",
     "ol": "9.2.4",
     "parse": "6.1.1",
     "polished": "^4.3.1",
@@ -18,7 +15,8 @@
     "react-dom": "^18.3.1",
     "react-intl": "^6.8.9",
     "react-router-dom": "^6.30.2",
-    "tslog": "^4.10.2"
+    "tslog": "^4.10.2",
+    "zustand": "^5.0.9"
   },
   "scripts": {
     "dev": "vite",
@@ -42,8 +40,6 @@
     "up": "yarn upgrade-interactive"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.28.0",
-    "@babel/plugin-transform-class-properties": "^7.27.1",
     "@formatjs/cli": "^6.7.4",
     "@types/parse": "^3.0.9",
     "@types/proj4": "^2.5.6",

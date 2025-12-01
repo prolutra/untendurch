@@ -1,37 +1,54 @@
-import { computed } from 'mobx';
-import { Model, model, modelAction, prop } from 'mobx-keystone';
 import Parse from 'parse';
+import { create } from 'zustand';
 
-@model('untendurch/Auth')
-export class AuthStore extends Model({
-  sessionToken: prop<null | string>(() => null).withSetter(),
-}) {
-  @computed
-  get currentUser(): Parse.User | undefined {
-    return Parse.User.current() ?? undefined;
-  }
+export type AuthStore = AuthActions & AuthState;
 
-  @modelAction
-  async login(username: string, password: string) {
-    return Parse.User.logIn(username, password)
-      .then((parseUser) => {
-        this.setSessionToken(parseUser.getSessionToken());
-      })
-      .catch((error) => {
-        throw new Error(error.message);
-      });
-  }
+interface AuthActions {
+  currentUser: () => Parse.User | undefined;
+  login: (username: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  setSessionToken: (token: null | string) => void;
+}
 
-  @modelAction
-  async logout() {
-    // remove session token in any case
-    this.setSessionToken(null);
-    return Parse.User.logOut();
-  }
+interface AuthState {
+  sessionToken: null | string;
+}
 
-  onAttachedToRootStore() {
-    if (this.currentUser) {
-      this.setSessionToken(this.currentUser.getSessionToken());
+export const useAuthStore = create<AuthStore>((set) => ({
+  currentUser: () => Parse.User.current() ?? undefined,
+
+  login: async (username: string, password: string) => {
+    try {
+      const parseUser = await Parse.User.logIn(username, password);
+      set({ sessionToken: parseUser.getSessionToken() ?? null });
+    } catch (error) {
+      throw new Error(error instanceof Error ? error.message : 'Unknown error');
     }
+  },
+
+  logout: async () => {
+    set({ sessionToken: null });
+    await Parse.User.logOut();
+  },
+
+  sessionToken: null,
+
+  setSessionToken: (token) => set({ sessionToken: token }),
+}));
+
+/**
+ * Initialize session token from current user if exists.
+ * Must be called after Parse is initialized.
+ */
+export function initializeAuthStore() {
+  try {
+    const currentUser = Parse.User.current();
+    if (currentUser) {
+      useAuthStore
+        .getState()
+        .setSessionToken(currentUser.getSessionToken() ?? null);
+    }
+  } catch {
+    // Parse not initialized yet, ignore
   }
 }

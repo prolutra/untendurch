@@ -1,9 +1,8 @@
-import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { useStore } from '../Store/Store';
 
-export const AdminLogoutButton = observer(() => {
+export const AdminLogoutButton = () => {
   const store = useStore();
 
   function logout() {
@@ -23,4 +22,4 @@ export const AdminLogoutButton = observer(() => {
       )}
     </>
   );
-});
+};

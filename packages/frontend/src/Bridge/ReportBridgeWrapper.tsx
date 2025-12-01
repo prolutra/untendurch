@@ -1,15 +1,14 @@
 import type { FC } from 'react';
 
-import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 
 import type { BridgeFormState } from './BridgeFormState';
 
-import { LatLon } from '../Store/LatLon';
+import { createLatLon } from '../Store/LatLon';
 import { useStore } from '../Store/Store';
 import { BridgeForm } from './BridgeForm';
 
-export const ReportBridgeWrapper: FC = observer(() => {
+export const ReportBridgeWrapper: FC = () => {
   const store = useStore();
 
   const defaultState: BridgeFormState = {
@@ -46,16 +45,15 @@ export const ReportBridgeWrapper: FC = observer(() => {
     if (store.currentPosition.latLon) {
       store.reportBridge
         .setPosition(
-          new LatLon({
-            lat: store.currentPosition.latLon.lat,
-            lon: store.currentPosition.latLon.lon,
-          })
+          createLatLon(
+            store.currentPosition.latLon.lat,
+            store.currentPosition.latLon.lon
+          )
         )
         .then(() => {
-          if (store.currentPosition.currentPoint) {
-            store.mapSettings.setCenter(
-              store.currentPosition.currentPoint.getCoordinates()
-            );
+          const currentPoint = store.currentPosition.currentPoint();
+          if (currentPoint) {
+            store.mapSettings.setCenter(currentPoint.getCoordinates());
             store.mapSettings.setZoom(17);
           }
         });
@@ -64,14 +62,9 @@ export const ReportBridgeWrapper: FC = observer(() => {
 
   useEffect(() => {
     if (store.currentPosition.navigatorWithoutLocationSupport) {
-      store.reportBridge.setPosition(
-        new LatLon({
-          lat: 46.79871,
-          lon: 8.23176,
-        })
-      );
+      store.reportBridge.setPosition(createLatLon(46.79871, 8.23176));
     }
   }, [store.currentPosition.navigatorWithoutLocationSupport]);
 
   return <BridgeForm bridgeFormState={defaultState}></BridgeForm>;
-});
+};

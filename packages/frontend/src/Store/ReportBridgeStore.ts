@@ -1,8 +1,7 @@
 import type { Point } from 'ol/geom';
 
-import { computed } from 'mobx';
-import { model, Model, modelAction, prop } from 'mobx-keystone';
 import { Feature } from 'ol';
+import { create } from 'zustand';
 
 import type { LatLon } from './LatLon';
 import type { Lv95 } from './Lv95';
@@ -11,39 +10,63 @@ import { fetchPointInformation } from '../GeoAdmin/FetchPointInformation';
 import { latLonToPoint } from '../GeoAdmin/PointTransformations';
 import { transformToLv95 } from '../GeoAdmin/projections';
 
-@model('untendurch/ReportBridgeRoute')
-export class ReportBridgeStore extends Model({
-  canton: prop<string>(() => '').withSetter(),
-  latLon: prop<LatLon | null>(() => null).withSetter(),
-  municipality: prop<string>(() => '').withSetter(),
-}) {
-  @computed
-  get asLv95(): Lv95 | null {
-    if (this.latLon) {
-      return transformToLv95(this.latLon.lon, this.latLon.lat);
+export type ReportBridgeStore = ReportBridgeActions &
+  ReportBridgeGetters &
+  ReportBridgeState;
+
+interface ReportBridgeActions {
+  setCanton: (canton: string) => void;
+  setLatLon: (latLon: LatLon | null) => void;
+  setMunicipality: (municipality: string) => void;
+  setPosition: (latLon: LatLon) => Promise<void>;
+}
+
+interface ReportBridgeGetters {
+  asLv95: () => Lv95 | null;
+  reportedFeature: () => Feature<Point> | null;
+}
+
+interface ReportBridgeState {
+  canton: string;
+  latLon: LatLon | null;
+  municipality: string;
+}
+
+export const useReportBridgeStore = create<ReportBridgeStore>((set, get) => ({
+  asLv95: () => {
+    const { latLon } = get();
+    if (latLon) {
+      return transformToLv95(latLon.lon, latLon.lat);
     }
     return null;
-  }
+  },
+  canton: '',
+  latLon: null,
 
-  @computed
-  get reportedFeature(): Feature<Point> | null {
-    if (this.latLon) {
+  municipality: '',
+  reportedFeature: () => {
+    const { latLon } = get();
+    if (latLon) {
       const feature = new Feature({
-        geometry: latLonToPoint(this.latLon),
+        geometry: latLonToPoint(latLon),
       });
       feature.setId('reportedFeature-' + new Date());
       return feature;
-    } else {
-      return null;
     }
-  }
+    return null;
+  },
+  setCanton: (canton) => set({ canton }),
 
-  @modelAction
-  async setPosition(latLon: LatLon) {
-    return fetchPointInformation(latLonToPoint(latLon)).then((result) => {
-      this.setLatLon(latLon);
-      this.setCanton(result.canton);
-      this.setMunicipality(result.municipality);
+  setLatLon: (latLon) => set({ latLon }),
+
+  setMunicipality: (municipality) => set({ municipality }),
+
+  setPosition: async (latLon: LatLon) => {
+    const result = await fetchPointInformation(latLonToPoint(latLon));
+    set({
+      canton: result.canton,
+      latLon,
+      municipality: result.municipality,
     });
-  }
-}
+  },
+}));

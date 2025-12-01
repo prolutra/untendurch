@@ -11,6 +11,8 @@ export const ReportBridgeRoute: FC = () => {
   const store = useStore();
 
   useEffect(() => {
+    // Save main map state before entering report bridge view
+    store.mapSettings.saveMainMapState();
     // Clear any selected bridge pin when entering the report bridge page
     store.mapSettings.setSelectedBridgePinObjectId(null);
   }, []);

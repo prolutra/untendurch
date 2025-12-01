@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { useStore } from '../Store/Store';
@@ -8,7 +7,7 @@ interface BridgeSidebarProps {
   onClose: () => void;
 }
 
-export const BridgeSidebar = observer(({ onClose }: BridgeSidebarProps) => {
+export const BridgeSidebar = ({ onClose }: BridgeSidebarProps) => {
   const store = useStore();
   const isOpen = store.mapSettings.selectedBridgePinObjectId !== null;
 
@@ -60,4 +59,4 @@ export const BridgeSidebar = observer(({ onClose }: BridgeSidebarProps) => {
       )}
     </>
   );
-});
+};

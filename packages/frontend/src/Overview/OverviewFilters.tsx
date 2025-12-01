@@ -1,17 +1,18 @@
 import type { FC } from 'react';
 
 import 'ol/ol.css';
-import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useSearchParams } from 'react-router-dom';
+
+import type { Municipality } from '../Store/Municipality';
 
 import { CloseChar } from '../lib/closeChar';
 import { AllFilter } from '../Store/AllFilter';
 import { SafetyRisk } from '../Store/SafetyRisk';
 import { useStore } from '../Store/Store';
 
-export const OverviewFilters: FC = observer(() => {
+export const OverviewFilters: FC = () => {
   const store = useStore();
 
   type OverviewFiltersState = {
@@ -70,7 +71,7 @@ export const OverviewFilters: FC = observer(() => {
     // toggle around if switching between municipalities and cantons
     if ('municipality' === name) {
       const municipality = store.cantonMunicipality.municipalities.find(
-        (municipality) => value === municipality.name
+        (m: Municipality) => value === m.name
       );
       setState((previousState) => ({
         canton: municipality ? municipality.canton : AllFilter,
@@ -127,7 +128,7 @@ export const OverviewFilters: FC = observer(() => {
               id="overview_filters_select_ALL"
             />
           </option>
-          {store.cantonMunicipality.cantons.map((canton) => (
+          {store.cantonMunicipality.cantons.map((canton: string) => (
             <option key={canton} value={canton}>
               {canton}
             </option>
@@ -155,11 +156,10 @@ export const OverviewFilters: FC = observer(() => {
           </option>
           {store.cantonMunicipality.municipalities
             .filter(
-              (municipality) =>
-                state.canton === AllFilter ||
-                state.canton === municipality.canton
+              (m: Municipality) =>
+                state.canton === AllFilter || state.canton === m.canton
             )
-            .map((municipality) => (
+            .map((municipality: Municipality) => (
               <option
                 key={municipality.canton + '_' + municipality.name}
                 value={municipality.name}
@@ -239,4 +239,4 @@ export const OverviewFilters: FC = observer(() => {
       </div>
     </div>
   );
-});
+};

@@ -145,9 +145,7 @@ export const BridgeImages: FC<Props> = ({ setState, state }) => {
 
   return (
     <div
-      className={
-        'flex flex-col gap-3 relative pt-4 border-t border-gray-200'
-      }
+      className={'flex flex-col gap-3 relative pt-4 border-t border-gray-200'}
     >
       {isBusy && (
         <div
@@ -212,7 +210,6 @@ export const BridgeImages: FC<Props> = ({ setState, state }) => {
           name="files"
           onChange={onFileChange}
           ref={hiddenFileInputRef}
-          required={displayFiles.length === 0}
           type={'file'}
         />
       </div>

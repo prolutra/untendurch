@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite';
 import 'ol/ol.css';
 import Parse from 'parse';
 import React, { useState } from 'react';
@@ -6,21 +5,8 @@ import { FormattedMessage } from 'react-intl';
 
 import { AllFilter } from '../Store/AllFilter';
 import { useStore } from '../Store/Store';
-// import JSZip from 'jszip';
-//
-// async function runPromisesInBatches(
-//   promises: Promise<any>[],
-//   batchSize: number
-// ) {
-//   const result = [];
-//   for (let i = 0; i < promises.length; i += batchSize) {
-//     const batch = promises.slice(i, i + batchSize);
-//     result.push(...(await Promise.all(batch)));
-//   }
-//   return result;
-// }
 
-export const OverviewExport = observer(() => {
+export const OverviewExport = () => {
   const store = useStore();
   const [isBusy, setIsBusy] = useState(false);
   const [isAlerting, setIsAlerting] = useState(false);
@@ -142,4 +128,4 @@ export const OverviewExport = observer(() => {
       )}
     </div>
   );
-});
+};

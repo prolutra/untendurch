@@ -38,9 +38,7 @@ export const Layout: FC<Props> = ({ children, fullHeight }) => {
           <Header lang={setLang} />
         </div>
         <div
-          className={
-            fullHeight ? 'flex-1 min-h-0 relative' : 'flex-1 relative'
-          }
+          className={fullHeight ? 'flex-1 min-h-0 relative' : 'flex-1 relative'}
         >
           {children}
         </div>

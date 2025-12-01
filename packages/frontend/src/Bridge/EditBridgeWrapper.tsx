@@ -9,7 +9,7 @@ import type { BridgeLogItem } from '../Store/BridgeSchema';
 import type { BridgeFormState } from './BridgeFormState';
 
 import { latLonToPoint } from '../GeoAdmin/PointTransformations';
-import { LatLon } from '../Store/LatLon';
+import { createLatLon } from '../Store/LatLon';
 import { useStore } from '../Store/Store';
 import { BridgeForm } from './BridgeForm';
 
@@ -51,10 +51,7 @@ export const EditBridgeWrapper: FC = () => {
       const images = bridge.attributes['images'] as Parse.File[];
 
       store.reportBridge.setPosition(
-        new LatLon({
-          lat: position.latitude,
-          lon: position.longitude,
-        })
+        createLatLon(position.latitude, position.longitude)
       );
 
       setState({
@@ -82,11 +79,8 @@ export const EditBridgeWrapper: FC = () => {
         traffic: traffic,
       });
 
-      store.mapSettings.setCenter(
-        latLonToPoint(
-          new LatLon({ lat: position.latitude, lon: position.longitude })
-        ).getCoordinates()
-      );
+      const latLon = createLatLon(position.latitude, position.longitude);
+      store.mapSettings.setCenter(latLonToPoint(latLon).getCoordinates());
       store.mapSettings.setZoom(17);
       store.mapSettings.setMode('TOP');
     });

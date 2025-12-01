@@ -1,5 +1,3 @@
-import { observer } from 'mobx-react-lite';
-
 import './Map.css';
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -9,6 +7,7 @@ import type { BridgePin } from '../Store/BridgePin';
 
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { CloseChar } from '../lib/closeChar';
+import { getAsLv95 } from '../Store/LatLon';
 import { useStore } from '../Store/Store';
 import { getThumbnail } from './GetThumbnail';
 
@@ -16,7 +15,7 @@ interface BridgePinInfoProps {
   closeFn?: () => void;
 }
 
-export const BridgePinInfo = observer(({ closeFn }: BridgePinInfoProps) => {
+export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
   const store = useStore();
   const [bridgePin, setBridgePin] = useState<BridgePin | null>(null);
   const [objectId, setObjectId] = useState<null | string>(null);
@@ -31,11 +30,11 @@ export const BridgePinInfo = observer(({ closeFn }: BridgePinInfoProps) => {
     if (objectId) {
       setBridgePin(store.existingBridges.bridgeById(objectId) || null);
     }
-  }, [objectId, store.existingBridges]);
+  }, [objectId, store.existingBridges.bridgePins]);
 
   useEffect(() => {
     if (bridgePin) {
-      setLv95(bridgePin.latLon.asLv95);
+      setLv95(getAsLv95(bridgePin.latLon));
     }
   }, [bridgePin]);
 
@@ -67,13 +66,17 @@ export const BridgePinInfo = observer(({ closeFn }: BridgePinInfoProps) => {
   return (
     <div className={'md:h-full md:flex md:flex-col'}>
       {/* Header with bridge name and close button */}
-      <div className={`px-4 py-3 bg-safety-${bridgePin.safetyRisk} flex-shrink-0`}>
+      <div
+        className={`px-4 py-3 bg-safety-${bridgePin.safetyRisk} flex-shrink-0`}
+      >
         <div className={'flex flex-row justify-between items-center gap-2'}>
           <h2 className={'text-white font-semibold text-lg leading-tight'}>
             {bridgePin.name}
           </h2>
           <button
-            className={'btn btn-ghost btn-sm btn-circle text-white flex-shrink-0'}
+            className={
+              'btn btn-ghost btn-sm btn-circle text-white flex-shrink-0'
+            }
             onClick={closeFn}
           >
             {CloseChar}
@@ -276,4 +279,4 @@ export const BridgePinInfo = observer(({ closeFn }: BridgePinInfoProps) => {
       />
     </div>
   );
-});
+};

@@ -1,14 +1,16 @@
 import type { Point } from 'ol/geom';
 
-import { computed } from 'mobx';
-import { getRootStore, model, Model, modelAction, prop } from 'mobx-keystone';
+import { create } from 'zustand';
 
-import type { RootStore } from './Store';
+import type { LatLon } from './LatLon';
 
 import { fetchPointInformation } from '../GeoAdmin/FetchPointInformation';
 import { latLonToPoint } from '../GeoAdmin/PointTransformations';
-import { LatLon } from './LatLon';
-import { rootStore } from './Store';
+import { createLatLon } from './LatLon';
+
+export type CurrentPositionStore = CurrentPositionActions &
+  CurrentPositionGetters &
+  CurrentPositionState;
 
 export type GeolocationErrorType =
   | 'not_supported'
@@ -17,103 +19,125 @@ export type GeolocationErrorType =
   | 'timeout'
   | null;
 
-@model('untendurch/CurrentPosition')
-export class CurrentPositionStore extends Model({
-  currentCanton: prop<null | string>(() => null).withSetter(),
-  currentMunicipality: prop<null | string>(() => null).withSetter(),
-  geolocationError: prop<GeolocationErrorType>(() => null).withSetter(),
-  latLon: prop<LatLon | null>(() => null).withSetter(),
-  navigatorWithoutLocationSupport: prop<boolean>(() => false).withSetter(),
-}) {
-  @computed
-  get currentPoint(): null | Point {
-    if (this.latLon) {
-      return latLonToPoint(this.latLon);
-    } else {
-      return null;
-    }
-  }
-
-  @computed
-  get geolocationErrorMessage(): null | string {
-    switch (this.geolocationError) {
-      case 'not_supported':
-        return 'Geolocation wird von Ihrem Browser nicht unterstützt.';
-      case 'permission_denied':
-        return 'Standortzugriff wurde verweigert. Bitte erlauben Sie den Zugriff in Ihren Browsereinstellungen.';
-      case 'position_unavailable':
-        return 'Standort konnte nicht ermittelt werden.';
-      case 'timeout':
-        return 'Zeitüberschreitung bei der Standortabfrage.';
-      default:
-        return null;
-    }
-  }
-
-  private store!: RootStore;
-
-  async getCurrentPosition(): Promise<GeolocationPosition> {
-    // Clear previous error
-    this.setGeolocationError(null);
-
-    return new Promise((resolve, reject) => {
-      if (!navigator.geolocation) {
-        this.setNavigatorWithoutLocationSupport(true);
-        this.setGeolocationError('not_supported');
-        reject(new Error('Geolocation is not supported by this browser.'));
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => resolve(position),
-        (error) => {
-          this.setNavigatorWithoutLocationSupport(true);
-
-          // Map GeolocationPositionError codes to readable types
-          switch (error.code) {
-            case GeolocationPositionError.PERMISSION_DENIED:
-              this.setGeolocationError('permission_denied');
-              break;
-            case GeolocationPositionError.POSITION_UNAVAILABLE:
-              this.setGeolocationError('position_unavailable');
-              break;
-            case GeolocationPositionError.TIMEOUT:
-              this.setGeolocationError('timeout');
-              break;
-          }
-
-          reject(error);
-        },
-        {
-          enableHighAccuracy: true,
-          maximumAge: 60000,
-          timeout: 10000,
-        }
-      );
-    });
-  }
-
-  @modelAction
-  async locateMe(): Promise<void> {
-    const position = await this.getCurrentPosition();
-    return this.setPosition(
-      new LatLon({
-        lat: position.coords.latitude,
-        lon: position.coords.longitude,
-      })
-    );
-  }
-
-  onAttachedToRootStore() {
-    this.store = getRootStore<RootStore>(rootStore) as RootStore;
-  }
-
-  @modelAction
-  async setPosition(latLon: LatLon) {
-    return fetchPointInformation(latLonToPoint(latLon)).then((result) => {
-      this.setLatLon(latLon);
-      this.setCurrentCanton(result.canton);
-      this.setCurrentMunicipality(result.municipality);
-    });
-  }
+interface CurrentPositionActions {
+  getCurrentPosition: () => Promise<GeolocationPosition>;
+  locateMe: () => Promise<void>;
+  setCurrentCanton: (canton: null | string) => void;
+  setCurrentMunicipality: (municipality: null | string) => void;
+  setGeolocationError: (error: GeolocationErrorType) => void;
+  setLatLon: (latLon: LatLon | null) => void;
+  setNavigatorWithoutLocationSupport: (value: boolean) => void;
+  setPosition: (latLon: LatLon) => Promise<void>;
 }
+
+interface CurrentPositionGetters {
+  currentPoint: () => null | Point;
+  geolocationErrorMessage: () => null | string;
+}
+
+interface CurrentPositionState {
+  currentCanton: null | string;
+  currentMunicipality: null | string;
+  geolocationError: GeolocationErrorType;
+  latLon: LatLon | null;
+  navigatorWithoutLocationSupport: boolean;
+}
+
+export const useCurrentPositionStore = create<CurrentPositionStore>(
+  (set, get) => ({
+    currentCanton: null,
+    currentMunicipality: null,
+    currentPoint: () => {
+      const { latLon } = get();
+      if (latLon) {
+        return latLonToPoint(latLon);
+      }
+      return null;
+    },
+    geolocationError: null,
+    geolocationErrorMessage: () => {
+      const { geolocationError } = get();
+      switch (geolocationError) {
+        case 'not_supported':
+          return 'Geolocation wird von Ihrem Browser nicht unterstützt.';
+        case 'permission_denied':
+          return 'Standortzugriff wurde verweigert. Bitte erlauben Sie den Zugriff in Ihren Browsereinstellungen.';
+        case 'position_unavailable':
+          return 'Standort konnte nicht ermittelt werden.';
+        case 'timeout':
+          return 'Zeitüberschreitung bei der Standortabfrage.';
+        default:
+          return null;
+      }
+    },
+
+    getCurrentPosition: () => {
+      return new Promise((resolve, reject) => {
+        set({ geolocationError: null });
+
+        if (!navigator.geolocation) {
+          set({
+            geolocationError: 'not_supported',
+            navigatorWithoutLocationSupport: true,
+          });
+          reject(new Error('Geolocation is not supported by this browser.'));
+          return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          (position) => resolve(position),
+          (error) => {
+            set({ navigatorWithoutLocationSupport: true });
+
+            switch (error.code) {
+              case GeolocationPositionError.PERMISSION_DENIED:
+                set({ geolocationError: 'permission_denied' });
+                break;
+              case GeolocationPositionError.POSITION_UNAVAILABLE:
+                set({ geolocationError: 'position_unavailable' });
+                break;
+              case GeolocationPositionError.TIMEOUT:
+                set({ geolocationError: 'timeout' });
+                break;
+            }
+
+            reject(error);
+          },
+          {
+            enableHighAccuracy: true,
+            maximumAge: 60000,
+            timeout: 10000,
+          }
+        );
+      });
+    },
+    latLon: null,
+    locateMe: async () => {
+      const position = await get().getCurrentPosition();
+      await get().setPosition(
+        createLatLon(position.coords.latitude, position.coords.longitude)
+      );
+    },
+    navigatorWithoutLocationSupport: false,
+    setCurrentCanton: (currentCanton) => set({ currentCanton }),
+
+    setCurrentMunicipality: (currentMunicipality) =>
+      set({ currentMunicipality }),
+
+    setGeolocationError: (geolocationError) => set({ geolocationError }),
+
+    setLatLon: (latLon) => set({ latLon }),
+
+    setNavigatorWithoutLocationSupport: (navigatorWithoutLocationSupport) =>
+      set({ navigatorWithoutLocationSupport }),
+
+    setPosition: async (latLon: LatLon) => {
+      const result = await fetchPointInformation(latLonToPoint(latLon));
+      set({
+        currentCanton: result.canton,
+        currentMunicipality: result.municipality,
+        latLon,
+      });
+    },
+  })
+);

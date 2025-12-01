@@ -1,168 +1,156 @@
 import type { GeoPoint } from 'parse';
 
-import { computed } from 'mobx';
-import {
-  _async,
-  _await,
-  getRootStore,
-  model,
-  Model,
-  modelFlow,
-  prop,
-} from 'mobx-keystone';
 import Parse from 'parse';
+import { create } from 'zustand';
 
+import type { BridgePin } from './BridgePin';
 import type { BridgeStatus } from './BridgeStatus';
 import type { SafetyRisk } from './SafetyRisk';
-import type { RootStore } from './Store';
 
 import { AllFilter } from './AllFilter';
-import { BridgePin } from './BridgePin';
-import { LatLon } from './LatLon';
-import { rootStore } from './Store';
+import { createBridgePin } from './BridgePin';
+import { createLatLon } from './LatLon';
+import { useMapSettingsStore } from './MapSettingsStore';
 
-@model('untendurch/ExistingBridges')
-export class ExistingBridgesStore extends Model({
-  bridgePins: prop<BridgePin[]>(() => []).withSetter(),
-}) {
-  @modelFlow
-  deleteBridge = _async(function* (
-    this: ExistingBridgesStore,
-    objectId: string
-  ) {
-    const query = new Parse.Query('Bridge');
+export type ExistingBridgesStore = ExistingBridgesActions &
+  ExistingBridgesGetters &
+  ExistingBridgesState;
 
-    yield* _await(
-      query.get(objectId).then((existingBridge) => {
-        return existingBridge.destroy();
-      })
-    );
+interface ExistingBridgesActions {
+  bridgeById: (objectId: string) => BridgePin | undefined;
+  deleteBridge: (objectId: string) => Promise<void>;
+  fetchExistingBridges: () => Promise<void>;
+  setBridgePins: (bridgePins: BridgePin[]) => void;
+  verifyBridge: (objectId: string) => Promise<void>;
+}
 
-    const data = this.bridgePins.filter(
-      (bridgePin) => bridgePin.objectId !== objectId
-    );
+interface ExistingBridgesGetters {
+  filteredBridges: () => BridgePin[];
+}
 
-    this.setBridgePins(data);
-  });
+interface ExistingBridgesState {
+  bridgePins: BridgePin[];
+}
 
-  @modelFlow
-  fetchExistingBridges = _async(function* (this: ExistingBridgesStore) {
-    const query = new Parse.Query('Bridge');
-    const data = yield* _await(
-      query
-        .limit(9999)
-        .find()
-        .then((bridges) =>
-          bridges.map((bridge) => {
-            const objectId = bridge.id;
-            const name = bridge.attributes['name'] as string;
-            const position = bridge.attributes['position'] as GeoPoint;
-            const bridgeIndex = bridge.attributes['bridgeIndex'] as number;
-            const safetyRisk = bridge.attributes['safetyRisk'] as SafetyRisk;
-            const cantons = bridge.attributes['cantons'] as string[];
-            const municipality = bridge.attributes[
-              'municipalities'
-            ] as string[];
-            const status = bridge.attributes['status'] as BridgeStatus;
-            const otterFriendly = bridge.attributes['otterFriendly'] as string;
-            const images = bridge.attributes['images'] as Parse.File[];
-            const nickname = bridge.attributes['nickname'] as string;
-            const shape = bridge.attributes['shape'] as string;
-            const averageDailyTraffic = bridge.attributes[
-              'averageDailyTraffic'
-            ] as number;
+export const useExistingBridgesStore = create<ExistingBridgesStore>(
+  (set, get) => ({
+    bridgeById: (objectId: string) => {
+      return get()
+        .filteredBridges()
+        .find((bridgePin) => bridgePin.objectId === objectId);
+    },
 
-            const imageUrl = images && images[0] ? (images[0].url() ?? '') : '';
+    bridgePins: [],
 
-            return new BridgePin({
-              averageDailyTraffic: averageDailyTraffic,
-              bridgeIndex: bridgeIndex,
-              cantons: cantons,
-              imageUrl: imageUrl,
-              latLon: new LatLon({
-                lat: position.latitude,
-                lon: position.longitude,
-              }),
-              municipalities: municipality,
-              name: name,
-              nickname: nickname,
-              objectId: objectId ?? '',
-              otterFriendly: otterFriendly,
-              safetyRisk: safetyRisk,
-              shape: shape,
-              status: status,
-            });
-          })
+    deleteBridge: async (objectId: string) => {
+      const query = new Parse.Query('Bridge');
+      const existingBridge = await query.get(objectId);
+      await existingBridge.destroy();
+
+      set({
+        bridgePins: get().bridgePins.filter(
+          (bridgePin) => bridgePin.objectId !== objectId
+        ),
+      });
+    },
+
+    fetchExistingBridges: async () => {
+      const query = new Parse.Query('Bridge');
+      const bridges = await query.limit(9999).find();
+
+      const data = bridges.map((bridge) => {
+        const objectId = bridge.id;
+        const name = bridge.attributes['name'] as string;
+        const position = bridge.attributes['position'] as GeoPoint;
+        const bridgeIndex = bridge.attributes['bridgeIndex'] as number;
+        const safetyRisk = bridge.attributes['safetyRisk'] as SafetyRisk;
+        const cantons = bridge.attributes['cantons'] as string[];
+        const municipality = bridge.attributes['municipalities'] as string[];
+        const status = bridge.attributes['status'] as BridgeStatus;
+        const otterFriendly = bridge.attributes['otterFriendly'] as string;
+        const images = bridge.attributes['images'] as Parse.File[];
+        const nickname = bridge.attributes['nickname'] as string;
+        const shape = bridge.attributes['shape'] as string;
+        const averageDailyTraffic = bridge.attributes[
+          'averageDailyTraffic'
+        ] as number;
+
+        const imageUrl = images && images[0] ? (images[0].url() ?? '') : '';
+
+        return createBridgePin({
+          averageDailyTraffic: averageDailyTraffic,
+          bridgeIndex: bridgeIndex,
+          cantons: cantons,
+          imageUrl: imageUrl,
+          latLon: createLatLon(position.latitude, position.longitude),
+          municipalities: municipality,
+          name: name,
+          nickname: nickname,
+          objectId: objectId ?? '',
+          otterFriendly: otterFriendly,
+          safetyRisk: safetyRisk,
+          shape: shape,
+          status: status,
+        });
+      });
+
+      set({ bridgePins: data });
+    },
+
+    filteredBridges: () => {
+      const mapSettings = useMapSettingsStore.getState();
+      return get()
+        .bridgePins.filter(
+          (b) =>
+            mapSettings.filterMunicipality === AllFilter ||
+            b.municipalities.includes(mapSettings.filterMunicipality)
         )
-    );
+        .filter(
+          (b) =>
+            mapSettings.filterCanton === AllFilter ||
+            b.cantons.includes(mapSettings.filterCanton)
+        )
+        .filter(
+          (b) =>
+            mapSettings.filterStatus === AllFilter ||
+            b.status === mapSettings.filterStatus
+        )
+        .filter(
+          (b) =>
+            mapSettings.filterOtterFriendly === AllFilter ||
+            b.otterFriendly === mapSettings.filterOtterFriendly
+        )
+        .filter(
+          (b) =>
+            mapSettings.filterSafetyRisk === AllFilter ||
+            b.safetyRisk === mapSettings.filterSafetyRisk
+        );
+    },
 
-    this.setBridgePins(data);
-  });
+    setBridgePins: (bridgePins) => set({ bridgePins }),
 
-  @modelFlow
-  verifyBridge = _async(function* (
-    this: ExistingBridgesStore,
-    objectId: string
-  ) {
-    const query = new Parse.Query('Bridge');
+    verifyBridge: async (objectId: string) => {
+      const query = new Parse.Query('Bridge');
+      const existingBridge = await query.get(objectId);
+      existingBridge.set('status', 'VERIFIED');
+      await existingBridge.save();
 
-    yield* _await(
-      query.get(objectId).then((existingBridge) => {
-        existingBridge.set('status', 'VERIFIED');
-        return existingBridge.save();
-      })
-    );
+      set({
+        bridgePins: get().bridgePins.map((bridgePin) => {
+          if (bridgePin.objectId === objectId) {
+            return { ...bridgePin, status: 'VERIFIED' as BridgeStatus };
+          }
+          return bridgePin;
+        }),
+      });
+    },
+  })
+);
 
-    const data = this.bridgePins.map((bridgePin) => {
-      if (bridgePin.objectId === objectId) {
-        bridgePin.status = 'VERIFIED';
-      }
-      return bridgePin;
-    });
-
-    this.setBridgePins(data);
-  });
-
-  @computed
-  get filteredBridges(): BridgePin[] {
-    return this.bridgePins
-      .filter(
-        (b) =>
-          this.store.mapSettings.filterMunicipality === AllFilter ||
-          b.municipalities.includes(this.store.mapSettings.filterMunicipality)
-      )
-      .filter(
-        (b) =>
-          this.store.mapSettings.filterCanton === AllFilter ||
-          b.cantons.includes(this.store.mapSettings.filterCanton)
-      )
-      .filter(
-        (b) =>
-          this.store.mapSettings.filterStatus === AllFilter ||
-          b.status === this.store.mapSettings.filterStatus
-      )
-      .filter(
-        (b) =>
-          this.store.mapSettings.filterOtterFriendly === AllFilter ||
-          b.otterFriendly === this.store.mapSettings.filterOtterFriendly
-      )
-      .filter(
-        (b) =>
-          this.store.mapSettings.filterSafetyRisk === AllFilter ||
-          b.safetyRisk === this.store.mapSettings.filterSafetyRisk
-      );
-  }
-
-  private store!: RootStore;
-
-  bridgeById(objectId: string) {
-    return this.filteredBridges.find(
-      (bridgePin) => bridgePin.objectId === objectId
-    );
-  }
-
-  onAttachedToRootStore() {
-    this.store = getRootStore<RootStore>(rootStore) as RootStore;
-    this.fetchExistingBridges();
-  }
+/**
+ * Initialize by fetching existing bridges.
+ * Must be called after Parse is initialized.
+ */
+export function initializeExistingBridgesStore() {
+  useExistingBridgesStore.getState().fetchExistingBridges();
 }

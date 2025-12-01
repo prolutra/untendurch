@@ -3,7 +3,6 @@ import type { Geometry, Point } from 'ol/geom';
 import type { StyleFunction } from 'ol/style/Style';
 import type { FC } from 'react';
 
-import { observer } from 'mobx-react-lite';
 import { Modify } from 'ol/interaction';
 import OLVectorLayer from 'ol/layer/Vector';
 import { toLonLat } from 'ol/proj';
@@ -12,7 +11,7 @@ import { Icon, Style } from 'ol/style';
 import React, { useCallback, useContext, useEffect } from 'react';
 
 import { MapContext } from '../Map/MapContext';
-import { LatLon } from '../Store/LatLon';
+import { createLatLon } from '../Store/LatLon';
 import { useStore } from '../Store/Store';
 
 /**
@@ -22,10 +21,8 @@ import { useStore } from '../Store/Store';
 const PIN_ICON = {
   // Anchor at horizontal center (0.5 = 50% of width)
   ANCHOR_X: 0.5,
-  // Anchor at bottom tip of pin (107px from top at default scale)
-  ANCHOR_Y_DEFAULT: 107,
-  // Slightly higher anchor when hovered (pin appears to lift)
-  ANCHOR_Y_HOVERED: 98,
+  // Anchor at bottom tip of pin (1.0 = 100% of height, i.e., the very bottom)
+  ANCHOR_Y: 1.0,
   // Default scale factor (icon scaled to ~45% of original)
   SCALE_DEFAULT: 0.45,
   // Hovered scale factor (icon scaled to ~55% of original)
@@ -41,122 +38,119 @@ type VectorLayerProps = {
   zIndex: number;
 };
 
-export const VectorLayer: FC<VectorLayerProps> = observer(
-  ({ draggable, features, iconSrc, zIndex }) => {
-    const store = useStore();
+export const VectorLayer: FC<VectorLayerProps> = ({
+  draggable,
+  features,
+  iconSrc,
+  zIndex,
+}) => {
+  const store = useStore();
 
-    const mapContext = useContext(MapContext);
+  const mapContext = useContext(MapContext);
 
-    const addFeaturesToMap = useCallback((): [
-      OLVectorLayer<Feature<Geometry>> | undefined,
-      Modify | undefined,
-    ] => {
-      if (!mapContext) return [undefined, undefined];
+  const addFeaturesToMap = useCallback((): [
+    OLVectorLayer<Feature<Geometry>> | undefined,
+    Modify | undefined,
+  ] => {
+    if (!mapContext) return [undefined, undefined];
 
-      const source = new VectorSource({
-        features: features,
-      });
+    const source = new VectorSource({
+      features: features,
+    });
 
-      const style = new Style({
-        image: new Icon({
-          anchor: [PIN_ICON.ANCHOR_X, PIN_ICON.ANCHOR_Y_DEFAULT],
-          anchorXUnits: 'fraction',
-          anchorYUnits: 'pixels',
-          scale: PIN_ICON.SCALE_DEFAULT,
-          src: iconSrc,
-        }),
-      });
+    const style = new Style({
+      image: new Icon({
+        anchor: [PIN_ICON.ANCHOR_X, PIN_ICON.ANCHOR_Y],
+        anchorXUnits: 'fraction',
+        anchorYUnits: 'fraction',
+        scale: PIN_ICON.SCALE_DEFAULT,
+        src: iconSrc,
+      }),
+    });
 
-      const styleHovered = new Style({
-        image: new Icon({
-          anchor: [PIN_ICON.ANCHOR_X, PIN_ICON.ANCHOR_Y_HOVERED],
-          anchorXUnits: 'fraction',
-          anchorYUnits: 'pixels',
-          scale: PIN_ICON.SCALE_HOVERED,
-          src: iconSrc,
-        }),
-        zIndex: PIN_ICON.Z_INDEX_HOVERED,
-      });
+    const styleHovered = new Style({
+      image: new Icon({
+        anchor: [PIN_ICON.ANCHOR_X, PIN_ICON.ANCHOR_Y],
+        anchorXUnits: 'fraction',
+        anchorYUnits: 'fraction',
+        scale: PIN_ICON.SCALE_HOVERED,
+        src: iconSrc,
+      }),
+      zIndex: PIN_ICON.Z_INDEX_HOVERED,
+    });
 
-      const styleFunction: StyleFunction = (feature) => {
-        return feature.get('hovered') ? styleHovered : style;
-      };
+    const styleFunction: StyleFunction = (feature) => {
+      return feature.get('hovered') ? styleHovered : style;
+    };
 
-      const layer = new OLVectorLayer({
-        source,
-        style: styleFunction,
-        zIndex,
-      });
+    const layer = new OLVectorLayer({
+      source,
+      style: styleFunction,
+      zIndex,
+    });
 
-      mapContext.addLayer(layer);
+    mapContext.addLayer(layer);
 
-      const interaction = new Modify({
-        hitDetection: layer,
-        source: source,
-      });
+    const interaction = new Modify({
+      hitDetection: layer,
+      source: source,
+    });
 
-      if (draggable) {
-        interaction.on('modifyend', (event) => {
-          event.features.forEach((feature) => {
-            const point = (feature.getGeometry() as Point).getCoordinates();
-            const lonLat = toLonLat(point);
-            store.reportBridge
-              .setPosition(
-                new LatLon({
-                  lat: lonLat[1],
-                  lon: lonLat[0],
-                })
-              )
-              .then(() => {
-                store.mapSettings.setCenter(point);
-              });
-          });
-
-          store.mapSettings.setZoom(17);
+    if (draggable) {
+      interaction.on('modifyend', (event) => {
+        event.features.forEach((feature) => {
+          const point = (feature.getGeometry() as Point).getCoordinates();
+          const lonLat = toLonLat(point);
+          store.reportBridge
+            .setPosition(createLatLon(lonLat[1], lonLat[0]))
+            .then(() => {
+              store.mapSettings.setCenter(point);
+            });
         });
 
-        mapContext.addInteraction(interaction);
-
-        return [layer, interaction];
-      }
-
-      return [layer, undefined];
-    }, [mapContext, features]);
-
-    useEffect(() => {
-      if (store.currentPosition.currentPoint) {
-        store.mapSettings.setCenter(
-          store.currentPosition.currentPoint.getCoordinates()
-        );
         store.mapSettings.setZoom(17);
-      }
-    }, [store.currentPosition.currentPoint]);
+      });
 
-    useEffect(() => {
-      if (!mapContext) return;
+      mapContext.addInteraction(interaction);
 
-      let layerAndInteraction: [
-        OLVectorLayer<Feature<Geometry>> | undefined,
-        Modify | undefined,
-      ];
+      return [layer, interaction];
+    }
 
-      if (features.length > 0) {
-        layerAndInteraction = addFeaturesToMap();
-      }
+    return [layer, undefined];
+  }, [mapContext, features]);
 
-      return () => {
-        if (layerAndInteraction) {
-          if (layerAndInteraction[0]) {
-            mapContext.removeLayer(layerAndInteraction[0]);
-          }
+  useEffect(() => {
+    const currentPoint = store.currentPosition.currentPoint();
+    if (currentPoint) {
+      store.mapSettings.setCenter(currentPoint.getCoordinates());
+      store.mapSettings.setZoom(17);
+    }
+  }, [store.currentPosition.latLon]);
 
-          if (layerAndInteraction[1]) {
-            mapContext.removeInteraction(layerAndInteraction[1]);
-          }
+  useEffect(() => {
+    if (!mapContext) return;
+
+    let layerAndInteraction: [
+      OLVectorLayer<Feature<Geometry>> | undefined,
+      Modify | undefined,
+    ];
+
+    if (features.length > 0) {
+      layerAndInteraction = addFeaturesToMap();
+    }
+
+    return () => {
+      if (layerAndInteraction) {
+        if (layerAndInteraction[0]) {
+          mapContext.removeLayer(layerAndInteraction[0]);
         }
-      };
-    }, [mapContext, features.length]);
 
-    return <></>;
-  }
-);
+        if (layerAndInteraction[1]) {
+          mapContext.removeInteraction(layerAndInteraction[1]);
+        }
+      }
+    };
+  }, [mapContext, features.length]);
+
+  return <></>;
+};

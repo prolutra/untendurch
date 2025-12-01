@@ -1,9 +1,8 @@
 import type { FC } from 'react';
 
-import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { Layout } from '../Layout';
 import { MapWrapper } from '../Map/MapWrapper';
@@ -11,13 +10,16 @@ import { useStore } from '../Store/Store';
 import { OverviewExport } from './OverviewExport';
 import { OverviewFilters } from './OverviewFilters';
 
-export const RootRoute: FC = observer(() => {
+export const RootRoute: FC = () => {
   const store = useStore();
+  const location = useLocation();
 
   useEffect(() => {
     store.mapSettings.setMode('FULL');
     store.reportBridge.setLatLon(null);
-  }, []);
+    // Restore main map state if it was saved (e.g., when returning from report bridge)
+    store.mapSettings.restoreMainMapState();
+  }, [location.pathname]);
 
   return (
     <Layout fullHeight>
@@ -47,4 +49,4 @@ export const RootRoute: FC = observer(() => {
       </MapWrapper>
     </Layout>
   );
-});
+};

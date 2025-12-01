@@ -1,21 +1,51 @@
-import { model, Model, prop } from 'mobx-keystone';
-
+import type { BridgeStatus } from './BridgeStatus';
 import type { LatLon } from './LatLon';
 import type { SafetyRisk } from './SafetyRisk';
 
-@model('untendurch/BridgePin')
-export class BridgePin extends Model({
-  averageDailyTraffic: prop<number | undefined>(() => undefined),
-  bridgeIndex: prop<number>(),
-  cantons: prop<string[]>(() => []),
-  imageUrl: prop<string>(),
-  latLon: prop<LatLon>(),
-  municipalities: prop<string[]>(() => []),
-  name: prop<string>(),
-  nickname: prop<string>(),
-  objectId: prop<string>(),
-  otterFriendly: prop<string>(),
-  safetyRisk: prop<SafetyRisk | undefined>(() => undefined),
-  shape: prop<string>(),
-  status: prop<string>(),
-}) {}
+export interface BridgePin {
+  averageDailyTraffic: number | undefined;
+  bridgeIndex: number;
+  cantons: string[];
+  imageUrl: string;
+  latLon: LatLon;
+  municipalities: string[];
+  name: string;
+  nickname: string;
+  objectId: string;
+  otterFriendly: string;
+  safetyRisk: SafetyRisk | undefined;
+  shape: string;
+  status: BridgeStatus;
+}
+
+export function createBridgePin(data: {
+  averageDailyTraffic?: number;
+  bridgeIndex: number;
+  cantons: string[];
+  imageUrl: string;
+  latLon: LatLon;
+  municipalities: string[];
+  name: string;
+  nickname: string;
+  objectId: string;
+  otterFriendly: string;
+  safetyRisk?: SafetyRisk;
+  shape: string;
+  status: BridgeStatus;
+}): BridgePin {
+  return {
+    averageDailyTraffic: data.averageDailyTraffic,
+    bridgeIndex: data.bridgeIndex,
+    cantons: data.cantons,
+    imageUrl: data.imageUrl,
+    latLon: data.latLon,
+    municipalities: data.municipalities,
+    name: data.name,
+    nickname: data.nickname,
+    objectId: data.objectId,
+    otterFriendly: data.otterFriendly,
+    safetyRisk: data.safetyRisk,
+    shape: data.shape,
+    status: data.status,
+  };
+}

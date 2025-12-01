@@ -1,6 +1,5 @@
 import type { FC, FormEvent } from 'react';
 
-import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +16,7 @@ const defaultState = {
   username: '',
 } as LoginFormState;
 
-export const AdminLogin: FC = observer(() => {
+export const AdminLogin: FC = () => {
   const store = useStore();
   const navigate = useNavigate();
   const [error, setError] = useState<null | string>(null);
@@ -105,4 +104,4 @@ export const AdminLogin: FC = observer(() => {
       </div>
     </div>
   );
-});
+};

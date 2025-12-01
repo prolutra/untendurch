@@ -1,7 +1,8 @@
-import { model, Model, prop } from 'mobx-keystone';
+export interface Municipality {
+  canton: string;
+  name: string;
+}
 
-@model('untendurch/Municipality')
-export class Municipality extends Model({
-  canton: prop<string>(),
-  name: prop<string>(),
-}) {}
+export function createMunicipality(canton: string, name: string): Municipality {
+  return { canton, name };
+}

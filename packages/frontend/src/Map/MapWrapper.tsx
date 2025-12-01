@@ -4,7 +4,6 @@ import './Map.css';
 import type { Geometry, Point } from 'ol/geom';
 import type VectorSource from 'ol/source/Vector';
 
-import { observer } from 'mobx-react-lite';
 import * as ol from 'ol';
 import { Feature } from 'ol';
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
@@ -22,7 +21,7 @@ type Props = {
   variant?: 'small';
 };
 
-export const MapWrapper = observer(({ children, variant }: Props) => {
+export const MapWrapper = ({ children, variant }: Props) => {
   const store = useStore();
 
   const mapRef = useRef<HTMLDivElement>(null);
@@ -135,7 +134,7 @@ export const MapWrapper = observer(({ children, variant }: Props) => {
           .centerOn(store.mapSettings.center, size, [size[0] / 2, size[1] / 2]);
       }
     }
-  }, [store.mapSettings.center]);
+  }, [store.mapSettings.center, store.mapSettings.zoom, mapContext]);
 
   // Update map size when sidebar opens/closes
   useEffect(() => {
@@ -173,4 +172,4 @@ export const MapWrapper = observer(({ children, variant }: Props) => {
       )}
     </MapContext.Provider>
   );
-});
+};

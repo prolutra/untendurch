@@ -13,30 +13,20 @@ export default defineConfig(() => {
         output: {
           experimentalMinChunkSize: 20000,
           manualChunks: {
-            mobx: ['mobx', 'mobx-keystone'],
             ol: ['ol'],
             parse: ['parse'],
             react: ['react', 'react-dom'],
+            zustand: ['zustand'],
           },
           plugins: [terser()]
         }
       }
     },
     optimizeDeps: {
-      include: ['ol', 'react', 'react-dom', 'mobx', 'mobx-keystone', 'parse'],
+      include: ['ol', 'react', 'react-dom', 'zustand', 'parse'],
     },
     plugins: [
-      react({
-        babel: {
-          plugins: [
-            ["@babel/plugin-proposal-decorators", { legacy: true }],
-            [
-              "@babel/plugin-transform-class-properties",
-              { loose: true },
-            ],
-          ],
-        },
-      }),
+      react(),
       viteTsconfigPaths(),
       checker({
         eslint: {

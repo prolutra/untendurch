@@ -16,13 +16,21 @@ type Props = {
 export const BridgeShape: FC<Props> = (props) => {
   const bridgeShapes = ['a', 'b', 'c', 'd', 'e', 'f'];
   return (
-    <div className={'grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-12'}>
-      {bridgeShapes.map((shape) => (
-        <div className={'form-control'} key={shape}>
-          <label className="label cursor-pointer">
+    <div className={'grid grid-cols-2 md:grid-cols-3 gap-4'}>
+      {bridgeShapes.map((shape) => {
+        const isSelected = props.state.shape === shape;
+        return (
+          <label
+            className={`relative cursor-pointer rounded-lg border-2 p-2 transition-all ${
+              isSelected
+                ? 'border-green-500 bg-green-50'
+                : 'border-gray-300 bg-white hover:border-gray-400'
+            }`}
+            key={shape}
+          >
             <input
-              checked={props.state.shape === shape}
-              className="radio"
+              checked={isSelected}
+              className="sr-only"
               name="shape"
               onChange={props.onChange}
               required
@@ -30,13 +38,30 @@ export const BridgeShape: FC<Props> = (props) => {
               value={shape}
             />
             <img
-              alt={''}
-              className={'w-32 md:w-48'}
+              alt={`Bridge shape ${shape.toUpperCase()}`}
+              className={'w-full'}
               src={`/shape/${shape}.png`}
             />
+            {isSelected && (
+              <div className="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-green-500 text-white">
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={3}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M5 13l4 4L19 7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            )}
           </label>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };
