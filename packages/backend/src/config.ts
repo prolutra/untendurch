@@ -43,3 +43,9 @@ export const PARSE_SERVER_ROOT_URL = PARSE_SERVER_URL.replace(
   PARSE_SERVER_MOUNT_PATH,
   ''
 );
+
+// CORS configuration - comma-separated list of allowed origins
+// If not set, defaults to allowing all origins (not recommended for production)
+export const CORS_ORIGINS: '*' | string[] = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',').map((origin) => origin.trim())
+  : '*';

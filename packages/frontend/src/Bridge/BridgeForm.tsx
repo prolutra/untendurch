@@ -204,8 +204,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
     persistedBridge.save().then(async () => {
       store.reportBridge.setLatLon(null);
       await store.existingBridges.fetchExistingBridges();
-      navigate('/');
-      navigate(0);
+      navigate('/', { replace: true });
     });
   };
 
@@ -239,8 +238,9 @@ export const BridgeForm: FC<BridgeFormProps> = ({
   useEffect(() => {
     if (saveStatus === 'saving' || saveStatus === 'preparing') {
       setIsBusy(true);
+    } else {
+      setIsBusy(false);
     }
-    setIsBusy(false);
   }, [saveStatus]);
 
   return (

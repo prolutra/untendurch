@@ -7,12 +7,28 @@ import { FormattedMessage } from 'react-intl';
 import { AllFilter } from '../Store/AllFilter';
 import { useStore } from '../Store/Store';
 
+type ExportStatusResponse = {
+  message: string;
+  progress: number;
+  status:
+    | 'copying'
+    | 'done'
+    | 'error'
+    | 'pending'
+    | 'processing'
+    | 'querying'
+    | 'zipping';
+  zipFileUrl?: string;
+};
+
 export const OverviewExport = () => {
   const store = useStore();
   const [isBusy, setIsBusy] = useState(false);
   const [isAlerting, setIsAlerting] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [statusMessage, setStatusMessage] = useState('');
 
-  async function fetchData(): Promise<{ zipFileUrl: string }> {
+  function getFilters() {
     const filters = [];
     if (AllFilter !== store.mapSettings.filterCanton) {
       filters.push({
@@ -44,10 +60,7 @@ export const OverviewExport = () => {
         value: store.mapSettings.filterSafetyRisk,
       });
     }
-
-    return await Parse.Cloud.run('export-xls', {
-      filters,
-    });
+    return filters;
   }
 
   function shareLink(): void {
@@ -59,23 +72,59 @@ export const OverviewExport = () => {
     });
   }
 
+  async function pollExportStatus(statusId: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const poll = async () => {
+        try {
+          const result = (await Parse.Cloud.run('export-xls-status', {
+            statusId,
+          })) as ExportStatusResponse;
+          setProgress(result.progress);
+          setStatusMessage(result.message);
+
+          if (result.status === 'done') {
+            resolve(result.zipFileUrl || '');
+          } else if (result.status === 'error') {
+            reject(new Error(result.message));
+          } else {
+            setTimeout(poll, 1000);
+          }
+        } catch (error) {
+          reject(error);
+        }
+      };
+      poll();
+    });
+  }
+
   async function exportXls(): Promise<void> {
     setIsBusy(true);
+    setProgress(0);
+    setStatusMessage('Export wird gestartet...');
+
     try {
-      const result = await fetchData();
-      if (result.zipFileUrl) {
+      const { statusId } = (await Parse.Cloud.run('export-xls-start', {
+        filters: getFilters(),
+      })) as { statusId: string };
+
+      const zipFileUrl = await pollExportStatus(statusId);
+
+      if (zipFileUrl) {
         const link = document.createElement('a');
-        link.href = result.zipFileUrl;
-        link.download = result.zipFileUrl.split('/').pop() || 'export.zip';
+        link.href = zipFileUrl;
+        link.download = zipFileUrl.split('/').pop() || 'export.zip';
         link.click();
       } else {
-        alert('No data found to export');
+        alert('Keine Daten zum Exportieren gefunden');
       }
     } catch (error) {
       console.error(error);
+      alert(error instanceof Error ? error.message : 'Export fehlgeschlagen');
     }
 
     setIsBusy(false);
+    setProgress(0);
+    setStatusMessage('');
   }
 
   return (
@@ -83,14 +132,20 @@ export const OverviewExport = () => {
       {isBusy && (
         <div
           className={
-            'fixed inset-0 flex flex-col items-center justify-center gap-8 bg-white bg-opacity-75'
+            'fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-white bg-opacity-90'
           }
         >
-          <div className={'loading-spinner-lg loading loading-spinner'}></div>
-          <div className={'text-lg text-base-content'}>
-            Exporting data...This might take a while. Please don't navigate away
-            or close the window. The download will start automatically.
+          <div className={'text-lg font-semibold text-base-content'}>
+            {statusMessage}
           </div>
+          <div className={'w-64'}>
+            <progress
+              className={'progress progress-primary w-full'}
+              max={100}
+              value={progress}
+            />
+          </div>
+          <div className={'text-sm text-base-content/70'}>{progress}%</div>
         </div>
       )}
       <button

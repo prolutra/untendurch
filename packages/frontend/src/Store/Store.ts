@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useAuthStore } from './AuthStore';
 import { useCantonMunicipalityStore } from './CantonMunicipalityStore';
 import { useCurrentPositionStore } from './CurrentPositionStore';
@@ -28,9 +26,3 @@ export function useStore() {
     reportBridge: useReportBridgeStore(),
   };
 }
-
-// StoreProvider is no longer needed with Zustand
-// but kept for backward compatibility with App.tsx
-export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
-  return <>{children}</>;
-};

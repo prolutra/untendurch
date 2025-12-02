@@ -65,6 +65,7 @@ export const OverviewFilters: FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Initialize state from URL params on mount
   useEffect(() => {
     const stateFromParams = Object.fromEntries([
       ...searchParams,
@@ -76,30 +77,21 @@ export const OverviewFilters: FC = () => {
     });
   }, []);
 
+  // Sync filter state to store and URL params
   useEffect(() => {
     store.mapSettings.setFilterCanton(state.canton);
-    setSearchParams(state);
-  }, [state.canton]);
-
-  useEffect(() => {
     store.mapSettings.setFilterMunicipality(state.municipality);
-    setSearchParams(state);
-  }, [state.municipality]);
-
-  useEffect(() => {
     store.mapSettings.setFilterOtterFriendly(state.otterFriendly);
-    setSearchParams(state);
-  }, [state.otterFriendly]);
-
-  useEffect(() => {
     store.mapSettings.setFilterSafetyRisk(state.safetyRisk);
-    setSearchParams(state);
-  }, [state.safetyRisk]);
-
-  useEffect(() => {
     store.mapSettings.setFilterAdmin(state.admin);
     setSearchParams(state);
-  }, [state.admin]);
+  }, [
+    state.canton,
+    state.municipality,
+    state.otterFriendly,
+    state.safetyRisk,
+    state.admin,
+  ]);
 
   const handleChange = (e: React.FormEvent<HTMLSelectElement>) => {
     const name = e.currentTarget.name;

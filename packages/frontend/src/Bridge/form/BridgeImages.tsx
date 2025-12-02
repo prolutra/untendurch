@@ -1,4 +1,3 @@
-import type Parse from 'parse';
 import type { FC } from 'react';
 
 import { ImagePlus, X } from 'lucide-react';
@@ -27,7 +26,6 @@ const ERROR_CODE_TO_TRANSLATION: Record<string, string> = {
 export const BridgeImages: FC<Props> = ({ setState, state }) => {
   const hiddenFileInputRef = useRef<HTMLInputElement>(null);
   const intl = useIntl();
-  const [parseFiles, setParseFiles] = useState<Parse.File[]>();
   const [newFiles, setNewFiles] = useState<DisplayFile[]>([]);
   const [displayFiles, setDisplayFiles] = useState<DisplayFile[]>([]);
   const [isBusy, setIsBusy] = useState(false);
@@ -35,7 +33,6 @@ export const BridgeImages: FC<Props> = ({ setState, state }) => {
 
   useEffect(() => {
     if (state.images && state.images.length > 0) {
-      setParseFiles(parseFiles);
       setDisplayFiles((previousFiles) => {
         const combined = [
           ...previousFiles,

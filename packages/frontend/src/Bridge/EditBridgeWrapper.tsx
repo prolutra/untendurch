@@ -28,7 +28,9 @@ export const EditBridgeWrapper: FC = () => {
       const name = bridge.attributes['name'] as string;
       const position = bridge.attributes['position'] as GeoPoint;
       const hasBanquet = bridge.attributes['hasBanquet'] as boolean;
-      const hasMinimalBanquetWidth = bridge.attributes['hasBanquet'] as boolean;
+      const hasMinimalBanquetWidth = bridge.attributes[
+        'hasMinimalBanquetWidth'
+      ] as boolean;
       const hasStones = bridge.attributes['hasStones'] as boolean;
       const bridgeWidth = bridge.attributes['bridgeWidth'] as number;
       const bridgeHeight = bridge.attributes['bridgeHeight'] as number;

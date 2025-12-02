@@ -1,7 +1,18 @@
 Parse.Cloud.define('deleteFile', async (req) => {
   const { filename } = req.params;
   if (!filename) {
-    throw new Error('Missing filename parameter');
+    throw new Parse.Error(
+      Parse.Error.INVALID_QUERY,
+      'Missing filename parameter'
+    );
+  }
+
+  // Check if user is authenticated
+  if (!req.user) {
+    throw new Parse.Error(
+      Parse.Error.OPERATION_FORBIDDEN,
+      'Authentication required'
+    );
   }
 
   // @ts-expect-error types are outdated
@@ -10,6 +21,9 @@ Parse.Cloud.define('deleteFile', async (req) => {
     await file.destroy({ useMasterKey: true });
     return 'File deleted successfully';
   } catch {
-    throw new Error('Failed to delete file');
+    throw new Parse.Error(
+      Parse.Error.INTERNAL_SERVER_ERROR,
+      'Failed to delete file'
+    );
   }
 });

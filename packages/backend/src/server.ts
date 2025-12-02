@@ -5,6 +5,7 @@ import ParseDashboard from 'parse-dashboard';
 import { ParseServer } from 'parse-server';
 
 import {
+  CORS_ORIGINS,
   PARSE_SERVER_APP_NAME,
   PARSE_SERVER_APPLICATION_ID,
   PARSE_SERVER_DASHBOARD_USER_ID,
@@ -39,7 +40,6 @@ const serverOptions = {
     enableForPublic: true,
   },
   masterKey: PARSE_SERVER_MASTER_KEY,
-  masterKeyIps: ['0.0.0.0/0', '::/0'],
   // Use PagesRouter instead of deprecated PublicAPIRouter
   pages: {
     enableRouter: true,
@@ -89,7 +89,7 @@ app.use(
 app.use(
   '/uploads',
   cors({
-    origin: '*',
+    origin: CORS_ORIGINS,
   }),
   express.static(uploadsDirectory, {
     cacheControl: true,

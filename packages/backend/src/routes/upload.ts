@@ -2,11 +2,10 @@ import cors from 'cors';
 import express from 'express';
 import fs from 'fs';
 import multer from 'multer';
-import path from 'path';
 import sharp from 'sharp';
 import { v4 as uuidv4 } from 'uuid';
 
-import { PARSE_SERVER_ROOT_URL } from '../config.js';
+import { CORS_ORIGINS, PARSE_SERVER_ROOT_URL } from '../config.js';
 import { uploadsDirectory } from '../directories.js';
 
 const uploadRoute = express.Router();
@@ -27,7 +26,7 @@ const upload = multer({ storage });
 uploadRoute.post(
   '/upload',
   cors({
-    origin: '*',
+    origin: CORS_ORIGINS,
   }),
   upload.array('images', 10),
   async (req, res) => {
@@ -47,8 +46,6 @@ uploadRoute.post(
 
       for (const file of files) {
         console.log('Processing image:', file.originalname);
-        const originalName = file.originalname;
-        const uploadPathFilename = path.join(uploadsDirectory, originalName);
 
         const buffer = fs.readFileSync(file.path);
 
@@ -68,10 +65,13 @@ uploadRoute.post(
         const newMeta = await sharp(processedImage).metadata();
 
         if (newMeta.width && newMeta.height && newMeta.width > newMeta.height) {
-          fs.writeFileSync(uploadPathFilename, new Uint8Array(processedImage));
+          // Overwrite the multer-saved file with the processed image
+          fs.writeFileSync(file.path, new Uint8Array(processedImage));
           const url = `${PARSE_SERVER_ROOT_URL}/uploads/${file.filename}`;
-          processedImages.push({ isValid: true, name: file.originalname, url });
+          processedImages.push({ isValid: true, name: file.filename, url });
         } else {
+          // Remove the uploaded file since it's not valid
+          fs.unlinkSync(file.path);
           processedImages.push({
             error: 'PORTRAIT_MODE_NOT_SUPPORTED',
             isValid: false,

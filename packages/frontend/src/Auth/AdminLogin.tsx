@@ -27,8 +27,8 @@ export const AdminLogin: FC = () => {
     try {
       await store.auth.login(state.username, state.password).then(() => {
         store.mapSettings.setMode('FULL');
-        navigate('/');
-        navigate(0);
+        navigate('/', { replace: true });
+        window.location.reload();
       });
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Unknown error');
