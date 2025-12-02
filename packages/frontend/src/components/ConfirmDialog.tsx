@@ -45,7 +45,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   return (
     <dialog className="modal" onClose={onCancel} ref={dialogRef}>
       <div className="modal-box">
-        <h3 className="font-bold text-lg">{title}</h3>
+        <h3 className="text-lg font-bold">{title}</h3>
         <p className="py-4">{message}</p>
         <div className="modal-action">
           <button className="btn" onClick={onCancel}>

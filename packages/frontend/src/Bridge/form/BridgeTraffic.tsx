@@ -12,7 +12,7 @@ export function BridgeTraffic(props: {
   state: BridgeFormState;
 }) {
   return (
-    <div className={'flex flex-col gap-3 pt-4 border-t border-gray-200'}>
+    <div className={'flex flex-col gap-3 border-t border-gray-200 pt-4'}>
       <h3 className={'text-lg font-semibold'}>
         <FormattedMessage
           defaultMessage={'Verkehr'}

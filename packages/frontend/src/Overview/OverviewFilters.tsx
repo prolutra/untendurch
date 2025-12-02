@@ -145,7 +145,7 @@ export const OverviewFilters: FC = () => {
       {/* Filter Dropdown */}
       <div className="relative" ref={filterRef}>
         <button
-          className="btn btn-sm bg-white/90 hover:bg-white border-gray-300 gap-1"
+          className="btn btn-sm gap-1 border-gray-300 bg-white/90 hover:bg-white"
           onClick={() => {
             setFilterOpen(!filterOpen);
             setViewOpen(false);
@@ -164,16 +164,16 @@ export const OverviewFilters: FC = () => {
         </button>
 
         {filterOpen && (
-          <div className="absolute top-full left-0 mt-2 bg-base-100 rounded-box z-50 w-64 p-4 shadow-lg">
-            <div className="flex items-center justify-between mb-3">
-              <span className="font-medium text-sm">
+          <div className="absolute left-0 top-full z-50 mt-2 w-64 rounded-box bg-base-100 p-4 shadow-lg">
+            <div className="mb-3 flex items-center justify-between">
+              <span className="text-sm font-medium">
                 <FormattedMessage
                   defaultMessage="Filter"
                   id="overview_filters_header"
                 />
               </span>
               <button
-                className="btn btn-ghost btn-xs"
+                className="btn btn-xs btn-ghost"
                 onClick={() => {
                   handleReset();
                   setFilterOpen(false);
@@ -295,7 +295,7 @@ export const OverviewFilters: FC = () => {
       {/* View Options Dropdown */}
       <div className="relative" ref={viewRef}>
         <button
-          className="btn btn-sm bg-white/90 hover:bg-white border-gray-300 gap-1"
+          className="btn btn-sm gap-1 border-gray-300 bg-white/90 hover:bg-white"
           onClick={() => {
             setViewOpen(!viewOpen);
             setFilterOpen(false);
@@ -309,15 +309,15 @@ export const OverviewFilters: FC = () => {
         </button>
 
         {viewOpen && (
-          <div className="absolute top-full left-0 mt-2 bg-base-100 rounded-box z-50 w-56 p-4 shadow-lg">
-            <div className="font-medium text-sm mb-3">
+          <div className="absolute left-0 top-full z-50 mt-2 w-56 rounded-box bg-base-100 p-4 shadow-lg">
+            <div className="mb-3 text-sm font-medium">
               <FormattedMessage
                 defaultMessage="Ansicht"
                 id="overview_filters_view_header"
               />
             </div>
 
-            <label className="flex items-center justify-between cursor-pointer py-2">
+            <label className="flex cursor-pointer items-center justify-between py-2">
               <span className="label-text select-none">
                 <FormattedMessage
                   defaultMessage="Pins gruppieren"
@@ -326,13 +326,13 @@ export const OverviewFilters: FC = () => {
               </span>
               <input
                 checked={store.mapSettings.clusteringEnabled}
-                className="checkbox checkbox-sm checkbox-primary"
+                className="checkbox-primary checkbox checkbox-sm"
                 onChange={handleClusteringToggle}
                 type="checkbox"
               />
             </label>
 
-            <label className="flex items-center justify-between cursor-pointer py-2">
+            <label className="flex cursor-pointer items-center justify-between py-2">
               <span className="label-text select-none">
                 <FormattedMessage
                   defaultMessage="Riskante Brücken immer zeigen"
@@ -341,7 +341,7 @@ export const OverviewFilters: FC = () => {
               </span>
               <input
                 checked={store.mapSettings.showRiskyPinsUnclustered}
-                className="checkbox checkbox-sm checkbox-primary"
+                className="checkbox-primary checkbox checkbox-sm"
                 onChange={handleRiskyPinsToggle}
                 type="checkbox"
               />

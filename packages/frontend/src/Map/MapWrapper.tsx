@@ -295,8 +295,8 @@ export const MapWrapper = ({ children, variant }: Props) => {
           <div
             className={
               variant === 'small'
-                ? 'z-0 relative w-full h-[200px] sm:h-[300px]'
-                : 'z-0 h-full flex-1 min-w-0 relative'
+                ? 'relative z-0 h-[200px] w-full sm:h-[300px]'
+                : 'relative z-0 h-full min-w-0 flex-1'
             }
             ref={mapRef}
           >

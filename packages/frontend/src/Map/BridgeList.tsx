@@ -96,17 +96,17 @@ export const BridgeList: FC<BridgeListProps> = ({
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full flex-col">
       {/* Header */}
-      <div className="px-4 py-3 bg-base-200 flex-shrink-0">
-        <div className="flex flex-row justify-between items-center gap-2">
+      <div className="flex-shrink-0 bg-base-200 px-4 py-3">
+        <div className="flex flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <MapPin className="h-5 w-5 text-primary" />
-            <h2 className="font-semibold text-lg">{title}</h2>
+            <h2 className="text-lg font-semibold">{title}</h2>
           </div>
           {onClose && (
             <button
-              className="btn btn-ghost btn-sm btn-circle flex-shrink-0"
+              className="btn btn-sm btn-circle btn-ghost flex-shrink-0"
               onClick={onClose}
             >
               <X className="h-5 w-5" />
@@ -114,7 +114,7 @@ export const BridgeList: FC<BridgeListProps> = ({
           )}
         </div>
         {subtitle && (
-          <p className="text-sm text-base-content/70 mt-1">{subtitle}</p>
+          <p className="mt-1 text-sm text-base-content/70">{subtitle}</p>
         )}
       </div>
 
@@ -126,7 +126,7 @@ export const BridgeList: FC<BridgeListProps> = ({
 
             return (
               <button
-                className="w-full px-4 py-3 flex items-center gap-3 hover:bg-base-100 transition-colors text-left"
+                className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-base-100"
                 key={bridge.objectId}
                 onClick={() => onSelect(bridge.objectId)}
               >
@@ -134,19 +134,19 @@ export const BridgeList: FC<BridgeListProps> = ({
                 {bridge.imageUrl ? (
                   <img
                     alt={bridge.name}
-                    className="w-16 h-12 object-cover rounded flex-shrink-0"
+                    className="h-12 w-16 flex-shrink-0 rounded object-cover"
                     src={getThumbnail(bridge.imageUrl)}
                   />
                 ) : (
-                  <div className="w-16 h-12 bg-base-200 rounded flex-shrink-0 flex items-center justify-center">
+                  <div className="flex h-12 w-16 flex-shrink-0 items-center justify-center rounded bg-base-200">
                     <MapPin className="h-6 w-6 text-base-content/30" />
                   </div>
                 )}
 
                 {/* Bridge info */}
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-medium text-base truncate">
+                    <span className="truncate text-base font-medium">
                       {bridge.name}
                     </span>
                     {isOverlapping && (
@@ -162,12 +162,12 @@ export const BridgeList: FC<BridgeListProps> = ({
                       </span>
                     )}
                   </div>
-                  <div className="text-sm text-base-content/70 truncate">
+                  <div className="truncate text-sm text-base-content/70">
                     {bridge.municipalities.join(', ')}
                   </div>
-                  <div className="flex items-center gap-2 mt-1">
+                  <div className="mt-1 flex items-center gap-2">
                     <span
-                      className={`inline-block w-3 h-3 rounded-full bg-safety-${bridge.safetyRisk}`}
+                      className={`inline-block h-3 w-3 rounded-full bg-safety-${bridge.safetyRisk}`}
                     />
                     <span className="text-xs text-base-content/60">
                       <FormattedMessage

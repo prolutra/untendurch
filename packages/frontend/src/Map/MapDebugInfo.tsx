@@ -78,16 +78,16 @@ export const MapDebugInfo: FC = () => {
   if (!mapContext) return null;
 
   return (
-    <div className="absolute bottom-4 left-4 z-20 bg-black/70 text-white text-xs font-mono p-2 rounded shadow-lg select-none">
-      <div className="font-bold mb-1 text-yellow-300">Debug Info</div>
+    <div className="absolute bottom-4 left-4 z-20 select-none rounded bg-black/70 p-2 font-mono text-xs text-white shadow-lg">
+      <div className="mb-1 font-bold text-yellow-300">Debug Info</div>
       <div>Zoom: {zoom.toFixed(2)}</div>
       <div>Resolution: {resolution.toFixed(2)} m/px</div>
       <div>Cluster Distance: {clusterDistance}px</div>
-      <div className="text-gray-400 mt-1">
+      <div className="mt-1 text-gray-400">
         Center: [{center[0].toFixed(0)}, {center[1].toFixed(0)}]
       </div>
       <button
-        className="mt-2 flex items-center gap-1 text-yellow-300 hover:text-yellow-100 pointer-events-auto"
+        className="pointer-events-auto mt-2 flex items-center gap-1 text-yellow-300 hover:text-yellow-100"
         onClick={handleResetState}
         title="Reset persisted state (welcome modal)"
       >

@@ -30,15 +30,15 @@ export const Layout: FC<Props> = ({ children, fullHeight }) => {
       <div
         className={
           fullHeight
-            ? 'h-dvh w-full flex flex-col overflow-hidden'
-            : 'min-h-dvh w-full flex flex-col'
+            ? 'flex h-dvh w-full flex-col overflow-hidden'
+            : 'flex min-h-dvh w-full flex-col'
         }
       >
         <div className={'h-[60px] flex-shrink-0'}>
           <Header lang={setLang} />
         </div>
         <div
-          className={fullHeight ? 'flex-1 min-h-0 relative' : 'flex-1 relative'}
+          className={fullHeight ? 'relative min-h-0 flex-1' : 'relative flex-1'}
         >
           {children}
         </div>

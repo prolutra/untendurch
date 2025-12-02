@@ -6,9 +6,9 @@
   "license": "AGPL-3.0",
   "scripts": {
     "build": "tsc",
-    "check": "tsc --noEmit && eslint . --fix && prettier --write \"src/**/*.ts\"",
+    "check": "tsc --noEmit && eslint . --fix && prettier --write --log-level warn \"src/**/*.ts\"",
     "lint": "eslint .",
-    "format": "prettier --write \"src/**/*.ts\"",
+    "format": "prettier --write --log-level warn \"src/**/*.ts\"",
     "db:download": "node --import tsx src/db-download.ts",
     "db:import": "node --import tsx src/db-import.ts",
     "db:sync": "yarn db:download && yarn db:import",
@@ -22,9 +22,15 @@
     "zx": "^8.8.5"
   },
   "devDependencies": {
+    "@eslint/js": "^9.17.0",
     "@tsconfig/node24": "^24.0.3",
     "@types/node": "^20.19.25",
+    "eslint": "^9.17.0",
+    "eslint-plugin-perfectionist": "^4.15.1",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.18.1"
   }
 }

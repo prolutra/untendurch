@@ -17,7 +17,7 @@ type Props = {
 export const BridgeShape: FC<Props> = (props) => {
   const bridgeShapes = ['a', 'b', 'c', 'd', 'e', 'f'];
   return (
-    <div className={'grid grid-cols-2 md:grid-cols-3 gap-4'}>
+    <div className={'grid grid-cols-2 gap-4 md:grid-cols-3'}>
       {bridgeShapes.map((shape) => {
         const isSelected = props.state.shape === shape;
         return (
@@ -44,7 +44,7 @@ export const BridgeShape: FC<Props> = (props) => {
               src={`/shape/${shape}.png`}
             />
             {isSelected && (
-              <div className="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-green-500 text-white">
+              <div className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-green-500 text-white">
                 <Check className="h-4 w-4" strokeWidth={3} />
               </div>
             )}

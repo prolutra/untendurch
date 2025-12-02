@@ -47,13 +47,13 @@ export const AdminLogin: FC = () => {
   return (
     <div
       className={
-        'fixed inset-0 flex justify-center items-center bg-black bg-opacity-30 backdrop-blur-md'
+        'fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-md'
       }
     >
-      <div className={'p-3 max-w-sm w-full bg-white rounded-lg shadow-md'}>
-        <form className={'flex gap-4 flex-col'} onSubmit={login}>
+      <div className={'w-full max-w-sm rounded-lg bg-white p-3 shadow-md'}>
+        <form className={'flex flex-col gap-4'} onSubmit={login}>
           {error && <div className={'alert alert-error'}>{error}</div>}
-          <div className={'flex justify-between items-center'}>
+          <div className={'flex items-center justify-between'}>
             <h3>
               <FormattedMessage
                 defaultMessage={'Login'}

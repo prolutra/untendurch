@@ -94,14 +94,14 @@ export const WelcomeModal: FC = () => {
           <X className="h-4 w-4" />
         </button>
 
-        <h3 className="font-bold text-xl mb-2">
+        <h3 className="mb-2 text-xl font-bold">
           <FormattedMessage
             defaultMessage="Willkommen bei Untendurch"
             id="welcome_modal_title"
           />
         </h3>
 
-        <p className="text-base-content/80 mb-6">
+        <p className="mb-6 text-base-content/80">
           <FormattedMessage
             defaultMessage="Mit dieser App können Sie Brücken in der Schweiz erfassen und deren Sicherheit für Fischotter bewerten. Der Brückenindex (BI) zeigt, ob eine Brücke fischotterfreundlich ist (BI > 1.5)."
             id="welcome_modal_description"

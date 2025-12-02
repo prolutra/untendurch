@@ -47,7 +47,7 @@ function setHowToSeen(): void {
 
 const StepItem: FC<StepItemProps> = ({ description, icon, step, title }) => (
   <div className="flex gap-3">
-    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-content text-base font-bold">
+    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-base font-bold text-primary-content">
       {step}
     </div>
     <div>
@@ -55,7 +55,7 @@ const StepItem: FC<StepItemProps> = ({ description, icon, step, title }) => (
         <span className="text-base-content/60">{icon}</span>
         <h4 className="m-0 p-0 font-medium">{title}</h4>
       </div>
-      <p className="text-base text-base-content/70 mt-1">{description}</p>
+      <p className="mt-1 text-base text-base-content/70">{description}</p>
     </div>
   </div>
 );
@@ -106,14 +106,14 @@ export const HowToModal: FC<HowToModalProps> = ({ forceOpen, onClose }) => {
           <X className="h-4 w-4" />
         </button>
 
-        <h3 className="font-bold text-xl mb-2">
+        <h3 className="mb-2 text-xl font-bold">
           <FormattedMessage
             defaultMessage="So erfassen Sie eine Brücke"
             id="howto_modal_title"
           />
         </h3>
 
-        <p className="text-base-content/80 mb-6">
+        <p className="mb-6 text-base-content/80">
           <FormattedMessage
             defaultMessage="Folgen Sie diesen Schritten, um eine Brücke korrekt zu dokumentieren."
             id="howto_modal_description"

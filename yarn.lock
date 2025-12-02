@@ -3828,6 +3828,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@untendurch/backend@workspace:packages/backend"
   dependencies:
+    "@eslint/js": "npm:^9.17.0"
     "@parse/fs-files-adapter": "npm:^3.0.0"
     "@tsconfig/node24": "npm:^24.0.3"
     "@types/cors": "npm:^2.8.19"
@@ -3838,14 +3839,19 @@ __metadata:
     axios: "npm:^1.13.2"
     cors: "npm:^2.8.5"
     dotenv-cli: "npm:^7.4.4"
+    eslint: "npm:^9.17.0"
+    eslint-plugin-perfectionist: "npm:^4.15.1"
     express: "npm:5.2.0"
+    globals: "npm:^15.14.0"
     multer: "npm:^1.4.5-lts.2"
     nodemon: "npm:^3.1.11"
     parse: "npm:6.1.1"
     parse-dashboard: "npm:8.1.0"
     parse-server: "npm:8.4.0"
+    prettier: "npm:^3.4.2"
     sharp: "npm:^0.33.5"
     typescript: "npm:^5.9.3"
+    typescript-eslint: "npm:^8.18.1"
     uuid: "npm:^10.0.0"
     write-excel-file: "npm:^2.3.10"
   languageName: unknown
@@ -3855,6 +3861,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@untendurch/frontend@workspace:packages/frontend"
   dependencies:
+    "@eslint/js": "npm:^9.17.0"
     "@formatjs/cli": "npm:^6.7.4"
     "@mdx-js/react": "npm:^3.1.1"
     "@types/parse": "npm:^3.0.9"
@@ -3867,11 +3874,17 @@ __metadata:
     babel-plugin-formatjs: "npm:^10.5.41"
     csv-parser: "npm:^3.2.0"
     daisyui: "npm:^4.12.24"
+    eslint: "npm:^9.17.0"
+    eslint-plugin-perfectionist: "npm:^4.15.1"
+    eslint-plugin-react: "npm:^7.37.2"
+    globals: "npm:^15.14.0"
     lucide-react: "npm:^0.555.0"
     ol: "npm:9.2.4"
     parse: "npm:6.1.1"
     polished: "npm:^4.3.1"
     postcss: "npm:^8.5.6"
+    prettier: "npm:^3.4.2"
+    prettier-plugin-tailwindcss: "npm:^0.7.2"
     proj4: "npm:^2.20.2"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
@@ -3882,6 +3895,7 @@ __metadata:
     tailwindcss: "npm:^3.4.18"
     tslog: "npm:^4.10.2"
     typescript: "npm:^5.9.3"
+    typescript-eslint: "npm:^8.18.1"
     vite: "npm:^5.4.21"
     vite-bundle-analyzer: "npm:^0.10.6"
     vite-plugin-checker: "npm:^0.11.0"
@@ -3894,11 +3908,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@untendurch/tools@workspace:packages/tools"
   dependencies:
+    "@eslint/js": "npm:^9.17.0"
     "@tsconfig/node24": "npm:^24.0.3"
     "@types/node": "npm:^20.19.25"
     dotenv: "npm:^16.6.1"
+    eslint: "npm:^9.17.0"
+    eslint-plugin-perfectionist: "npm:^4.15.1"
+    globals: "npm:^15.14.0"
+    prettier: "npm:^3.4.2"
     tsx: "npm:^4.21.0"
     typescript: "npm:^5.9.3"
+    typescript-eslint: "npm:^8.18.1"
     zx: "npm:^8.8.5"
   languageName: unknown
   linkType: soft
@@ -11613,6 +11633,64 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prettier-plugin-tailwindcss@npm:^0.7.2":
+  version: 0.7.2
+  resolution: "prettier-plugin-tailwindcss@npm:0.7.2"
+  peerDependencies:
+    "@ianvs/prettier-plugin-sort-imports": "*"
+    "@prettier/plugin-hermes": "*"
+    "@prettier/plugin-oxc": "*"
+    "@prettier/plugin-pug": "*"
+    "@shopify/prettier-plugin-liquid": "*"
+    "@trivago/prettier-plugin-sort-imports": "*"
+    "@zackad/prettier-plugin-twig": "*"
+    prettier: ^3.0
+    prettier-plugin-astro: "*"
+    prettier-plugin-css-order: "*"
+    prettier-plugin-jsdoc: "*"
+    prettier-plugin-marko: "*"
+    prettier-plugin-multiline-arrays: "*"
+    prettier-plugin-organize-attributes: "*"
+    prettier-plugin-organize-imports: "*"
+    prettier-plugin-sort-imports: "*"
+    prettier-plugin-svelte: "*"
+  peerDependenciesMeta:
+    "@ianvs/prettier-plugin-sort-imports":
+      optional: true
+    "@prettier/plugin-hermes":
+      optional: true
+    "@prettier/plugin-oxc":
+      optional: true
+    "@prettier/plugin-pug":
+      optional: true
+    "@shopify/prettier-plugin-liquid":
+      optional: true
+    "@trivago/prettier-plugin-sort-imports":
+      optional: true
+    "@zackad/prettier-plugin-twig":
+      optional: true
+    prettier-plugin-astro:
+      optional: true
+    prettier-plugin-css-order:
+      optional: true
+    prettier-plugin-jsdoc:
+      optional: true
+    prettier-plugin-marko:
+      optional: true
+    prettier-plugin-multiline-arrays:
+      optional: true
+    prettier-plugin-organize-attributes:
+      optional: true
+    prettier-plugin-organize-imports:
+      optional: true
+    prettier-plugin-sort-imports:
+      optional: true
+    prettier-plugin-svelte:
+      optional: true
+  checksum: 10/c77253025d62555e761b0a76df6e5c73d48d96a259ac157de9c21f11a7851fd2b434c27b296b119530895a57fe87c8cf337b0df0bff97b2bc1a0d48a442b0d99
+  languageName: node
+  linkType: hard
+
 "prettier@npm:^3.4.2":
   version: 3.7.3
   resolution: "prettier@npm:3.7.3"
@@ -14567,14 +14645,6 @@ __metadata:
 "untendurch@workspace:.":
   version: 0.0.0-use.local
   resolution: "untendurch@workspace:."
-  dependencies:
-    "@eslint/js": "npm:^9.17.0"
-    eslint: "npm:^9.17.0"
-    eslint-plugin-perfectionist: "npm:^4.15.1"
-    eslint-plugin-react: "npm:^7.37.2"
-    globals: "npm:^15.14.0"
-    prettier: "npm:^3.4.2"
-    typescript-eslint: "npm:^8.18.1"
   languageName: unknown
   linkType: soft
 

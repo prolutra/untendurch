@@ -27,21 +27,21 @@ export const RootRoute: FC = () => {
     <Layout fullHeight>
       <WelcomeModal />
       <MapWrapper>
-        <div className={'absolute top-3 left-16 z-10'}>
+        <div className={'absolute left-16 top-3 z-10'}>
           <OverviewFilters></OverviewFilters>
         </div>
         {store.auth.sessionToken && (
-          <div className={'absolute z-10 top-4 right-4'}>
+          <div className={'absolute right-4 top-4 z-10'}>
             <OverviewExport></OverviewExport>
           </div>
         )}
         <div
           className={
-            'absolute z-10 bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-auto'
+            'absolute bottom-4 left-4 right-4 z-10 md:left-auto md:right-4 md:w-auto'
           }
         >
           <Link to="/bridges/new">
-            <button className="btn btn-primary btn-lg w-full md:w-auto">
+            <button className="btn btn-lg btn-primary w-full md:w-auto">
               <Plus className="h-5 w-5" />
               <FormattedMessage
                 defaultMessage={'Brücke erfassen'}

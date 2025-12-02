@@ -79,14 +79,14 @@ export const OverviewExport = () => {
   }
 
   return (
-    <div className={'flex flex-row items-center gap-4 p-1 rounded bg-base-100'}>
+    <div className={'flex flex-row items-center gap-4 rounded bg-base-100 p-1'}>
       {isBusy && (
         <div
           className={
-            'fixed inset-0 bg-white bg-opacity-75 flex flex-col items-center justify-center gap-8'
+            'fixed inset-0 flex flex-col items-center justify-center gap-8 bg-white bg-opacity-75'
           }
         >
-          <div className={'loading loading-spinner loading-spinner-lg'}></div>
+          <div className={'loading-spinner-lg loading loading-spinner'}></div>
           <div className={'text-lg text-base-content'}>
             Exporting data...This might take a while. Please don't navigate away
             or close the window. The download will start automatically.
@@ -109,7 +109,7 @@ export const OverviewExport = () => {
         {isBusy && (
           <div
             className={
-              'loading loading-spinner loading-spinner-sm absolute inset-0'
+              'loading-spinner-sm loading loading-spinner absolute inset-0'
             }
           ></div>
         )}

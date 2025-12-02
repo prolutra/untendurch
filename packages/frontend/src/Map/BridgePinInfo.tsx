@@ -64,18 +64,18 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
   }
 
   return (
-    <div className={'md:h-full md:flex md:flex-col'}>
+    <div className={'md:flex md:h-full md:flex-col'}>
       {/* Header with bridge name and close button */}
       <div
         className={`px-4 py-3 bg-safety-${bridgePin.safetyRisk} flex-shrink-0`}
       >
-        <div className={'flex flex-row justify-between items-center gap-2'}>
-          <h2 className={'text-white font-semibold text-lg leading-tight'}>
+        <div className={'flex flex-row items-center justify-between gap-2'}>
+          <h2 className={'text-lg font-semibold leading-tight text-white'}>
             {bridgePin.name}
           </h2>
           <button
             className={
-              'btn btn-ghost btn-sm btn-circle text-white flex-shrink-0'
+              'btn btn-sm btn-circle btn-ghost flex-shrink-0 text-white'
             }
             onClick={closeFn}
           >
@@ -86,32 +86,32 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
 
       {/* Bridge image */}
       {bridgePin.imageUrl && (
-        <div className={'overflow-hidden flex-shrink-0'}>
+        <div className={'flex-shrink-0 overflow-hidden'}>
           <img
             alt={bridgePin.name}
-            className={'w-full h-auto object-cover'}
+            className={'h-auto w-full object-cover'}
             src={getThumbnail(bridgePin.imageUrl)}
           />
         </div>
       )}
 
-      <div className={'flex flex-col md:flex-1 md:min-h-0'}>
+      <div className={'flex flex-col md:min-h-0 md:flex-1'}>
         <div className={'divide-y divide-gray-100'}>
           {/* Location section */}
           <div className={'px-4 py-3'}>
             <div className={'text-base font-semibold text-gray-900'}>
               {bridgePin.municipalities.join(', ')}
             </div>
-            <div className={'text-sm text-gray-500 mt-0.5'}>
+            <div className={'mt-0.5 text-sm text-gray-500'}>
               {bridgePin.cantons.join(', ')}
             </div>
-            <div className={'text-xs text-gray-400 font-mono mt-1'}>
+            <div className={'mt-1 font-mono text-xs text-gray-400'}>
               {lv95.east.toFixed(2)}, {lv95.west.toFixed(2)}
             </div>
           </div>
 
           {/* Bridge details section */}
-          <div className={'px-4 py-3 space-y-3'}>
+          <div className={'space-y-3 px-4 py-3'}>
             {/* Otter friendliness */}
             <div className={'flex items-center justify-between'}>
               <span className={'text-sm text-gray-500'}>
@@ -178,7 +178,7 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
           {/* Bridge shape section */}
           {bridgePin.shape && (
             <div className={'px-4 py-3'}>
-              <div className={'text-sm text-gray-500 mb-2'}>
+              <div className={'mb-2 text-sm text-gray-500'}>
                 <FormattedMessage
                   defaultMessage={'Brückenform'}
                   id="bridge_pin_info_bridge_form"
@@ -186,7 +186,7 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
               </div>
               <img
                 alt={''}
-                className={'max-w-32 h-auto'}
+                className={'h-auto max-w-32'}
                 src={`/shape/${bridgePin.shape}.png`}
               />
             </div>
@@ -214,15 +214,15 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
           )}
 
           {/* Object ID */}
-          <div className={'px-4 py-2 bg-gray-50'}>
-            <div className={'text-xs text-gray-400 font-mono'}>{objectId}</div>
+          <div className={'bg-gray-50 px-4 py-2'}>
+            <div className={'font-mono text-xs text-gray-400'}>{objectId}</div>
           </div>
 
           {/* Action buttons for authenticated users */}
           {store.auth.sessionToken && (
-            <div className={'px-4 py-4 space-y-2'}>
+            <div className={'space-y-2 px-4 py-4'}>
               <Link className={'block'} to={'/bridges/' + bridgePin.objectId}>
-                <button className={'btn btn-primary btn-sm w-full'}>
+                <button className={'btn btn-sm btn-primary w-full'}>
                   <Pencil className="h-4 w-4" />
                   <FormattedMessage
                     defaultMessage={'Brücke editieren'}
@@ -232,7 +232,7 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
               </Link>
               {bridgePin.status === 'UNVERIFIED' && (
                 <button
-                  className={'btn btn-outline btn-sm w-full'}
+                  className={'btn btn-sm btn-outline w-full'}
                   onClick={verifyBridge}
                 >
                   <CheckCircle className="h-4 w-4" />
@@ -243,7 +243,7 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
                 </button>
               )}
               <button
-                className={'btn btn-error btn-outline btn-sm w-full'}
+                className={'btn btn-sm btn-outline btn-error w-full'}
                 onClick={handleDeleteClick}
               >
                 <Trash2 className="h-4 w-4" />

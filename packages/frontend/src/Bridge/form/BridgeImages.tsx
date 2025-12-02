@@ -164,12 +164,12 @@ export const BridgeImages: FC<Props> = ({ setState, state }) => {
 
   return (
     <div
-      className={'flex flex-col gap-3 relative pt-4 border-t border-gray-200'}
+      className={'relative flex flex-col gap-3 border-t border-gray-200 pt-4'}
     >
       {isBusy && (
         <div
           className={
-            'absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center'
+            'absolute inset-0 flex items-center justify-center bg-white bg-opacity-75'
           }
         >
           <div className={'loading loading-spinner'}></div>
@@ -248,7 +248,7 @@ export const BridgeImages: FC<Props> = ({ setState, state }) => {
               <div className={'relative'} key={'wrap-' + file.name}>
                 <img alt={''} src={file.url} />
                 <button
-                  className={'btn btn-sm btn-circle absolute top-2 right-2'}
+                  className={'btn btn-sm btn-circle absolute right-2 top-2'}
                   key={'remove-' + file.name}
                   onClick={(e) => {
                     e.preventDefault();

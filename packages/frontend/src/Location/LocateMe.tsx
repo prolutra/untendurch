@@ -16,17 +16,17 @@ export const LocateMe = () => {
   return (
     <button
       className={
-        'btn btn-md md:btn-lg btn-circle rounded-full btn-success relative drop-shadow'
+        'btn btn-md btn-circle btn-success relative rounded-full drop-shadow md:btn-lg'
       }
       onClick={locateMe}
       title={'Locate me'}
       type={'button'}
     >
-      <LocateFixed className="z-10 h-6 w-6 md:h-8 md:w-8 text-white" />
+      <LocateFixed className="z-10 h-6 w-6 text-white md:h-8 md:w-8" />
       {isBusy && (
         <div
           className={
-            'absolute z-20 w-full h-full loading loading-spinner text-white'
+            'loading loading-spinner absolute z-20 h-full w-full text-white'
           }
         ></div>
       )}

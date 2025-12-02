@@ -1,5 +1,5 @@
 .ol-map {
-  @apply w-full absolute flex flex-row;
+  @apply absolute flex w-full flex-row;
   height: calc(100% - 110px);
 }
 
@@ -8,7 +8,7 @@
 }
 
 .ol-full-screen {
-  @apply absolute top-0 right-0;
+  @apply absolute right-0 top-0;
 }
 
 .ol-map-top {
@@ -17,5 +17,5 @@
 }
 
 .map-container-in-reporting {
-  @apply flex flex-row w-full h-96;
+  @apply flex h-96 w-full flex-row;
 }

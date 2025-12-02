@@ -30,7 +30,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({ setLang }) => {
   return (
     <>
       <button
-        className="btn btn-ghost btn-circle"
+        className="btn btn-circle btn-ghost"
         onClick={handleOpen}
         title={intl.formatMessage({
           defaultMessage: 'Einstellungen',
@@ -50,7 +50,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({ setLang }) => {
               <X className="h-4 w-4" />
             </button>
 
-            <h3 className="font-bold text-xl mb-6">
+            <h3 className="mb-6 text-xl font-bold">
               <FormattedMessage
                 defaultMessage="Einstellungen"
                 id="settings_modal_title"
@@ -84,7 +84,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({ setLang }) => {
 
               {/* Links section */}
               <div className="space-y-3">
-                <h4 className="font-medium text-sm text-base-content/70">
+                <h4 className="text-sm font-medium text-base-content/70">
                   <FormattedMessage
                     defaultMessage="Rechtliches"
                     id="settings_legal_heading"
@@ -92,7 +92,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({ setLang }) => {
                 </h4>
                 <div className="flex flex-col gap-2">
                   <a
-                    className="link link-hover flex items-center gap-2 text-base"
+                    className="link-hover link flex items-center gap-2 text-base"
                     href="https://prolutra.ch/impressum/"
                     rel="noopener noreferrer"
                     target="_blank"
@@ -104,7 +104,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({ setLang }) => {
                     />
                   </a>
                   <a
-                    className="link link-hover flex items-center gap-2 text-base"
+                    className="link-hover link flex items-center gap-2 text-base"
                     href="https://prolutra.ch/datenschutzerklaerung/"
                     rel="noopener noreferrer"
                     target="_blank"
@@ -119,7 +119,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({ setLang }) => {
               </div>
 
               {/* About section */}
-              <div className="pt-4 border-t border-base-200">
+              <div className="border-t border-base-200 pt-4">
                 <p className="text-sm text-base-content/60">
                   <FormattedMessage
                     defaultMessage="Diese App wurde entwickelt von {tegonalLink} im Auftrag von {prolutraLink}."

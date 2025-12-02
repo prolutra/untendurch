@@ -13,7 +13,7 @@ export const AdminLogoutButton = () => {
   return (
     <>
       {store.auth.sessionToken && (
-        <button className={'btn btn-ghost btn-circle'} onClick={logout}>
+        <button className={'btn btn-circle btn-ghost'} onClick={logout}>
           <LogOut className="h-6 w-6" />
         </button>
       )}

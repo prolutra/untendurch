@@ -244,9 +244,9 @@ export const BridgeForm: FC<BridgeFormProps> = ({
   }, [saveStatus]);
 
   return (
-    <div className={'mx-auto w-5/6 md:w-4/5 lg:w-1/2 select-none mb-8'}>
+    <div className={'mx-auto mb-8 w-5/6 select-none md:w-4/5 lg:w-1/2'}>
       <form className={'flex flex-col gap-12 p-4'} onSubmit={saveBridge}>
-        <div className={'flex flex-row w-full justify-between items-center'}>
+        <div className={'flex w-full flex-row items-center justify-between'}>
           <div className={'flex items-center gap-2'}>
             <h2>
               <FormattedMessage
@@ -256,7 +256,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
             </h2>
             {onShowHowTo && (
               <button
-                className={'btn btn-sm btn-ghost btn-circle'}
+                className={'btn btn-sm btn-circle btn-ghost'}
                 onClick={(e) => {
                   e.preventDefault();
                   onShowHowTo();
@@ -343,7 +343,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
             value={state.name ? state.name : ''}
           />
         </div>
-        <div className={'flex flex-col gap-3 pt-4 border-t border-gray-200'}>
+        <div className={'flex flex-col gap-3 border-t border-gray-200 pt-4'}>
           <h3 className={'text-lg font-semibold'}>
             <FormattedMessage
               defaultMessage={'Brückenform'}
@@ -371,7 +371,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
             <label className="label cursor-pointer justify-start gap-4 py-3">
               <input
                 checked={state.hasBanquet}
-                className="checkbox checkbox-primary"
+                className="checkbox-primary checkbox"
                 name="hasBanquet"
                 onChange={handleChange}
                 type="checkbox"
@@ -383,7 +383,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
                 />
               </span>
             </label>
-            <p className="text-sm text-base-content/60 ml-10">
+            <p className="ml-10 text-sm text-base-content/60">
               <FormattedMessage
                 defaultMessage={
                   'Ein Bankett ist ein Uferstreifen entlang der ganzen Brückenlänge.'
@@ -397,7 +397,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
               <label className="label cursor-pointer justify-start gap-4 py-3">
                 <input
                   checked={state.hasMinimalBanquetWidth}
-                  className="checkbox checkbox-primary"
+                  className="checkbox-primary checkbox"
                   name="hasMinimalBanquetWidth"
                   onChange={handleChange}
                   type="checkbox"
@@ -415,7 +415,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
             <label className="label cursor-pointer justify-start gap-4 py-3">
               <input
                 checked={state.hasStones}
-                className="checkbox checkbox-primary"
+                className="checkbox-primary checkbox"
                 name="hasStones"
                 onChange={handleChange}
                 type="checkbox"
@@ -427,7 +427,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
                 />
               </span>
             </label>
-            <p className="text-sm text-base-content/60 ml-10">
+            <p className="ml-10 text-sm text-base-content/60">
               <FormattedMessage
                 defaultMessage={
                   'Herausragende Steine dienen dem Otter zur Markierung seines Reviers.'
@@ -438,7 +438,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
           </div>
         </div>
         <BridgeImages setState={setState} state={state} />
-        <div className={'flex flex-col gap-3 pt-4 border-t border-gray-200'}>
+        <div className={'flex flex-col gap-3 border-t border-gray-200 pt-4'}>
           <h3 className={'text-lg font-semibold'}>
             <FormattedMessage
               defaultMessage={'Brückendimensionen'}
@@ -453,10 +453,10 @@ export const BridgeForm: FC<BridgeFormProps> = ({
               id="report_bridge_dimensions_help"
             />
           </p>
-          <div className={'grid grid-cols-1 md:grid-cols-2 gap-4'}>
+          <div className={'grid grid-cols-1 gap-4 md:grid-cols-2'}>
             <img alt={'bridge'} src={'/bridge_index.jpg'} />
             <div className={'flex flex-col gap-4'}>
-              <div className={'flex flex-row gap-2 items-center justify-start'}>
+              <div className={'flex flex-row items-center justify-start gap-2'}>
                 <BridgeLegendNumber n={1} />
                 <input
                   className={'input input-bordered grow'}
@@ -471,7 +471,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
                   value={state.bridgeWidth ? state.bridgeWidth : ''}
                 />
               </div>
-              <div className={'flex flex-row gap-2 items-center justify-start'}>
+              <div className={'flex flex-row items-center justify-start gap-2'}>
                 <BridgeLegendNumber n={2} />
                 <input
                   className={'input input-bordered grow'}
@@ -486,7 +486,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
                   value={state.bridgeHeight ? state.bridgeHeight : ''}
                 />
               </div>
-              <div className={'flex flex-row gap-2 items-center justify-start'}>
+              <div className={'flex flex-row items-center justify-start gap-2'}>
                 <BridgeLegendNumber n={3} />
                 <input
                   className={'input input-bordered grow'}
@@ -504,7 +504,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
             </div>
           </div>
         </div>
-        <div className={'flex flex-col gap-3 pt-4 border-t border-gray-200'}>
+        <div className={'flex flex-col gap-3 border-t border-gray-200 pt-4'}>
           <h3 className={'text-lg font-semibold'}>
             <FormattedMessage
               defaultMessage={'Umgebung Brücke'}
@@ -524,7 +524,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
               <label className="label cursor-pointer justify-start gap-4 py-3">
                 <input
                   checked={state.hasContinuousShore}
-                  className="checkbox checkbox-primary flex-shrink-0"
+                  className="checkbox-primary checkbox flex-shrink-0"
                   name="hasContinuousShore"
                   onChange={handleChange}
                   type="checkbox"
@@ -543,7 +543,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
               <label className="label cursor-pointer justify-start gap-4 py-3">
                 <input
                   checked={state.hasSlopes}
-                  className="checkbox checkbox-primary flex-shrink-0"
+                  className="checkbox-primary checkbox flex-shrink-0"
                   name="hasSlopes"
                   onChange={handleChange}
                   type="checkbox"
@@ -561,7 +561,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
           </div>
         </div>
         <BridgeTraffic onChange={handleChange} state={state} />
-        <div className={'flex flex-col gap-3 pt-4 border-t border-gray-200'}>
+        <div className={'flex flex-col gap-3 border-t border-gray-200 pt-4'}>
           <h3 className={'text-lg font-semibold'}>
             <FormattedMessage
               defaultMessage={'Sonstiges'}
@@ -633,7 +633,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
         </div>
         <div
           className={
-            'text-sm text-base-content/60 pt-4 border-t border-gray-200'
+            'border-t border-gray-200 pt-4 text-sm text-base-content/60'
           }
         >
           <FormattedMessage
@@ -660,10 +660,10 @@ export const BridgeForm: FC<BridgeFormProps> = ({
         </div>
         <div
           className={
-            'sticky bottom-0 bg-white py-4 border-t border-gray-200 -mx-4 px-4 md:relative md:border-0 md:mx-0 md:px-0 md:py-0'
+            'sticky bottom-0 -mx-4 border-t border-gray-200 bg-white px-4 py-4 md:relative md:mx-0 md:border-0 md:px-0 md:py-0'
           }
         >
-          <div className={'flex flex-col-reverse md:flex-row gap-3'}>
+          <div className={'flex flex-col-reverse gap-3 md:flex-row'}>
             <button
               className={'btn btn-outline w-full md:w-auto'}
               onClick={() => navigate('/')}
@@ -677,7 +677,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
             </button>
             {state.objectId && (
               <button
-                className={'btn btn-primary btn-lg md:btn-md w-full md:w-auto'}
+                className={'btn btn-lg btn-primary w-full md:btn-md md:w-auto'}
                 disabled={isBusy}
                 type={'submit'}
               >
@@ -690,7 +690,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
             )}
             {!state.objectId && (
               <button
-                className={'btn btn-primary btn-lg md:btn-md w-full md:w-auto'}
+                className={'btn btn-lg btn-primary w-full md:btn-md md:w-auto'}
                 disabled={isBusy}
                 type={'submit'}
               >
@@ -705,7 +705,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
           {isBusy && (
             <div
               className={
-                'absolute inset-0 bg-white/50 flex items-center justify-center'
+                'absolute inset-0 flex items-center justify-center bg-white/50'
               }
             >
               <div className={'loading loading-spinner loading-lg'}></div>

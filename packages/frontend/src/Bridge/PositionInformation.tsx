@@ -30,7 +30,7 @@ export const PositionInformation: FC = () => {
   const lv95 = getAsLv95(reportedBridge.latLon);
 
   return (
-    <div className="flex flex-col md:flex-row gap-1 md:items-end justify-stretch">
+    <div className="flex flex-col justify-stretch gap-1 md:flex-row md:items-end">
       <div>
         <label className="label" htmlFor="position">
           <FormattedMessage
