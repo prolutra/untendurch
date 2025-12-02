@@ -1,9 +1,11 @@
 import type { FC } from 'react';
 
+import { Plus } from 'lucide-react';
 import React, { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, useLocation } from 'react-router-dom';
 
+import { WelcomeModal } from '../components/WelcomeModal';
 import { Layout } from '../Layout';
 import { MapWrapper } from '../Map/MapWrapper';
 import { useStore } from '../Store/Store';
@@ -23,8 +25,9 @@ export const RootRoute: FC = () => {
 
   return (
     <Layout fullHeight>
+      <WelcomeModal />
       <MapWrapper>
-        <div className={'absolute top-3 left-16 hidden md:block z-10'}>
+        <div className={'absolute top-3 left-16 z-10'}>
           <OverviewFilters></OverviewFilters>
         </div>
         {store.auth.sessionToken && (
@@ -39,6 +42,7 @@ export const RootRoute: FC = () => {
         >
           <Link to="/bridges/new">
             <button className="btn btn-primary btn-lg w-full md:w-auto">
+              <Plus className="h-5 w-5" />
               <FormattedMessage
                 defaultMessage={'Brücke erfassen'}
                 id="overview_button_report"

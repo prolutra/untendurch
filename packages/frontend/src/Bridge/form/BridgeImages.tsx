@@ -1,8 +1,9 @@
 import type Parse from 'parse';
 import type { FC } from 'react';
 
+import { ImagePlus, X } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import type { BridgeFormState } from '../BridgeFormState';
 
@@ -18,8 +19,14 @@ type Props = {
   state: BridgeFormState;
 };
 
+// Map error codes to translation keys
+const ERROR_CODE_TO_TRANSLATION: Record<string, string> = {
+  PORTRAIT_MODE_NOT_SUPPORTED: 'report_bridge_images_error_portrait',
+};
+
 export const BridgeImages: FC<Props> = ({ setState, state }) => {
   const hiddenFileInputRef = useRef<HTMLInputElement>(null);
+  const intl = useIntl();
   const [parseFiles, setParseFiles] = useState<Parse.File[]>();
   const [newFiles, setNewFiles] = useState<DisplayFile[]>([]);
   const [displayFiles, setDisplayFiles] = useState<DisplayFile[]>([]);
@@ -104,7 +111,19 @@ export const BridgeImages: FC<Props> = ({ setState, state }) => {
             url: file.url,
           };
         } else {
-          setUploadError(file.error);
+          // Translate error code if known, otherwise show raw error
+          const translationKey = ERROR_CODE_TO_TRANSLATION[file.error];
+          if (translationKey) {
+            setUploadError(
+              intl.formatMessage({
+                defaultMessage:
+                  'Bilder im Hochformat werden nicht unterstützt und automatisch abgelehnt. Bitte laden Sie Bilder im Querformat hoch.',
+                id: translationKey,
+              })
+            );
+          } else {
+            setUploadError(file.error);
+          }
           return null;
         }
       })
@@ -162,6 +181,14 @@ export const BridgeImages: FC<Props> = ({ setState, state }) => {
           id="report_bridge_label_images"
         />
       </h3>
+      <p className={'text-base text-base-content/70'}>
+        <FormattedMessage
+          defaultMessage={
+            'Mindestens ein Frontfoto aus Wasserhöhe (Ottersicht) ist erforderlich. So können wir die Brücke aus Sicht des Fischotters beurteilen.'
+          }
+          id="report_bridge_images_help"
+        />
+      </p>
       {uploadError && (
         <div className="alert alert-warning" role="alert">
           {uploadError}
@@ -195,6 +222,7 @@ export const BridgeImages: FC<Props> = ({ setState, state }) => {
               }}
               type="button"
             >
+              <ImagePlus className="h-5 w-5" />
               <FormattedMessage
                 defaultMessage={'Bild auswählen'}
                 id="report_bridge_button_upload"
@@ -228,7 +256,7 @@ export const BridgeImages: FC<Props> = ({ setState, state }) => {
                   }}
                   type="button"
                 >
-                  ✕
+                  <X className="h-4 w-4" />
                 </button>
               </div>
             );

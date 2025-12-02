@@ -1,15 +1,17 @@
 import type { FC } from 'react';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { BridgeFormState } from './BridgeFormState';
 
+import { HowToModal } from '../components/HowToModal';
 import { createLatLon } from '../Store/LatLon';
 import { useStore } from '../Store/Store';
 import { BridgeForm } from './BridgeForm';
 
 export const ReportBridgeWrapper: FC = () => {
   const store = useStore();
+  const [showHowTo, setShowHowTo] = useState(false);
 
   const defaultState: BridgeFormState = {
     barriers: 'NONE',
@@ -66,5 +68,13 @@ export const ReportBridgeWrapper: FC = () => {
     }
   }, [store.currentPosition.navigatorWithoutLocationSupport]);
 
-  return <BridgeForm bridgeFormState={defaultState}></BridgeForm>;
+  return (
+    <>
+      <HowToModal forceOpen={showHowTo} onClose={() => setShowHowTo(false)} />
+      <BridgeForm
+        bridgeFormState={defaultState}
+        onShowHowTo={() => setShowHowTo(true)}
+      />
+    </>
+  );
 };

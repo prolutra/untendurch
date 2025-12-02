@@ -1,4 +1,5 @@
 import './Map.css';
+import { CheckCircle, Pencil, Trash2, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
@@ -6,7 +7,6 @@ import { Link } from 'react-router-dom';
 import type { BridgePin } from '../Store/BridgePin';
 
 import { ConfirmDialog } from '../components/ConfirmDialog';
-import { CloseChar } from '../lib/closeChar';
 import { getAsLv95 } from '../Store/LatLon';
 import { useStore } from '../Store/Store';
 import { getThumbnail } from './GetThumbnail';
@@ -79,7 +79,7 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
             }
             onClick={closeFn}
           >
-            {CloseChar}
+            <X className="h-5 w-5" />
           </button>
         </div>
       </div>
@@ -223,6 +223,7 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
             <div className={'px-4 py-4 space-y-2'}>
               <Link className={'block'} to={'/bridges/' + bridgePin.objectId}>
                 <button className={'btn btn-primary btn-sm w-full'}>
+                  <Pencil className="h-4 w-4" />
                   <FormattedMessage
                     defaultMessage={'Brücke editieren'}
                     id="bridge_pin_info_button_edit"
@@ -234,6 +235,7 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
                   className={'btn btn-outline btn-sm w-full'}
                   onClick={verifyBridge}
                 >
+                  <CheckCircle className="h-4 w-4" />
                   <FormattedMessage
                     defaultMessage={'Brücke verifizieren'}
                     id="bridge_pin_info_button_approve"
@@ -244,6 +246,7 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
                 className={'btn btn-error btn-outline btn-sm w-full'}
                 onClick={handleDeleteClick}
               >
+                <Trash2 className="h-4 w-4" />
                 <FormattedMessage
                   defaultMessage={'Brücke löschen'}
                   id="bridge_pin_info_button_delete"

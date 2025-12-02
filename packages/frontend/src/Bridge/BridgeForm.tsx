@@ -1,6 +1,7 @@
 import type { Point } from 'ol/geom';
 import type { FC } from 'react';
 
+import { HelpCircle, Save, Send, X } from 'lucide-react';
 import { toLonLat } from 'ol/proj';
 import Parse, { GeoPoint } from 'parse';
 import React, { useEffect, useState } from 'react';
@@ -22,9 +23,13 @@ import { uploadFiles } from './ReportBridgeImageUploader';
 
 type BridgeFormProps = {
   bridgeFormState: BridgeFormState;
+  onShowHowTo?: () => void;
 };
 
-export const BridgeForm: FC<BridgeFormProps> = ({ bridgeFormState }) => {
+export const BridgeForm: FC<BridgeFormProps> = ({
+  bridgeFormState,
+  onShowHowTo,
+}) => {
   const store = useStore();
   const navigate = useNavigate();
   const intl = useIntl();
@@ -242,12 +247,27 @@ export const BridgeForm: FC<BridgeFormProps> = ({ bridgeFormState }) => {
     <div className={'mx-auto w-5/6 md:w-4/5 lg:w-1/2 select-none mb-8'}>
       <form className={'flex flex-col gap-12 p-4'} onSubmit={saveBridge}>
         <div className={'flex flex-row w-full justify-between items-center'}>
-          <h2>
-            <FormattedMessage
-              defaultMessage={'Informationen zur Brücke'}
-              id="report_bridge_heading_info"
-            />
-          </h2>
+          <div className={'flex items-center gap-2'}>
+            <h2>
+              <FormattedMessage
+                defaultMessage={'Informationen zur Brücke'}
+                id="report_bridge_heading_info"
+              />
+            </h2>
+            {onShowHowTo && (
+              <button
+                className={'btn btn-sm btn-ghost btn-circle'}
+                onClick={(e) => {
+                  e.preventDefault();
+                  onShowHowTo();
+                }}
+                title="Anleitung anzeigen"
+                type="button"
+              >
+                <HelpCircle className="h-5 w-5" />
+              </button>
+            )}
+          </div>
           <button
             className={'btn btn-sm btn-circle'}
             onClick={() => navigate('/')}
@@ -330,6 +350,14 @@ export const BridgeForm: FC<BridgeFormProps> = ({ bridgeFormState }) => {
               id="report_bridge_label_form"
             />
           </h3>
+          <p className={'text-base text-base-content/70'}>
+            <FormattedMessage
+              defaultMessage={
+                'Wählen Sie die Form, die der Brückenunterseite am nächsten kommt.'
+              }
+              id="report_bridge_form_help"
+            />
+          </p>
           {!state.shape && (
             <p className={'italic'}>
               <FormattedMessage
@@ -355,6 +383,14 @@ export const BridgeForm: FC<BridgeFormProps> = ({ bridgeFormState }) => {
                 />
               </span>
             </label>
+            <p className="text-sm text-base-content/60 ml-10">
+              <FormattedMessage
+                defaultMessage={
+                  'Ein Bankett ist ein Uferstreifen entlang der ganzen Brückenlänge.'
+                }
+                id="report_bridge_hasBanquet_help"
+              />
+            </p>
           </div>
           {state.hasBanquet && (
             <div className="form-control w-full md:w-72">
@@ -391,6 +427,14 @@ export const BridgeForm: FC<BridgeFormProps> = ({ bridgeFormState }) => {
                 />
               </span>
             </label>
+            <p className="text-sm text-base-content/60 ml-10">
+              <FormattedMessage
+                defaultMessage={
+                  'Herausragende Steine dienen dem Otter zur Markierung seines Reviers.'
+                }
+                id="report_bridge_hasStones_help"
+              />
+            </p>
           </div>
         </div>
         <BridgeImages setState={setState} state={state} />
@@ -401,6 +445,14 @@ export const BridgeForm: FC<BridgeFormProps> = ({ bridgeFormState }) => {
               id="report_bridge_heading_dimensions"
             />
           </h3>
+          <p className={'text-base text-base-content/70'}>
+            <FormattedMessage
+              defaultMessage={
+                'Aus diesen Massen wird der Brückenindex (BI) berechnet. Ein BI > 1.5 gilt als fischotterfreundlich.'
+              }
+              id="report_bridge_dimensions_help"
+            />
+          </p>
           <div className={'grid grid-cols-1 md:grid-cols-2 gap-4'}>
             <img alt={'bridge'} src={'/bridge_index.jpg'} />
             <div className={'flex flex-col gap-4'}>
@@ -459,6 +511,14 @@ export const BridgeForm: FC<BridgeFormProps> = ({ bridgeFormState }) => {
               id="report_bridge_heading_surrounding"
             />
           </h3>
+          <p className={'text-base text-base-content/70'}>
+            <FormattedMessage
+              defaultMessage={
+                'Hindernisse in der Umgebung können den Otter zwingen, die Strasse zu überqueren.'
+              }
+              id="report_bridge_surrounding_help"
+            />
+          </p>
           <div className="flex flex-col gap-2">
             <div className={'form-control w-full'}>
               <label className="label cursor-pointer justify-start gap-4 py-3">
@@ -573,6 +633,33 @@ export const BridgeForm: FC<BridgeFormProps> = ({ bridgeFormState }) => {
         </div>
         <div
           className={
+            'text-sm text-base-content/60 pt-4 border-t border-gray-200'
+          }
+        >
+          <FormattedMessage
+            defaultMessage={
+              'Verantwortlich für die Datenverarbeitung ist Pro Lutra. Ihre Angaben werden zur Erfassung und Auswertung von Brückendaten verwendet. E-Mail-Adressen werden nicht veröffentlicht. Weitere Informationen finden Sie in unserer {privacyLink}.'
+            }
+            id="report_bridge_privacy_disclaimer"
+            values={{
+              privacyLink: (
+                <a
+                  className="link link-primary"
+                  href="https://prolutra.ch/datenschutzerklaerung/"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <FormattedMessage
+                    defaultMessage="Datenschutzerklärung"
+                    id="report_bridge_privacy_link"
+                  />
+                </a>
+              ),
+            }}
+          />
+        </div>
+        <div
+          className={
             'sticky bottom-0 bg-white py-4 border-t border-gray-200 -mx-4 px-4 md:relative md:border-0 md:mx-0 md:px-0 md:py-0'
           }
         >
@@ -582,6 +669,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ bridgeFormState }) => {
               onClick={() => navigate('/')}
               type={'button'}
             >
+              <X className="h-4 w-4" />
               <FormattedMessage
                 defaultMessage={'Abbrechen'}
                 id="report_bridge_button_cancel"
@@ -593,6 +681,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ bridgeFormState }) => {
                 disabled={isBusy}
                 type={'submit'}
               >
+                <Save className="h-5 w-5" />
                 <FormattedMessage
                   defaultMessage={'Speichern'}
                   id="report_bridge_button_save"
@@ -605,6 +694,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({ bridgeFormState }) => {
                 disabled={isBusy}
                 type={'submit'}
               >
+                <Send className="h-5 w-5" />
                 <FormattedMessage
                   defaultMessage={'Erfassen'}
                   id="report_bridge_button_report"

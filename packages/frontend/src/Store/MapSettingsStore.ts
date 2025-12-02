@@ -7,9 +7,48 @@ export type MapMode = 'FULL' | 'NONE' | 'TOP';
 export type MapSettingsStore = MapSettingsActions & MapSettingsState;
 
 const DEFAULT_CENTER = [916355.3315324377, 5909283.341607826];
-const DEFAULT_ZOOM = 9;
+const DEFAULT_ZOOM = 8.5; // Matches minZoom for fully zoomed out view
+
+const STORAGE_KEY = 'untendurch-map-state';
+
+interface PersistedMapState {
+  center: number[];
+  zoom: number;
+}
+
+function loadPersistedState(): null | PersistedMapState {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored) as PersistedMapState;
+      // Validate the stored data
+      if (
+        Array.isArray(parsed.center) &&
+        parsed.center.length === 2 &&
+        typeof parsed.zoom === 'number'
+      ) {
+        return parsed;
+      }
+    }
+  } catch {
+    // Ignore localStorage errors
+  }
+  return null;
+}
+
+function persistState(center: number[], zoom: number): void {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ center, zoom }));
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+// Load persisted state on module initialization
+const persistedState = loadPersistedState();
 
 interface MapSettingsActions {
+  clearOverlappingBridgeIds: () => void;
   restoreMainMapState: () => void;
   saveMainMapState: () => void;
   setCenter: (center: number[]) => void;
@@ -22,8 +61,10 @@ interface MapSettingsActions {
   setFilterSafetyRisk: (filterSafetyRisk: string) => void;
   setFilterStatus: (filterStatus: string) => void;
   setMode: (mode: MapMode) => void;
+  setOverlappingBridgeIds: (ids: string[]) => void;
   setSelectedBridgePinObjectId: (objectId: null | string) => void;
   setShowRiskyPinsUnclustered: (showRiskyPinsUnclustered: boolean) => void;
+  setVisibleBridgeIds: (ids: string[]) => void;
   setZoom: (zoom: number) => void;
 }
 
@@ -38,16 +79,19 @@ interface MapSettingsState {
   filterSafetyRisk: string;
   filterStatus: string;
   mode: MapMode;
+  overlappingBridgeIds: string[];
   savedMainMapCenter: null | number[];
   savedMainMapZoom: null | number;
   selectedBridgePinObjectId: null | string;
   showRiskyPinsUnclustered: boolean;
+  visibleBridgeIds: string[];
   zoom: number;
 }
 
 export const useMapSettingsStore = create<MapSettingsStore>((set, get) => ({
-  center: DEFAULT_CENTER,
+  center: persistedState?.center ?? DEFAULT_CENTER,
   className: 'ol-map',
+  clearOverlappingBridgeIds: () => set({ overlappingBridgeIds: [] }),
   clusteringEnabled: true,
   containerClassName: '',
   filterCanton: AllFilter,
@@ -56,14 +100,18 @@ export const useMapSettingsStore = create<MapSettingsStore>((set, get) => ({
   filterSafetyRisk: AllFilter,
   filterStatus: AllFilter,
   mode: 'FULL',
+  overlappingBridgeIds: [],
   restoreMainMapState: () => {
     const { savedMainMapCenter, savedMainMapZoom } = get();
+    const newCenter = savedMainMapCenter ?? DEFAULT_CENTER;
+    const newZoom = savedMainMapZoom ?? DEFAULT_ZOOM;
     set({
-      center: savedMainMapCenter ?? DEFAULT_CENTER,
+      center: newCenter,
       savedMainMapCenter: null,
       savedMainMapZoom: null,
-      zoom: savedMainMapZoom ?? DEFAULT_ZOOM,
+      zoom: newZoom,
     });
+    persistState(newCenter, newZoom);
   },
   savedMainMapCenter: null,
   savedMainMapZoom: null,
@@ -75,7 +123,10 @@ export const useMapSettingsStore = create<MapSettingsStore>((set, get) => ({
     });
   },
   selectedBridgePinObjectId: null,
-  setCenter: (center) => set({ center }),
+  setCenter: (center) => {
+    set({ center });
+    persistState(center, get().zoom);
+  },
 
   setClassName: (className) => set({ className }),
   setClusteringEnabled: (clusteringEnabled) => set({ clusteringEnabled }),
@@ -86,11 +137,18 @@ export const useMapSettingsStore = create<MapSettingsStore>((set, get) => ({
   setFilterSafetyRisk: (filterSafetyRisk) => set({ filterSafetyRisk }),
   setFilterStatus: (filterStatus) => set({ filterStatus }),
   setMode: (mode) => set({ mode }),
+  setOverlappingBridgeIds: (overlappingBridgeIds) =>
+    set({ overlappingBridgeIds }),
   setSelectedBridgePinObjectId: (selectedBridgePinObjectId) =>
     set({ selectedBridgePinObjectId }),
   setShowRiskyPinsUnclustered: (showRiskyPinsUnclustered) =>
     set({ showRiskyPinsUnclustered }),
-  setZoom: (zoom) => set({ zoom }),
+  setVisibleBridgeIds: (visibleBridgeIds) => set({ visibleBridgeIds }),
+  setZoom: (zoom) => {
+    set({ zoom });
+    persistState(get().center, zoom);
+  },
   showRiskyPinsUnclustered: false,
-  zoom: DEFAULT_ZOOM,
+  visibleBridgeIds: [],
+  zoom: persistedState?.zoom ?? DEFAULT_ZOOM,
 }));

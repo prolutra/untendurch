@@ -73,8 +73,7 @@ uploadRoute.post(
           processedImages.push({ isValid: true, name: file.originalname, url });
         } else {
           processedImages.push({
-            error:
-              'Images in portrait mode are not supported and will be automatically rejected. Please upload images in landscape mode.',
+            error: 'PORTRAIT_MODE_NOT_SUPPORTED',
             isValid: false,
           });
         }

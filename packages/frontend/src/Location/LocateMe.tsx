@@ -1,3 +1,4 @@
+import { LocateFixed } from 'lucide-react';
 import React, { useState } from 'react';
 
 import { useStore } from '../Store/Store';
@@ -21,11 +22,7 @@ export const LocateMe = () => {
       title={'Locate me'}
       type={'button'}
     >
-      <img
-        alt={'Locate me'}
-        className={'z-10 w-auto h-3/4'}
-        src={'/user-location-line.svg'}
-      />
+      <LocateFixed className="z-10 h-6 w-6 md:h-8 md:w-8 text-white" />
       {isBusy && (
         <div
           className={

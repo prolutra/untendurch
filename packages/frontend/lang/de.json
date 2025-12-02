@@ -11,6 +11,9 @@
   "admin_label_username": {
     "defaultMessage": "Benutzername"
   },
+  "bridge_list_overlap_tooltip": {
+    "defaultMessage": "Diese Brücke überlappt mit einer anderen"
+  },
   "bridge_pin_info_bridge_averageDailyTraffic": {
     "defaultMessage": "Durchschnittlicher Verkehr pro Tag"
   },
@@ -31,6 +34,57 @@
   },
   "bridge_pin_info_reported_by": {
     "defaultMessage": "Rapportiert von"
+  },
+  "confirm_dialog_cancel": {
+    "defaultMessage": "Abbrechen"
+  },
+  "confirm_dialog_confirm": {
+    "defaultMessage": "Bestätigen"
+  },
+  "howto_modal_button": {
+    "defaultMessage": "Verstanden"
+  },
+  "howto_modal_description": {
+    "defaultMessage": "Folgen Sie diesen Schritten, um eine Brücke korrekt zu dokumentieren."
+  },
+  "howto_modal_step1_desc": {
+    "defaultMessage": "Positionieren Sie den Marker auf der Karte genau auf der Brücke. Sie können die Standortfunktion nutzen, um Ihren aktuellen GPS-Standort zu verwenden, oder den Marker manuell auf die richtige Position verschieben. Die genaue Positionierung ist wichtig für die Dokumentation."
+  },
+  "howto_modal_step1_title": {
+    "defaultMessage": "Standort markieren"
+  },
+  "howto_modal_step2_desc": {
+    "defaultMessage": "Fotografieren Sie die Brücke frontal von der Wasserseite aus – quasi aus der Perspektive eines Otters. Das Foto sollte den Durchgang unter der Brücke zeigen. Wichtig: Bitte im Querformat (Landschaft) fotografieren, nicht im Hochformat. So können wir beurteilen, wie zugänglich der Durchgang für Fischotter ist."
+  },
+  "howto_modal_step2_title": {
+    "defaultMessage": "Foto aus Ottersicht"
+  },
+  "howto_modal_step3_desc": {
+    "defaultMessage": "Schätzen Sie die Masse der Brücke: Breite (Spannweite des Durchgangs), Höhe (vom Wasserspiegel bis zur Brückenunterkante) und Länge/Tiefe (wie lang ist der Durchgang). Aus diesen Massen wird der Brückenindex (BI) berechnet. Ein BI über 1.5 gilt als otterfreundlich – der Durchgang ist gross genug für sichere Passage."
+  },
+  "howto_modal_step3_title": {
+    "defaultMessage": "Masse schätzen"
+  },
+  "howto_modal_step4_desc": {
+    "defaultMessage": "Beurteilen Sie die Umgebung der Brücke: Gibt es ein durchgängiges Bankett (Uferstreifen) von mindestens 30 cm Breite auf einer Seite? Sind Steine vorhanden, die aus dem Wasser ragen und als Markierplatz dienen können? Ist das Ufer vor und nach der Brücke durchgehend, oder müssen Tiere die Strasse überqueren? Gibt es Hindernisse wie Wehre oder Abstürze über 1 Meter innerhalb von 20 Metern?"
+  },
+  "howto_modal_step4_title": {
+    "defaultMessage": "Umgebung beurteilen"
+  },
+  "howto_modal_step5_desc": {
+    "defaultMessage": "Erfassen Sie die Verkehrssituation: Wie viele Fahrzeuge passieren die Brücke während Ihrer Beobachtung? Welches Tempolimit gilt auf der Strasse? Gibt es Barrieren wie Zäune oder Mauern, die Tiere daran hindern könnten, die Strasse sicher zu überqueren? Diese Daten helfen bei der Risikobewertung."
+  },
+  "howto_modal_step5_title": {
+    "defaultMessage": "Verkehr erfassen"
+  },
+  "howto_modal_title": {
+    "defaultMessage": "So erfassen Sie eine Brücke"
+  },
+  "overlapping_bridges_subtitle": {
+    "defaultMessage": "Wählen Sie eine Brücke aus, um Details anzuzeigen"
+  },
+  "overlapping_bridges_title": {
+    "defaultMessage": "{count} Brücken an diesem Standort"
   },
   "otter_friendly_FRIENDLY": {
     "defaultMessage": "Freundlich"
@@ -94,6 +148,12 @@
   },
   "report_bridge_heading_varia": {
     "defaultMessage": "Sonstiges"
+  },
+  "report_bridge_images_error_portrait": {
+    "defaultMessage": "Bilder im Hochformat werden nicht unterstützt und automatisch abgelehnt. Bitte laden Sie Bilder im Querformat hoch."
+  },
+  "report_bridge_images_request_landscape": {
+    "defaultMessage": "Bitte Bilder im Querformat hochladen."
   },
   "report_bridge_images_required": {
     "defaultMessage": "Es muss mindestens ein Bild hochgeladen werden"
@@ -229,5 +289,74 @@
   },
   "safety_risk_VERY_HIGH_RISK": {
     "defaultMessage": "Äusserst gefährlich"
+  },
+  "settings_about_text": {
+    "defaultMessage": "Diese App wurde entwickelt von {tegonalLink} im Auftrag von {prolutraLink}."
+  },
+  "settings_button_close": {
+    "defaultMessage": "Schliessen"
+  },
+  "settings_button_title": {
+    "defaultMessage": "Einstellungen"
+  },
+  "settings_language_label": {
+    "defaultMessage": "Sprache"
+  },
+  "settings_legal_heading": {
+    "defaultMessage": "Rechtliches"
+  },
+  "settings_link_imprint": {
+    "defaultMessage": "Impressum"
+  },
+  "settings_link_privacy": {
+    "defaultMessage": "Datenschutzerklärung"
+  },
+  "settings_modal_title": {
+    "defaultMessage": "Einstellungen"
+  },
+  "visible_bridges_subtitle": {
+    "defaultMessage": "Brücken im aktuellen Kartenausschnitt"
+  },
+  "visible_bridges_title": {
+    "defaultMessage": "{count} Brücken sichtbar"
+  },
+  "welcome_modal_button": {
+    "defaultMessage": "Los geht's"
+  },
+  "welcome_modal_description": {
+    "defaultMessage": "Mit dieser App können Sie Brücken in der Schweiz erfassen und deren Sicherheit für Fischotter bewerten. Der Brückenindex (BI) zeigt, ob eine Brücke fischotterfreundlich ist (BI > 1.5)."
+  },
+  "welcome_modal_feature_clustering_desc": {
+    "defaultMessage": "Bei vielen Brücken werden nahe beieinanderliegende Pins zu Kreisen mit einer Zahl zusammengefasst. Zoomen Sie hinein, um einzelne Brücken zu sehen."
+  },
+  "welcome_modal_feature_clustering_title": {
+    "defaultMessage": "Gruppierung"
+  },
+  "welcome_modal_feature_filters_desc": {
+    "defaultMessage": "Filtern Sie Brücken nach Sicherheitsrisiko oder Kanton. In den Ansichtsoptionen können Sie die Gruppierung ein- oder ausschalten und den Kartenstil wählen."
+  },
+  "welcome_modal_feature_filters_title": {
+    "defaultMessage": "Filter & Ansicht"
+  },
+  "welcome_modal_feature_locate_desc": {
+    "defaultMessage": "Positionieren Sie die Karte auf Ihren aktuellen Standort, um Brücken in Ihrer Nähe zu finden."
+  },
+  "welcome_modal_feature_locate_title": {
+    "defaultMessage": "Standort finden"
+  },
+  "welcome_modal_feature_pins_desc": {
+    "defaultMessage": "Die Pins zeigen erfasste Brücken. Die Farbe zeigt das Sicherheitsrisiko: Grün (fischotterfreundlich) bis Violett (sehr hohes Risiko). Tippen Sie auf einen Pin für Details."
+  },
+  "welcome_modal_feature_pins_title": {
+    "defaultMessage": "Brücken auf der Karte"
+  },
+  "welcome_modal_feature_report_desc": {
+    "defaultMessage": "Erfassen Sie eine neue Brücke mit Fotos von der Wasserseite, Brückenmassen und Verkehrsdaten."
+  },
+  "welcome_modal_feature_report_title": {
+    "defaultMessage": "Brücke erfassen"
+  },
+  "welcome_modal_title": {
+    "defaultMessage": "Willkommen bei Untendurch"
   }
 }

@@ -1,7 +1,13 @@
+import { fromLonLat } from 'ol/proj';
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import { useStore } from '../Store/Store';
+import { BridgeList } from './BridgeList';
 import { BridgePinInfo } from './BridgePinInfo';
+
+// Maximum number of visible bridges to show in the sidebar list
+const MAX_VISIBLE_BRIDGES_FOR_LIST = 50;
 
 interface BridgeSidebarProps {
   onClose: () => void;
@@ -9,7 +15,93 @@ interface BridgeSidebarProps {
 
 export const BridgeSidebar = ({ onClose }: BridgeSidebarProps) => {
   const store = useStore();
-  const isOpen = store.mapSettings.selectedBridgePinObjectId !== null;
+  const selectedBridgeId = store.mapSettings.selectedBridgePinObjectId;
+  const overlappingIds = store.mapSettings.overlappingBridgeIds;
+  const visibleIds = store.mapSettings.visibleBridgeIds;
+
+  const showBridgeInfo = selectedBridgeId !== null;
+  const showOverlappingPicker = overlappingIds.length > 0 && !showBridgeInfo;
+  const showVisibleList =
+    !showBridgeInfo &&
+    !showOverlappingPicker &&
+    visibleIds.length > 0 &&
+    visibleIds.length <= MAX_VISIBLE_BRIDGES_FOR_LIST;
+
+  const isOpen = showBridgeInfo || showOverlappingPicker || showVisibleList;
+
+  const handleClose = () => {
+    store.mapSettings.clearOverlappingBridgeIds();
+    onClose();
+  };
+
+  const handleSelectBridge = (bridgeId: string) => {
+    store.mapSettings.clearOverlappingBridgeIds();
+    store.mapSettings.setSelectedBridgePinObjectId(bridgeId);
+
+    // Zoom to the selected bridge
+    const bridge = store.existingBridges.bridgeById(bridgeId);
+    if (bridge) {
+      const coords = fromLonLat([bridge.latLon.lon, bridge.latLon.lat]);
+      store.mapSettings.setCenter(coords);
+      store.mapSettings.setZoom(17);
+    }
+  };
+
+  const handleCloseOverlappingPicker = () => {
+    store.mapSettings.clearOverlappingBridgeIds();
+  };
+
+  const renderContent = () => {
+    if (showBridgeInfo) {
+      return <BridgePinInfo closeFn={handleClose} />;
+    }
+    if (showOverlappingPicker) {
+      return (
+        <BridgeList
+          bridgeIds={overlappingIds}
+          onClose={handleCloseOverlappingPicker}
+          onSelect={handleSelectBridge}
+          showOverlapWarnings={false}
+          subtitle={
+            <FormattedMessage
+              defaultMessage="Wählen Sie eine Brücke aus, um Details anzuzeigen"
+              id="overlapping_bridges_subtitle"
+            />
+          }
+          title={
+            <FormattedMessage
+              defaultMessage="{count} Brücken an diesem Standort"
+              id="overlapping_bridges_title"
+              values={{ count: overlappingIds.length }}
+            />
+          }
+        />
+      );
+    }
+    if (showVisibleList) {
+      return (
+        <BridgeList
+          bridgeIds={visibleIds}
+          onSelect={handleSelectBridge}
+          showOverlapWarnings={true}
+          subtitle={
+            <FormattedMessage
+              defaultMessage="Brücken im aktuellen Kartenausschnitt"
+              id="visible_bridges_subtitle"
+            />
+          }
+          title={
+            <FormattedMessage
+              defaultMessage="{count} Brücken sichtbar"
+              id="visible_bridges_title"
+              values={{ count: visibleIds.length }}
+            />
+          }
+        />
+      );
+    }
+    return null;
+  };
 
   return (
     <>
@@ -23,9 +115,7 @@ export const BridgeSidebar = ({ onClose }: BridgeSidebarProps) => {
           ${isOpen ? 'w-96' : 'w-0'}
         `}
       >
-        <div className="w-96 h-full overflow-y-auto">
-          {isOpen && <BridgePinInfo closeFn={onClose} />}
-        </div>
+        <div className="w-96 h-full overflow-y-auto">{renderContent()}</div>
       </div>
 
       {/* Mobile: Bottom Sheet */}
@@ -46,7 +136,7 @@ export const BridgeSidebar = ({ onClose }: BridgeSidebarProps) => {
           <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto" />
         </div>
         <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain -webkit-overflow-scrolling-touch">
-          {isOpen && <BridgePinInfo closeFn={onClose} />}
+          {renderContent()}
         </div>
       </div>
 
@@ -54,7 +144,7 @@ export const BridgeSidebar = ({ onClose }: BridgeSidebarProps) => {
       {isOpen && (
         <div
           className="md:hidden fixed inset-0 bg-black bg-opacity-25 z-40"
-          onClick={onClose}
+          onClick={handleClose}
         />
       )}
     </>

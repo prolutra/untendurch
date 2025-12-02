@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 
+import { Filter, Settings } from 'lucide-react';
 import 'ol/ol.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -150,19 +151,7 @@ export const OverviewFilters: FC = () => {
             setViewOpen(false);
           }}
         >
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <Filter className="h-4 w-4" />
           <FormattedMessage
             defaultMessage="Filter"
             id="overview_filters_title"
@@ -312,24 +301,7 @@ export const OverviewFilters: FC = () => {
             setFilterOpen(false);
           }}
         >
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <Settings className="h-4 w-4" />
           <FormattedMessage
             defaultMessage="Ansicht"
             id="overview_filters_view"
@@ -346,7 +318,7 @@ export const OverviewFilters: FC = () => {
             </div>
 
             <label className="flex items-center justify-between cursor-pointer py-2">
-              <span className="label-text">
+              <span className="label-text select-none">
                 <FormattedMessage
                   defaultMessage="Pins gruppieren"
                   id="overview_filters_clustering"
@@ -361,7 +333,7 @@ export const OverviewFilters: FC = () => {
             </label>
 
             <label className="flex items-center justify-between cursor-pointer py-2">
-              <span className="label-text">
+              <span className="label-text select-none">
                 <FormattedMessage
                   defaultMessage="Riskante Brücken immer zeigen"
                   id="overview_filters_show_risky"

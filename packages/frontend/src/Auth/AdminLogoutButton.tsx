@@ -1,3 +1,4 @@
+import { LogOut } from 'lucide-react';
 import React from 'react';
 
 import { useStore } from '../Store/Store';
@@ -13,11 +14,7 @@ export const AdminLogoutButton = () => {
     <>
       {store.auth.sessionToken && (
         <button className={'btn btn-ghost btn-circle'} onClick={logout}>
-          <img
-            alt={'logout'}
-            className={'size-full'}
-            src={'/logout-circle-r-line.svg'}
-          />
+          <LogOut className="h-6 w-6" />
         </button>
       )}
     </>

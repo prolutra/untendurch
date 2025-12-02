@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { AdminLogoutButton } from './Auth/AdminLogoutButton';
-import { LocaleSelect } from './i18n/LocaleSelect';
+import { SettingsModal } from './components/SettingsModal';
 import { LocateMe } from './Location/LocateMe';
 import { Logo } from './Logo';
 
@@ -23,10 +23,10 @@ export function Header(props: {
         <div className={'grow'}>
           <h1 className={'text-xl'}>Untendurch</h1>
         </div>
-        <div className={'flex justify-end items-center gap-4 md:gap-8'}>
-          <LocateMe></LocateMe>
-          <LocaleSelect setLang={props.lang}></LocaleSelect>
-          <AdminLogoutButton></AdminLogoutButton>
+        <div className={'flex justify-end items-center gap-2 md:gap-4'}>
+          <LocateMe />
+          <SettingsModal setLang={props.lang} />
+          <AdminLogoutButton />
         </div>
       </div>
     </div>

@@ -1,10 +1,10 @@
 import type { FC, FormEvent } from 'react';
 
+import { LogIn, X } from 'lucide-react';
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
-import { CloseChar } from '../lib/closeChar';
 import { useStore } from '../Store/Store';
 
 type LoginFormState = {
@@ -61,7 +61,7 @@ export const AdminLogin: FC = () => {
               />
             </h3>
             <button className={'btn btn-circle'} onClick={() => navigate('/')}>
-              {CloseChar}
+              <X className="h-5 w-5" />
             </button>
           </div>
           <div className={'form-control'}>
@@ -95,6 +95,7 @@ export const AdminLogin: FC = () => {
             />
           </div>
           <button className={'btn btn-primary'}>
+            <LogIn className="h-5 w-5" />
             <FormattedMessage
               defaultMessage={'Anmelden'}
               id="admin_button_login"

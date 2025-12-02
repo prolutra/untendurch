@@ -1,3 +1,4 @@
+import { Share2, Table } from 'lucide-react';
 import 'ol/ol.css';
 import Parse from 'parse';
 import React, { useState } from 'react';
@@ -97,19 +98,14 @@ export const OverviewExport = () => {
         disabled={isBusy}
         onClick={shareLink}
       >
-        <img alt={'share'} height={48} src={'/share-line.svg'} width={48} />
+        <Share2 className="h-6 w-6" />
       </button>
       <button
         className={'btn btn-circle btn-ghost relative'}
         disabled={isBusy}
         onClick={exportXls}
       >
-        <img
-          alt={'XLS export'}
-          height={48}
-          src={'/table-line.svg'}
-          width={48}
-        />
+        <Table className="h-6 w-6" />
         {isBusy && (
           <div
             className={

@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 
+import { Check } from 'lucide-react';
 import React from 'react';
 
 import type { BridgeFormState } from '../BridgeFormState';
@@ -44,19 +45,7 @@ export const BridgeShape: FC<Props> = (props) => {
             />
             {isSelected && (
               <div className="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-green-500 text-white">
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={3}
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M5 13l4 4L19 7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <Check className="h-4 w-4" strokeWidth={3} />
               </div>
             )}
           </label>

@@ -11,6 +11,9 @@
   "admin_label_username": {
     "defaultMessage": "Username"
   },
+  "bridge_list_overlap_tooltip": {
+    "defaultMessage": "This bridge overlaps with another"
+  },
   "bridge_pin_info_bridge_averageDailyTraffic": {
     "defaultMessage": "Average traffic per day"
   },
@@ -31,6 +34,57 @@
   },
   "bridge_pin_info_reported_by": {
     "defaultMessage": "Reported by"
+  },
+  "confirm_dialog_cancel": {
+    "defaultMessage": "Cancel"
+  },
+  "confirm_dialog_confirm": {
+    "defaultMessage": "Confirm"
+  },
+  "howto_modal_button": {
+    "defaultMessage": "Got it"
+  },
+  "howto_modal_description": {
+    "defaultMessage": "Follow these steps to properly document a bridge."
+  },
+  "howto_modal_step1_desc": {
+    "defaultMessage": "Position the marker on the map exactly on the bridge. You can use the location feature to use your current GPS position, or manually move the marker to the correct position. Accurate positioning is important for documentation."
+  },
+  "howto_modal_step1_title": {
+    "defaultMessage": "Mark location"
+  },
+  "howto_modal_step2_desc": {
+    "defaultMessage": "Photograph the bridge frontally from the water side – from an otter's perspective. The photo should show the passage under the bridge. Important: Please photograph in landscape format, not portrait. This helps us assess how accessible the passage is for otters."
+  },
+  "howto_modal_step2_title": {
+    "defaultMessage": "Photo from otter's view"
+  },
+  "howto_modal_step3_desc": {
+    "defaultMessage": "Estimate the bridge dimensions: width (span of the passage), height (from water level to bridge underside) and length/depth (how long is the passage). The bridge index (BI) is calculated from these measurements. A BI above 1.5 is considered otter-friendly – the passage is large enough for safe crossing."
+  },
+  "howto_modal_step3_title": {
+    "defaultMessage": "Estimate dimensions"
+  },
+  "howto_modal_step4_desc": {
+    "defaultMessage": "Assess the bridge surroundings: Is there a continuous banquette (bank strip) of at least 30 cm width on one side? Are there stones protruding from the water that can serve as marking spots? Is the bank continuous before and after the bridge, or do animals need to cross the road? Are there obstacles like weirs or drops over 1 meter within 20 meters?"
+  },
+  "howto_modal_step4_title": {
+    "defaultMessage": "Assess surroundings"
+  },
+  "howto_modal_step5_desc": {
+    "defaultMessage": "Record the traffic situation: How many vehicles pass the bridge during your observation? What is the speed limit on the road? Are there barriers like fences or walls that could prevent animals from safely crossing the road? This data helps with risk assessment."
+  },
+  "howto_modal_step5_title": {
+    "defaultMessage": "Record traffic"
+  },
+  "howto_modal_title": {
+    "defaultMessage": "How to report a bridge"
+  },
+  "overlapping_bridges_subtitle": {
+    "defaultMessage": "Select a bridge to view details"
+  },
+  "overlapping_bridges_title": {
+    "defaultMessage": "{count} bridges at this location"
   },
   "otter_friendly_FRIENDLY": {
     "defaultMessage": "Friendly"
@@ -94,6 +148,12 @@
   },
   "report_bridge_heading_varia": {
     "defaultMessage": "Other"
+  },
+  "report_bridge_images_error_portrait": {
+    "defaultMessage": "Images in portrait mode are not supported and will be automatically rejected. Please upload images in landscape mode."
+  },
+  "report_bridge_images_request_landscape": {
+    "defaultMessage": "Please upload images in landscape format."
   },
   "report_bridge_images_required": {
     "defaultMessage": "At least one image must be uploaded"
@@ -229,5 +289,74 @@
   },
   "safety_risk_VERY_HIGH_RISK": {
     "defaultMessage": "Extremely dangerous"
+  },
+  "settings_about_text": {
+    "defaultMessage": "This app was developed by {tegonalLink} on behalf of {prolutraLink}."
+  },
+  "settings_button_close": {
+    "defaultMessage": "Close"
+  },
+  "settings_button_title": {
+    "defaultMessage": "Settings"
+  },
+  "settings_language_label": {
+    "defaultMessage": "Language"
+  },
+  "settings_legal_heading": {
+    "defaultMessage": "Legal"
+  },
+  "settings_link_imprint": {
+    "defaultMessage": "Imprint"
+  },
+  "settings_link_privacy": {
+    "defaultMessage": "Privacy Policy"
+  },
+  "settings_modal_title": {
+    "defaultMessage": "Settings"
+  },
+  "visible_bridges_subtitle": {
+    "defaultMessage": "Bridges in the current map view"
+  },
+  "visible_bridges_title": {
+    "defaultMessage": "{count} bridges visible"
+  },
+  "welcome_modal_button": {
+    "defaultMessage": "Let's go"
+  },
+  "welcome_modal_description": {
+    "defaultMessage": "With this app you can record bridges in Switzerland and assess their safety for otters. The bridge index (BI) shows whether a bridge is otter-friendly (BI > 1.5)."
+  },
+  "welcome_modal_feature_clustering_desc": {
+    "defaultMessage": "With many bridges, nearby pins are grouped into circles with a number. Zoom in to see individual bridges."
+  },
+  "welcome_modal_feature_clustering_title": {
+    "defaultMessage": "Clustering"
+  },
+  "welcome_modal_feature_filters_desc": {
+    "defaultMessage": "Filter bridges by safety risk or canton. In the view options you can turn clustering on or off and choose the map style."
+  },
+  "welcome_modal_feature_filters_title": {
+    "defaultMessage": "Filters & View"
+  },
+  "welcome_modal_feature_locate_desc": {
+    "defaultMessage": "Position the map to your current location to find bridges near you."
+  },
+  "welcome_modal_feature_locate_title": {
+    "defaultMessage": "Find location"
+  },
+  "welcome_modal_feature_pins_desc": {
+    "defaultMessage": "The pins show recorded bridges. The color indicates the safety risk: green (otter-friendly) to purple (very high risk). Tap a pin for details."
+  },
+  "welcome_modal_feature_pins_title": {
+    "defaultMessage": "Bridges on the map"
+  },
+  "welcome_modal_feature_report_desc": {
+    "defaultMessage": "Report a new bridge with photos from the water side, bridge dimensions and traffic data."
+  },
+  "welcome_modal_feature_report_title": {
+    "defaultMessage": "Report bridge"
+  },
+  "welcome_modal_title": {
+    "defaultMessage": "Welcome to Untendurch"
   }
 }
