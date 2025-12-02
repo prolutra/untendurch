@@ -13,12 +13,13 @@ Pro Lutra: Untendurch is a web application that enables users to report and view
 The app consists of the following components:
 - `backend` - Express JS server wrapping parse-server, parse-dashboard and other services
 - `frontend` - React client for bridge reporting and viewing
+- `tools` - CLI utilities for database and file synchronization
 - `mongodb` - Database for Parse
 
 ## Getting Started
 
 ### Prerequisites
-- `node >= 20`
+- `node >= 24`
 - `docker >= 25`
 
 The yarn CLI is included in this repository and can be used to install dependencies.
@@ -51,6 +52,27 @@ Access points:
 - Parse Server API: [http://localhost:1337/parse](http://localhost:1337/parse)
 - MongoDB: `localhost:27017`
 
+### Data Synchronization
+
+To sync data from a remote environment to local development:
+
+```bash
+# Sync database and files from remote
+yarn sync
+
+# Or run individually:
+yarn db:sync      # Download and import database
+yarn files:sync   # Download and import files
+```
+
+## Code Quality
+
+Run linting, formatting and type checking across all packages:
+
+```bash
+yarn check
+```
+
 ## Building
 
 ### Building the Application
@@ -68,28 +90,27 @@ yarn workspace @untendurch/frontend run build:prod
 
 ### Building Docker Image
 ```bash
-docker build -f frontend/Dockerfile .
+docker build --build-arg ENVIRONMENT=prod --build-arg CI_COMMIT_SHORT_SHA=$(git rev-parse --short HEAD) .
 ```
 
 ## Internationalization
 
 ### Extracting Translations
-For example, for German language:
+Extract translation strings from all supported languages:
 ```bash
-cd frontend
-npm run i18n-extract -- 'src/**/*.ts*' --ignore='**/*.d.ts' --out-file lang/de.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'
+yarn workspace @untendurch/frontend run i18n-extract
 ```
 
 ### Compiling Translations
+Compile translations for runtime use:
 ```bash
-cd frontend
-npm run i18n-compile -- lang/de.json --ast --out-file src/compiled-lang/de.json
+yarn workspace @untendurch/frontend run i18n-compile
 ```
 
 ## Deployment
 
 ### Docker Compose Setup
-The Docker Compose setup in `docker-compose/example` can be used as a template for TEST, PRE-PROD, or PROD environments. 
+The Docker Compose setup in `docker-compose/example` can be used as a template for TEST, PRE-PROD, or PROD environments.
 
 1. Copy the `.env.example` file to `.env`
 2. Modify the `.env` file with appropriate values

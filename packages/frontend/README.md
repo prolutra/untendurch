@@ -49,16 +49,18 @@ The compiled application will be output to the `dist/` directory.
 
 ### Managing Translations
 
-The application supports multiple languages through the i18n system:
+The application supports multiple languages (de, en, fr, it) through the i18n system:
 
 #### Extracting Translations
+Extract strings from all source files for all languages:
 ```bash
-npm run i18n-extract -- 'src/**/*.ts*' --ignore='**/*.d.ts' --out-file lang/de.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'
+yarn run i18n-extract
 ```
 
 #### Compiling Translations
+Compile translation files for runtime use:
 ```bash
-npm run i18n-compile -- lang/de.json --ast --out-file src/compiled-lang/de.json
+yarn run i18n-compile
 ```
 
 ## 📁 Directory Structure

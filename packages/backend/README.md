@@ -24,7 +24,7 @@ PARSE_SERVER_PORT=1337
 
 ### Starting MongoDB
 ```bash
-yarn run start:db
+yarn run db:start
 ```
 
 ### Starting Development Server
