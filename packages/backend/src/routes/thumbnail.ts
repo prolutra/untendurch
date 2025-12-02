@@ -75,7 +75,7 @@ thumbnailRoute.get('/thumbnail', async (req, res) => {
       .jpeg({ quality: 70 })
       .toBuffer();
 
-    fs.writeFileSync(cachePath, thumbnail);
+    fs.writeFileSync(cachePath, new Uint8Array(thumbnail));
     res.sendFile(cachePath);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';

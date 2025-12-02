@@ -68,7 +68,7 @@ uploadRoute.post(
         const newMeta = await sharp(processedImage).metadata();
 
         if (newMeta.width && newMeta.height && newMeta.width > newMeta.height) {
-          fs.writeFileSync(uploadPathFilename, processedImage);
+          fs.writeFileSync(uploadPathFilename, new Uint8Array(processedImage));
           const url = `${PARSE_SERVER_ROOT_URL}/uploads/${file.filename}`;
           processedImages.push({ isValid: true, name: file.originalname, url });
         } else {

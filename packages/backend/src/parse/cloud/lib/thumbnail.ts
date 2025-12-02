@@ -48,7 +48,7 @@ Parse.Cloud.define('thumbnail', async (req) => {
       .jpeg({ quality: 70 })
       .toBuffer();
 
-    fs.writeFileSync(cachePath, thumbnail);
+    fs.writeFileSync(cachePath, new Uint8Array(thumbnail));
 
     return { cached: false, path: `/cache/thumbnails/${cacheFilename}` };
   } catch (error) {
