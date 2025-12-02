@@ -1,67 +1,93 @@
-import axios from 'axios';
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
 
-import { PARSE_SERVER_URL } from '../config.js';
-import { thumbnailDirectory } from '../directories.js';
+import { imagesDirectory, thumbnailDirectory } from '../directories.js';
 
 const thumbnailRoute = express.Router();
 
 type Query = {
-  devicePixels: string;
-  url: string;
+  devicePixels?: string;
+  filename?: string;
+  url?: string;
 };
 
-thumbnailRoute.get('/thumbnail', async (req, res) => {
-  const { devicePixels, url } = req.query as Query;
+thumbnailRoute.get('/image/:filename', (req, res) => {
+  const imageFilename = path.basename(req.params.filename);
+  const sourcePath = path.join(imagesDirectory, imageFilename);
 
-  const width = Math.ceil(320 * (Number(devicePixels) || 1));
-  const height = Math.ceil(200 * (Number(devicePixels) || 1));
-
-  if (!url) {
-    return res.status(400).send({ error: 'Missing URL parameter' });
-  }
-
-  if (typeof url !== 'string') {
-    return res.status(400).send({ error: 'URL parameter must be a string' });
-  }
-
-  if (!url.includes(PARSE_SERVER_URL.split('//')[1])) {
-    return res.status(400).send({
-      error: 'Invalid URL',
-      serverUrl: PARSE_SERVER_URL,
-      url,
+  if (!fs.existsSync(sourcePath)) {
+    return res.status(404).json({
+      error: 'Image not found',
+      filename: imageFilename,
     });
   }
 
-  const filename = `${devicePixels}_${path.basename(url)}`;
-  const cachePathFilename = path.join(thumbnailDirectory, filename);
+  res.sendFile(sourcePath);
+});
 
-  if (fs.existsSync(cachePathFilename)) {
-    return res.sendFile(cachePathFilename);
+thumbnailRoute.get('/thumbnail', async (req, res) => {
+  const { devicePixels, filename, url } = req.query as Query;
+
+  // Support both filename and url parameters for backwards compatibility
+  let imageFilename: string | undefined;
+
+  if (filename) {
+    imageFilename = path.basename(filename);
+  } else if (url) {
+    imageFilename = path.basename(url);
+  }
+
+  if (!imageFilename) {
+    return res.status(400).json({
+      error: 'Missing filename or url parameter',
+    });
+  }
+
+  const pixels = Number(devicePixels) || 1;
+  const width = Math.ceil(320 * pixels);
+  const height = Math.ceil(200 * pixels);
+
+  const cacheFilename = `${pixels}_${imageFilename}`;
+  const cachePath = path.join(thumbnailDirectory, cacheFilename);
+
+  // Return cached thumbnail if exists
+  if (fs.existsSync(cachePath)) {
+    return res.sendFile(cachePath);
+  }
+
+  // Find source image directly from filesystem
+  const sourcePath = path.join(imagesDirectory, imageFilename);
+
+  if (!fs.existsSync(sourcePath)) {
+    return res.status(404).json({
+      error: 'Image not found',
+      filename: imageFilename,
+    });
   }
 
   try {
-    const response = await axios.get(url, { responseType: 'arraybuffer' });
-    const buffer = Buffer.from(response.data, 'binary');
-    console.log(url);
-
-    const imgSharp = sharp(buffer);
-    const thumbnail = await imgSharp
+    const thumbnail = await sharp(sourcePath)
       .rotate()
       .resize({ fit: 'inside', height, width })
       .sharpen()
       .jpeg({ quality: 70 })
       .toBuffer();
 
-    fs.writeFileSync(cachePathFilename, thumbnail);
-
-    res.sendFile(cachePathFilename);
+    fs.writeFileSync(cachePath, thumbnail);
+    res.sendFile(cachePath);
   } catch (error) {
-    console.error(`Failed to fetch or resize image: ${error}`);
-    res.status(500).send('Failed to fetch or resize image');
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error(
+      `Failed to generate thumbnail for ${imageFilename}:`,
+      message
+    );
+    res.status(500).json({
+      error: 'Failed to generate thumbnail',
+      filename: imageFilename,
+      message,
+    });
   }
 });
 

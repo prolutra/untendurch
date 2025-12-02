@@ -74,6 +74,7 @@ export const useExistingBridgesStore = create<ExistingBridgesStore>(
         const averageDailyTraffic = bridge.attributes[
           'averageDailyTraffic'
         ] as number;
+        const createdAt = bridge.createdAt;
 
         const imageUrl = images && images[0] ? (images[0].url() ?? '') : '';
 
@@ -81,6 +82,7 @@ export const useExistingBridgesStore = create<ExistingBridgesStore>(
           averageDailyTraffic: averageDailyTraffic,
           bridgeIndex: bridgeIndex,
           cantons: cantons,
+          createdAt: createdAt,
           imageUrl: imageUrl,
           latLon: createLatLon(position.latitude, position.longitude),
           municipalities: municipality,
@@ -99,32 +101,59 @@ export const useExistingBridgesStore = create<ExistingBridgesStore>(
 
     filteredBridges: () => {
       const mapSettings = useMapSettingsStore.getState();
-      return get()
-        .bridgePins.filter(
-          (b) =>
-            mapSettings.filterMunicipality === AllFilter ||
-            b.municipalities.includes(mapSettings.filterMunicipality)
-        )
-        .filter(
-          (b) =>
-            mapSettings.filterCanton === AllFilter ||
-            b.cantons.includes(mapSettings.filterCanton)
-        )
-        .filter(
-          (b) =>
-            mapSettings.filterStatus === AllFilter ||
-            b.status === mapSettings.filterStatus
-        )
-        .filter(
-          (b) =>
-            mapSettings.filterOtterFriendly === AllFilter ||
-            b.otterFriendly === mapSettings.filterOtterFriendly
-        )
-        .filter(
-          (b) =>
-            mapSettings.filterSafetyRisk === AllFilter ||
-            b.safetyRisk === mapSettings.filterSafetyRisk
-        );
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+      // Combined single-pass filter for better performance
+      return get().bridgePins.filter((b) => {
+        // Municipality filter
+        if (
+          mapSettings.filterMunicipality !== AllFilter &&
+          !b.municipalities.includes(mapSettings.filterMunicipality)
+        ) {
+          return false;
+        }
+        // Canton filter
+        if (
+          mapSettings.filterCanton !== AllFilter &&
+          !b.cantons.includes(mapSettings.filterCanton)
+        ) {
+          return false;
+        }
+        // Status filter
+        if (
+          mapSettings.filterStatus !== AllFilter &&
+          b.status !== mapSettings.filterStatus
+        ) {
+          return false;
+        }
+        // Otter friendly filter
+        if (
+          mapSettings.filterOtterFriendly !== AllFilter &&
+          b.otterFriendly !== mapSettings.filterOtterFriendly
+        ) {
+          return false;
+        }
+        // Safety risk filter
+        if (
+          mapSettings.filterSafetyRisk !== AllFilter &&
+          b.safetyRisk !== mapSettings.filterSafetyRisk
+        ) {
+          return false;
+        }
+        // Admin filters
+        if (mapSettings.filterAdmin !== AllFilter) {
+          if (mapSettings.filterAdmin === 'NO_IMAGE' && b.imageUrl) {
+            return false;
+          }
+          if (mapSettings.filterAdmin === 'RECENT') {
+            if (!b.createdAt || b.createdAt < thirtyDaysAgo) {
+              return false;
+            }
+          }
+        }
+        return true;
+      });
     },
 
     setBridgePins: (bridgePins) => set({ bridgePins }),

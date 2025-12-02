@@ -1,4 +1,5 @@
 import type { Feature } from 'ol';
+import type { FeatureLike } from 'ol/Feature';
 import type { Geometry, Point } from 'ol/geom';
 import type { StyleFunction } from 'ol/style/Style';
 import type { FC } from 'react';
@@ -37,6 +38,18 @@ const PIN_ICON = {
   SCALE_HOVERED: 0.55,
   // Hovered pins appear on top of all others
   Z_INDEX_HOVERED: 10000,
+  // Selected pins appear on top
+  Z_INDEX_SELECTED: 9999,
+} as const;
+
+/**
+ * Selected pin indicator styling
+ */
+const SELECTED_INDICATOR = {
+  FILL_COLOR: 'rgba(59, 130, 246, 0.9)',
+  RADIUS: 8,
+  STROKE_COLOR: '#fff',
+  STROKE_WIDTH: 3,
 } as const;
 
 /**
@@ -161,6 +174,65 @@ export const VectorLayer: FC<VectorLayerProps> = ({
       zIndex: PIN_ICON.Z_INDEX_HOVERED,
     });
 
+    // Selected indicator circle (rendered below the pin)
+    const selectedIndicatorStyle = new Style({
+      image: new CircleStyle({
+        fill: new Fill({ color: SELECTED_INDICATOR.FILL_COLOR }),
+        radius: SELECTED_INDICATOR.RADIUS,
+        stroke: new Stroke({
+          color: SELECTED_INDICATOR.STROKE_COLOR,
+          width: SELECTED_INDICATOR.STROKE_WIDTH,
+        }),
+      }),
+    });
+
+    // Combined styles for selected pins (indicator circle + pin icon)
+    const singlePinStyleSelected = [
+      selectedIndicatorStyle,
+      new Style({
+        image: new Icon({
+          anchor: [PIN_ICON.ANCHOR_X, PIN_ICON.ANCHOR_Y],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'fraction',
+          scale: PIN_ICON.SCALE_DEFAULT,
+          src: iconSrc,
+        }),
+        zIndex: PIN_ICON.Z_INDEX_SELECTED,
+      }),
+    ];
+
+    const singlePinStyleSelectedHovered = [
+      selectedIndicatorStyle,
+      new Style({
+        image: new Icon({
+          anchor: [PIN_ICON.ANCHOR_X, PIN_ICON.ANCHOR_Y],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'fraction',
+          scale: PIN_ICON.SCALE_HOVERED,
+          src: iconSrc,
+        }),
+        zIndex: PIN_ICON.Z_INDEX_HOVERED,
+      }),
+    ];
+
+    // Helper to check if a feature (or any feature in a cluster) is selected
+    const isFeatureSelected = (feature: FeatureLike): boolean => {
+      const selectedId = store.mapSettings.selectedBridgePinObjectId;
+      if (!selectedId) return false;
+
+      // Check if this is a cluster
+      const clusteredFeatures = feature.get('features') as
+        | Feature<Geometry>[]
+        | undefined;
+      if (clusteredFeatures) {
+        return clusteredFeatures.some(
+          (f) => f.get('bridgePinObjectId') === selectedId
+        );
+      }
+      // Single feature
+      return feature.get('bridgePinObjectId') === selectedId;
+    };
+
     // Cache for cluster styles to avoid recreating them
     const clusterStyleCache: Record<string, Style> = {};
 
@@ -242,7 +314,14 @@ export const VectorLayer: FC<VectorLayerProps> = ({
     if (!shouldCluster) {
       // Non-clustered mode: just show individual pins
       const styleFunction: StyleFunction = (feature) => {
-        return feature.get('hovered') ? singlePinStyleHovered : singlePinStyle;
+        const selected = isFeatureSelected(feature);
+        const hovered = feature.get('hovered');
+        if (selected) {
+          return hovered
+            ? singlePinStyleSelectedHovered
+            : singlePinStyleSelected;
+        }
+        return hovered ? singlePinStyleHovered : singlePinStyle;
       };
 
       const layer = new OLVectorLayer({
@@ -299,7 +378,14 @@ export const VectorLayer: FC<VectorLayerProps> = ({
 
       // Single feature or clustering disabled at high zoom - show pin icon
       if (size === 1 || clusteringDisabledByZoom) {
-        return feature.get('hovered') ? singlePinStyleHovered : singlePinStyle;
+        const selected = isFeatureSelected(feature);
+        const hovered = feature.get('hovered');
+        if (selected) {
+          return hovered
+            ? singlePinStyleSelectedHovered
+            : singlePinStyleSelected;
+        }
+        return hovered ? singlePinStyleHovered : singlePinStyle;
       }
 
       // Multiple features at low zoom - show cluster circle with count
@@ -325,6 +411,7 @@ export const VectorLayer: FC<VectorLayerProps> = ({
     mapContext,
     features,
     store.mapSettings.clusteringEnabled,
+    store.mapSettings.selectedBridgePinObjectId,
     excludeFromClustering,
   ]);
 
@@ -363,6 +450,7 @@ export const VectorLayer: FC<VectorLayerProps> = ({
     mapContext,
     features.length,
     store.mapSettings.clusteringEnabled,
+    store.mapSettings.selectedBridgePinObjectId,
     excludeFromClustering,
   ]);
 

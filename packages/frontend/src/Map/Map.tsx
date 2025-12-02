@@ -12,7 +12,11 @@ import { Layers } from '../Layers/Layers';
 import { TileLayer } from '../Layers/TileLayers';
 import { VectorLayer } from '../Layers/VectorLayers';
 import { SafetyRisk as SafetyRiskEnum } from '../Store/SafetyRisk';
-import { useStore } from '../Store/Store';
+import {
+  useExistingBridgesStore,
+  useMapSettingsStore,
+  useReportBridgeStore,
+} from '../Store/Store';
 
 // Risk levels that should be excluded from clustering when showRiskyPinsUnclustered is enabled
 const RISKY_SAFETY_LEVELS: SafetyRisk[] = [
@@ -22,7 +26,20 @@ const RISKY_SAFETY_LEVELS: SafetyRisk[] = [
 ];
 
 export const Map: FC = () => {
-  const store = useStore();
+  // Use individual selectors to avoid unnecessary re-renders
+  const filteredBridges = useExistingBridgesStore((s) => s.filteredBridges);
+  const reportedFeature = useReportBridgeStore((s) => s.reportedFeature);
+  const showRiskyUnclustered = useMapSettingsStore(
+    (s) => s.showRiskyPinsUnclustered
+  );
+  // Subscribe to filter changes to trigger re-computation
+  const filterCanton = useMapSettingsStore((s) => s.filterCanton);
+  const filterMunicipality = useMapSettingsStore((s) => s.filterMunicipality);
+  const filterStatus = useMapSettingsStore((s) => s.filterStatus);
+  const filterOtterFriendly = useMapSettingsStore((s) => s.filterOtterFriendly);
+  const filterSafetyRisk = useMapSettingsStore((s) => s.filterSafetyRisk);
+  const filterAdmin = useMapSettingsStore((s) => s.filterAdmin);
+  const bridgePins = useExistingBridgesStore((s) => s.bridgePins);
 
   const vectorLayersBySafety = useMemo((): [
     Feature<Point>[],
@@ -33,8 +50,7 @@ export const Map: FC = () => {
     const result =
       Array.of<[Feature<Point>[], string, number, SafetyRisk | undefined]>();
 
-    store.existingBridges
-      .filteredBridges()
+    filteredBridges()
       .groupBy((b: BridgePin) => b.safetyRisk)
       .forEach((bridges: BridgePin[], safetyRisk: SafetyRisk | undefined) => {
         const iconSrc = safetyRisk
@@ -55,17 +71,15 @@ export const Map: FC = () => {
       });
     return result;
   }, [
-    store.existingBridges.bridgePins,
-    store.mapSettings.filterCanton,
-    store.mapSettings.filterMunicipality,
-    store.mapSettings.filterStatus,
-    store.mapSettings.filterOtterFriendly,
-    store.mapSettings.filterSafetyRisk,
+    bridgePins,
+    filterCanton,
+    filterMunicipality,
+    filterStatus,
+    filterOtterFriendly,
+    filterSafetyRisk,
+    filterAdmin, // Added missing dependency
+    filteredBridges,
   ]);
-
-  const reportedFeature = store.reportBridge.reportedFeature();
-
-  const showRiskyUnclustered = store.mapSettings.showRiskyPinsUnclustered;
 
   return (
     <Layers>
@@ -88,10 +102,10 @@ export const Map: FC = () => {
           />
         );
       })}
-      {reportedFeature && (
+      {reportedFeature() && (
         <VectorLayer
           draggable={true}
-          features={[reportedFeature]}
+          features={[reportedFeature()!]}
           iconSrc={'/bridge_pin_new.svg'}
           zIndex={99}
         />

@@ -1,5 +1,5 @@
 import './Map.css';
-import { CheckCircle, Pencil, Trash2, X } from 'lucide-react';
+import { CheckCircle, ImageOff, Pencil, Trash2, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
@@ -7,30 +7,46 @@ import { Link } from 'react-router-dom';
 import type { BridgePin } from '../Store/BridgePin';
 
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { ImageLightbox } from '../components/ImageLightbox';
 import { getAsLv95 } from '../Store/LatLon';
-import { useStore } from '../Store/Store';
-import { getThumbnail } from './GetThumbnail';
+import {
+  useAuthStore,
+  useExistingBridgesStore,
+  useMapSettingsStore,
+} from '../Store/Store';
+import { getFullSizeImage, getThumbnail } from './GetThumbnail';
 
 interface BridgePinInfoProps {
   closeFn?: () => void;
 }
 
 export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
-  const store = useStore();
+  // Use individual selectors to avoid unnecessary re-renders
+  const selectedBridgePinObjectId = useMapSettingsStore(
+    (s) => s.selectedBridgePinObjectId
+  );
+  const bridgeById = useExistingBridgesStore((s) => s.bridgeById);
+  const verifyBridgeAction = useExistingBridgesStore((s) => s.verifyBridge);
+  const deleteBridgeAction = useExistingBridgesStore((s) => s.deleteBridge);
+  const sessionToken = useAuthStore((s) => s.sessionToken);
+
   const [bridgePin, setBridgePin] = useState<BridgePin | null>(null);
   const [objectId, setObjectId] = useState<null | string>(null);
   const [lv95, setLv95] = useState<null | { east: number; west: number }>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showImageLightbox, setShowImageLightbox] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
-    setObjectId(store.mapSettings.selectedBridgePinObjectId);
-  }, [store.mapSettings.selectedBridgePinObjectId]);
+    setObjectId(selectedBridgePinObjectId);
+  }, [selectedBridgePinObjectId]);
 
   useEffect(() => {
     if (objectId) {
-      setBridgePin(store.existingBridges.bridgeById(objectId) || null);
+      setBridgePin(bridgeById(objectId) || null);
+      setImageError(false); // Reset error state when bridge changes
     }
-  }, [objectId, store.existingBridges.bridgePins]);
+  }, [objectId, bridgeById]);
 
   useEffect(() => {
     if (bridgePin) {
@@ -40,7 +56,7 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
 
   const verifyBridge = () => {
     if (objectId) {
-      store.existingBridges.verifyBridge(objectId);
+      verifyBridgeAction(objectId);
     }
   };
 
@@ -50,7 +66,7 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
 
   const handleDeleteConfirm = () => {
     if (objectId) {
-      store.existingBridges.deleteBridge(objectId);
+      deleteBridgeAction(objectId);
     }
     setShowDeleteConfirm(false);
   };
@@ -65,9 +81,9 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
 
   return (
     <div className={'md:flex md:h-full md:flex-col'}>
-      {/* Header with bridge name and close button */}
+      {/* Header with bridge name and close button - sticky on scroll */}
       <div
-        className={`px-4 py-3 bg-safety-${bridgePin.safetyRisk} flex-shrink-0`}
+        className={`sticky top-0 z-10 px-4 py-3 bg-safety-${bridgePin.safetyRisk} flex-shrink-0`}
       >
         <div className={'flex flex-row items-center justify-between gap-2'}>
           <h2 className={'text-lg font-semibold leading-tight text-white'}>
@@ -85,13 +101,24 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
       </div>
 
       {/* Bridge image */}
-      {bridgePin.imageUrl && (
+      {bridgePin.imageUrl && !imageError && (
         <div className={'flex-shrink-0 overflow-hidden'}>
           <img
             alt={bridgePin.name}
-            className={'h-auto w-full object-cover'}
+            className={'h-auto w-full cursor-pointer object-cover'}
+            onClick={() => setShowImageLightbox(true)}
+            onError={() => setImageError(true)}
             src={getThumbnail(bridgePin.imageUrl)}
           />
+        </div>
+      )}
+      {bridgePin.imageUrl && imageError && (
+        <div
+          className={
+            'flex h-32 flex-shrink-0 items-center justify-center bg-base-200'
+          }
+        >
+          <ImageOff className="h-10 w-10 text-base-content/30" />
         </div>
       )}
 
@@ -198,28 +225,56 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
 
         {/* Bottom section: Reporter info, Object ID, and Action buttons */}
         <div className={'divide-y divide-gray-100 md:mt-auto'}>
-          {/* Reporter info */}
-          {bridgePin.nickname && (
+          {/* Reporter info and creation date */}
+          {(bridgePin.nickname || bridgePin.createdAt) && (
             <div className={'px-4 py-3'}>
-              <div className={'text-sm text-gray-500'}>
-                <FormattedMessage
-                  defaultMessage={'Rapportiert von'}
-                  id="bridge_pin_info_reported_by"
-                />{' '}
-                <span className={'font-medium text-gray-700'}>
-                  {bridgePin.nickname}
-                </span>
-              </div>
+              {bridgePin.nickname && (
+                <div className={'text-sm text-gray-500'}>
+                  <FormattedMessage
+                    defaultMessage={'Rapportiert von'}
+                    id="bridge_pin_info_reported_by"
+                  />{' '}
+                  <span className={'font-medium text-gray-700'}>
+                    {bridgePin.nickname}
+                  </span>
+                </div>
+              )}
+              {bridgePin.createdAt && (
+                <div className={'mt-1 text-sm text-gray-500'}>
+                  <FormattedMessage
+                    defaultMessage={'Erstellt am'}
+                    id="bridge_pin_info_created_at"
+                  />{' '}
+                  <span className={'font-medium text-gray-700'}>
+                    {bridgePin.createdAt.toLocaleDateString('de-CH')}
+                  </span>
+                </div>
+              )}
             </div>
           )}
 
           {/* Object ID */}
           <div className={'bg-gray-50 px-4 py-2'}>
-            <div className={'font-mono text-xs text-gray-400'}>{objectId}</div>
+            {sessionToken ? (
+              <a
+                className={
+                  'font-mono text-xs text-gray-400 underline hover:text-gray-600'
+                }
+                href={`${import.meta.env.VITE_REACT_APP_PARSE_SERVER_URL.replace('/parse', '')}/dashboard/apps/untendurch/browser/Bridge?filters=${encodeURIComponent(JSON.stringify([{ compareTo: objectId, constraint: 'eq', field: 'objectId' }]))}`}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {objectId}
+              </a>
+            ) : (
+              <div className={'font-mono text-xs text-gray-400'}>
+                {objectId}
+              </div>
+            )}
           </div>
 
           {/* Action buttons for authenticated users */}
-          {store.auth.sessionToken && (
+          {sessionToken && (
             <div className={'space-y-2 px-4 py-4'}>
               <Link className={'block'} to={'/bridges/' + bridgePin.objectId}>
                 <button className={'btn btn-sm btn-primary w-full'}>
@@ -280,6 +335,14 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
         }
         variant="danger"
       />
+      {bridgePin.imageUrl && (
+        <ImageLightbox
+          alt={bridgePin.name}
+          isOpen={showImageLightbox}
+          onClose={() => setShowImageLightbox(false)}
+          src={getFullSizeImage(bridgePin.imageUrl)}
+        />
+      )}
     </div>
   );
 };

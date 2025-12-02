@@ -12,7 +12,7 @@ import { Select } from 'ol/interaction';
 import VectorLayer from 'ol/layer/Vector';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { useStore } from '../Store/Store';
+import { useMapSettingsStore } from '../Store/Store';
 import { BridgeSidebar } from './BridgeSidebar';
 import { Map } from './Map';
 import { MapContext } from './MapContext';
@@ -24,14 +24,46 @@ type Props = {
 };
 
 export const MapWrapper = ({ children, variant }: Props) => {
-  const store = useStore();
+  // Use individual selectors to avoid unnecessary re-renders
+  const mode = useMapSettingsStore((s) => s.mode);
+  const center = useMapSettingsStore((s) => s.center);
+  const zoom = useMapSettingsStore((s) => s.zoom);
+  const selectedBridgePinObjectId = useMapSettingsStore(
+    (s) => s.selectedBridgePinObjectId
+  );
+  const setOverlappingBridgeIds = useMapSettingsStore(
+    (s) => s.setOverlappingBridgeIds
+  );
+  const setSelectedBridgePinObjectId = useMapSettingsStore(
+    (s) => s.setSelectedBridgePinObjectId
+  );
+  const setContainerClassName = useMapSettingsStore(
+    (s) => s.setContainerClassName
+  );
+  const setClassName = useMapSettingsStore((s) => s.setClassName);
+  const setCenter = useMapSettingsStore((s) => s.setCenter);
+  const setZoom = useMapSettingsStore((s) => s.setZoom);
+  const setVisibleBridgeIds = useMapSettingsStore((s) => s.setVisibleBridgeIds);
 
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapContext, setMapContext] = useState<null | ol.Map>(null);
   const [selectContext, setSelectContext] = useState<null | Select>(null);
+  // Track if map has been initialized with persisted state to avoid overwriting it
+  const mapInitializedWithPersistedState = useRef(false);
+
+  // Get initial values from store (already loaded from localStorage at module init)
+  const initialCenterRef = useRef(useMapSettingsStore.getState().center);
+  const initialZoomRef = useRef(useMapSettingsStore.getState().zoom);
 
   useEffect(() => {
     if (!mapRef.current) throw Error('mapRef is not assigned');
+
+    // Use store values which are already loaded from localStorage
+    const initialCenter = initialCenterRef.current;
+    const initialZoom = initialZoomRef.current;
+
+    // Mark that we're initializing with persisted state
+    mapInitializedWithPersistedState.current = true;
 
     const options = {
       controls: defaultControls().extend([
@@ -42,11 +74,11 @@ export const MapWrapper = ({ children, variant }: Props) => {
       layers: [],
       overlays: [],
       view: new ol.View({
-        center: store.mapSettings.center,
+        center: initialCenter,
         maxZoom: 19,
         minZoom: 8.5,
         projection: 'EPSG:3857',
-        zoom: store.mapSettings.zoom,
+        zoom: initialZoom,
       }),
     };
     const mapObject = new ol.Map(options);
@@ -81,7 +113,7 @@ export const MapWrapper = ({ children, variant }: Props) => {
 
             if (bridgeIds.length > 1) {
               // Show the overlapping bridges picker
-              store.mapSettings.setOverlappingBridgeIds(bridgeIds);
+              setOverlappingBridgeIds(bridgeIds);
               select.getFeatures().clear();
               return;
             }
@@ -100,22 +132,22 @@ export const MapWrapper = ({ children, variant }: Props) => {
           });
           // Clear selection so we can re-click after zoom
           select.getFeatures().clear();
-          store.mapSettings.setSelectedBridgePinObjectId(null);
+          setSelectedBridgePinObjectId(null);
         } else if (clusteredFeatures && clusteredFeatures.length === 1) {
           // Single feature cluster: select the bridge
           const bridgePinObjectId = clusteredFeatures[0].get(
             'bridgePinObjectId'
           ) as string;
-          store.mapSettings.setSelectedBridgePinObjectId(bridgePinObjectId);
+          setSelectedBridgePinObjectId(bridgePinObjectId);
         } else {
           // Non-clustered feature (e.g., new bridge pin)
           const bridgePinObjectId = selectedFeature.get(
             'bridgePinObjectId'
           ) as string;
-          store.mapSettings.setSelectedBridgePinObjectId(bridgePinObjectId);
+          setSelectedBridgePinObjectId(bridgePinObjectId);
         }
       } else {
-        store.mapSettings.setSelectedBridgePinObjectId(null);
+        setSelectedBridgePinObjectId(null);
       }
     });
 
@@ -127,66 +159,75 @@ export const MapWrapper = ({ children, variant }: Props) => {
     };
   }, [mapContext]);
 
+  // Track last hovered feature to avoid iterating all features on every mouse move
+  const lastHoveredFeatureRef = useRef<Feature | null>(null);
+
   useEffect(() => {
     if (!mapContext) return;
     // Add a pointermove handler to the map to change the cursor to a pointer on hover over any feature
-    mapContext.on('pointermove', function (evt) {
+    const handlePointerMove = (evt: ol.MapBrowserEvent<PointerEvent>) => {
       let activeFeature: Feature | FeatureLike | undefined;
       const hit = mapContext.forEachFeatureAtPixel(evt.pixel, (feature) => {
         activeFeature = feature;
         return true;
       });
 
-      mapContext.getLayers().forEach(function (layer) {
-        if (layer instanceof VectorLayer) {
-          const source = layer.getSource() as null | VectorSource<
-            Feature<Geometry>
-          >;
-          source?.forEachFeature(function (feature) {
-            feature.set('hovered', false);
-          });
-        }
-      });
+      // Only update features that changed - avoid iterating all features
+      const lastHovered = lastHoveredFeatureRef.current;
+      if (lastHovered && lastHovered !== activeFeature) {
+        lastHovered.set('hovered', false);
+      }
 
-      if (hit) {
-        if (activeFeature instanceof Feature) {
+      if (hit && activeFeature instanceof Feature) {
+        if (activeFeature !== lastHovered) {
           activeFeature.set('hovered', true);
         }
-
+        lastHoveredFeatureRef.current = activeFeature;
         mapContext.getTargetElement().style.cursor = 'pointer';
       } else {
+        lastHoveredFeatureRef.current = null;
         mapContext.getTargetElement().style.cursor = '';
       }
-    });
+    };
+
+    mapContext.on('pointermove', handlePointerMove);
+    return () => {
+      mapContext.un('pointermove', handlePointerMove);
+    };
   }, [mapContext]);
 
   useEffect(() => {
-    if ('TOP' === store.mapSettings.mode) {
-      store.mapSettings.setContainerClassName('map-container-in-reporting');
-      store.mapSettings.setClassName('ol-map-top');
+    if ('TOP' === mode) {
+      setContainerClassName('map-container-in-reporting');
+      setClassName('ol-map-top');
     } else {
-      store.mapSettings.setContainerClassName('');
-      store.mapSettings.setClassName('ol-map');
+      setContainerClassName('');
+      setClassName('ol-map');
     }
 
     // unfortunately, we have to force a size update to resize the tile layer
     setTimeout(() => {
       if (mapContext) mapContext.updateSize();
     }, 50);
-  }, [store.mapSettings.mode]);
+  }, [mode, setContainerClassName, setClassName, mapContext]);
 
   useEffect(() => {
-    if (mapContext) {
-      mapContext.updateSize();
-      const size = mapContext.getSize();
-      if (size) {
-        mapContext.getView().setZoom(store.mapSettings.zoom);
-        mapContext
-          .getView()
-          .centerOn(store.mapSettings.center, size, [size[0] / 2, size[1] / 2]);
-      }
+    if (!mapContext) return;
+
+    // Skip if map was initialized with persisted state - don't overwrite it
+    // This ref is set to true during map creation when localStorage has state
+    if (mapInitializedWithPersistedState.current) {
+      mapInitializedWithPersistedState.current = false;
+      return;
     }
-  }, [store.mapSettings.center, store.mapSettings.zoom, mapContext]);
+
+    mapContext.updateSize();
+    const size = mapContext.getSize();
+    if (size) {
+      mapContext.getView().setZoom(zoom);
+      mapContext.getView().centerOn(center, size, [size[0] / 2, size[1] / 2]);
+    }
+  }, [center, zoom, mapContext]);
 
   // Update map size when sidebar opens/closes
   useEffect(() => {
@@ -197,30 +238,23 @@ export const MapWrapper = ({ children, variant }: Props) => {
       }, 310);
       return () => clearTimeout(timeout);
     }
-  }, [store.mapSettings.selectedBridgePinObjectId, mapContext]);
+  }, [selectedBridgePinObjectId, mapContext]);
 
   // Track visible bridges and persist map state when map moves or zooms
   useEffect(() => {
     if (!mapContext) return;
 
-    const updateVisibleBridges = () => {
+    const updateVisibleBridges = (persistState: boolean) => {
       const view = mapContext.getView();
       const extent = view.calculateExtent(mapContext.getSize());
 
-      // Persist current map state to localStorage via store
-      const center = view.getCenter();
-      const zoom = view.getZoom();
-      if (center && zoom !== undefined) {
-        // Only update if values have changed to avoid unnecessary re-renders
-        const currentCenter = store.mapSettings.center;
-        const currentZoom = store.mapSettings.zoom;
-        if (
-          center[0] !== currentCenter[0] ||
-          center[1] !== currentCenter[1] ||
-          zoom !== currentZoom
-        ) {
-          store.mapSettings.setCenter(center);
-          store.mapSettings.setZoom(zoom);
+      // Persist current map state to localStorage via store (only on user interaction)
+      if (persistState) {
+        const newCenter = view.getCenter();
+        const newZoom = view.getZoom();
+        if (newCenter && newZoom !== undefined) {
+          setCenter(newCenter);
+          setZoom(newZoom);
         }
       }
 
@@ -268,28 +302,38 @@ export const MapWrapper = ({ children, variant }: Props) => {
         }
       });
 
-      store.mapSettings.setVisibleBridgeIds(visibleIds);
+      setVisibleBridgeIds(visibleIds);
     };
 
-    // Initial update
-    updateVisibleBridges();
+    // Initial update (don't persist - just calculate visible bridges)
+    updateVisibleBridges(false);
 
     // Listen for map move/zoom events
-    mapContext.on('moveend', updateVisibleBridges);
+    const handleMoveEnd = () => updateVisibleBridges(true);
+    mapContext.on('moveend', handleMoveEnd);
+
+    // Also update when layers are added (features may load after map init)
+    const layers = mapContext.getLayers();
+    const handleLayerChange = () => {
+      // Delay slightly to allow cluster source to process features
+      setTimeout(() => updateVisibleBridges(false), 100);
+    };
+    layers.on('add', handleLayerChange);
 
     return () => {
-      mapContext.un('moveend', updateVisibleBridges);
+      mapContext.un('moveend', handleMoveEnd);
+      layers.un('add', handleLayerChange);
     };
   }, [mapContext]);
 
   function deselectBridgePin() {
     selectContext?.getFeatures().clear();
-    store.mapSettings.setSelectedBridgePinObjectId(null);
+    setSelectedBridgePinObjectId(null);
   }
 
   return (
     <MapContext.Provider value={mapContext}>
-      {store.mapSettings.mode !== 'NONE' && (
+      {mode !== 'NONE' && (
         <div className={variant === 'small' ? '' : 'flex h-full w-full'}>
           <BridgeSidebar onClose={deselectBridgePin} />
           <div

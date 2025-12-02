@@ -1,13 +1,37 @@
 import type { FC } from 'react';
 
-import { AlertTriangle, MapPin, X } from 'lucide-react';
-import React, { useMemo } from 'react';
+import { AlertTriangle, ImageOff, MapPin, X } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import type { BridgePin } from '../Store/BridgePin';
 
-import { useStore } from '../Store/Store';
+import { useExistingBridgesStore } from '../Store/Store';
 import { getThumbnail } from './GetThumbnail';
+
+/**
+ * Thumbnail image with error fallback placeholder
+ */
+const BridgeThumbnail: FC<{ alt: string; src: string }> = ({ alt, src }) => {
+  const [hasError, setHasError] = useState(false);
+
+  if (hasError) {
+    return (
+      <div className="flex h-12 w-16 flex-shrink-0 items-center justify-center rounded bg-base-200">
+        <ImageOff className="h-5 w-5 text-base-content/30" />
+      </div>
+    );
+  }
+
+  return (
+    <img
+      alt={alt}
+      className="h-12 w-16 flex-shrink-0 rounded object-cover"
+      onError={() => setHasError(true)}
+      src={src}
+    />
+  );
+};
 
 // Distance threshold in meters for considering bridges as overlapping
 const OVERLAP_DISTANCE_METERS = 5;
@@ -51,16 +75,16 @@ export const BridgeList: FC<BridgeListProps> = ({
   subtitle,
   title,
 }) => {
-  const store = useStore();
+  const bridgeById = useExistingBridgesStore((s) => s.bridgeById);
   const intl = useIntl();
 
-  // Get bridge data for each ID
+  // Get bridge data for each ID - only depends on the IDs, not all bridgePins
   const bridges: BridgePin[] = useMemo(
     () =>
       bridgeIds
-        .map((id) => store.existingBridges.bridgeById(id))
+        .map((id) => bridgeById(id))
         .filter((b): b is BridgePin => b !== undefined),
-    [bridgeIds, store.existingBridges.bridgePins]
+    [bridgeIds, bridgeById]
   );
 
   // Calculate which bridges are overlapping (within OVERLAP_DISTANCE_METERS of another bridge)
@@ -132,9 +156,8 @@ export const BridgeList: FC<BridgeListProps> = ({
               >
                 {/* Thumbnail */}
                 {bridge.imageUrl ? (
-                  <img
+                  <BridgeThumbnail
                     alt={bridge.name}
-                    className="h-12 w-16 flex-shrink-0 rounded object-cover"
                     src={getThumbnail(bridge.imageUrl)}
                   />
                 ) : (

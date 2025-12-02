@@ -6,6 +6,7 @@ export interface BridgePin {
   averageDailyTraffic: number | undefined;
   bridgeIndex: number;
   cantons: string[];
+  createdAt: Date | undefined;
   imageUrl: string;
   latLon: LatLon;
   municipalities: string[];
@@ -22,6 +23,7 @@ export function createBridgePin(data: {
   averageDailyTraffic?: number;
   bridgeIndex: number;
   cantons: string[];
+  createdAt?: Date;
   imageUrl: string;
   latLon: LatLon;
   municipalities: string[];
@@ -37,6 +39,7 @@ export function createBridgePin(data: {
     averageDailyTraffic: data.averageDailyTraffic,
     bridgeIndex: data.bridgeIndex,
     cantons: data.cantons,
+    createdAt: data.createdAt,
     imageUrl: data.imageUrl,
     latLon: data.latLon,
     municipalities: data.municipalities,

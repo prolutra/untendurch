@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import { resetHowToSeen } from '../components/HowToModal';
 import { resetWelcomeSeen } from '../components/WelcomeModal';
+import { clearPersistedMapState } from '../Store/MapSettingsStore';
 import { MapContext } from './MapContext';
 
 /**
@@ -72,6 +73,7 @@ export const MapDebugInfo: FC = () => {
   const handleResetState = () => {
     resetWelcomeSeen();
     resetHowToSeen();
+    clearPersistedMapState();
     window.location.reload();
   };
 

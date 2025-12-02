@@ -1,16 +1,21 @@
+const getBaseUrl = () =>
+  import.meta.env.VITE_REACT_APP_PARSE_SERVER_URL.replace('/parse', '');
+
+const getFilename = (url: string) => url.split('/').pop() || '';
+
 export const getThumbnail = (url: string) => {
   if (!url) return '';
   const devicePixels = window.devicePixelRatio || 1;
-  const baseUrl = import.meta.env.VITE_REACT_APP_PARSE_SERVER_URL.replace(
-    '/parse',
-    ''
-  );
+  const baseUrl = getBaseUrl();
+  const filename = getFilename(url);
 
-  // In development, replace production domain with localhost
-  let imageUrl = url;
-  if (import.meta.env.DEV) {
-    imageUrl = url.replace(/^https?:\/\/[^/]+/, baseUrl);
-  }
+  return `${baseUrl}/thumbnail?filename=${filename}&devicePixels=${devicePixels}`;
+};
 
-  return `${baseUrl}/thumbnail?url=${imageUrl}&devicePixels=${devicePixels}`;
+export const getFullSizeImage = (url: string) => {
+  if (!url) return '';
+  const baseUrl = getBaseUrl();
+  const filename = getFilename(url);
+
+  return `${baseUrl}/image/${filename}`;
 };

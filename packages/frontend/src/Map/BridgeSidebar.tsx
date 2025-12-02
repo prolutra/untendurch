@@ -2,22 +2,34 @@ import { fromLonLat } from 'ol/proj';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { useStore } from '../Store/Store';
+import { useExistingBridgesStore, useMapSettingsStore } from '../Store/Store';
 import { BridgeList } from './BridgeList';
 import { BridgePinInfo } from './BridgePinInfo';
 
-// Maximum number of visible bridges to show in the sidebar list
-const MAX_VISIBLE_BRIDGES_FOR_LIST = 50;
+// Zoom level threshold to show the visible bridges sidebar
+const SIDEBAR_ZOOM_THRESHOLD = 12;
 
 interface BridgeSidebarProps {
   onClose: () => void;
 }
 
 export const BridgeSidebar = ({ onClose }: BridgeSidebarProps) => {
-  const store = useStore();
-  const selectedBridgeId = store.mapSettings.selectedBridgePinObjectId;
-  const overlappingIds = store.mapSettings.overlappingBridgeIds;
-  const visibleIds = store.mapSettings.visibleBridgeIds;
+  // Use individual selectors to avoid unnecessary re-renders
+  const selectedBridgeId = useMapSettingsStore(
+    (s) => s.selectedBridgePinObjectId
+  );
+  const overlappingIds = useMapSettingsStore((s) => s.overlappingBridgeIds);
+  const visibleIds = useMapSettingsStore((s) => s.visibleBridgeIds);
+  const zoom = useMapSettingsStore((s) => s.zoom);
+  const clearOverlappingBridgeIds = useMapSettingsStore(
+    (s) => s.clearOverlappingBridgeIds
+  );
+  const setSelectedBridgePinObjectId = useMapSettingsStore(
+    (s) => s.setSelectedBridgePinObjectId
+  );
+  const setCenter = useMapSettingsStore((s) => s.setCenter);
+  const setZoom = useMapSettingsStore((s) => s.setZoom);
+  const bridgeById = useExistingBridgesStore((s) => s.bridgeById);
 
   const showBridgeInfo = selectedBridgeId !== null;
   const showOverlappingPicker = overlappingIds.length > 0 && !showBridgeInfo;
@@ -25,30 +37,33 @@ export const BridgeSidebar = ({ onClose }: BridgeSidebarProps) => {
     !showBridgeInfo &&
     !showOverlappingPicker &&
     visibleIds.length > 0 &&
-    visibleIds.length <= MAX_VISIBLE_BRIDGES_FOR_LIST;
+    zoom > SIDEBAR_ZOOM_THRESHOLD;
 
-  const isOpen = showBridgeInfo || showOverlappingPicker || showVisibleList;
+  // Desktop shows all content types, mobile only shows bridge info
+  const isDesktopOpen =
+    showBridgeInfo || showOverlappingPicker || showVisibleList;
+  const isMobileOpen = showBridgeInfo;
 
   const handleClose = () => {
-    store.mapSettings.clearOverlappingBridgeIds();
+    clearOverlappingBridgeIds();
     onClose();
   };
 
   const handleSelectBridge = (bridgeId: string) => {
-    store.mapSettings.clearOverlappingBridgeIds();
-    store.mapSettings.setSelectedBridgePinObjectId(bridgeId);
+    clearOverlappingBridgeIds();
+    setSelectedBridgePinObjectId(bridgeId);
 
     // Zoom to the selected bridge
-    const bridge = store.existingBridges.bridgeById(bridgeId);
+    const bridge = bridgeById(bridgeId);
     if (bridge) {
       const coords = fromLonLat([bridge.latLon.lon, bridge.latLon.lat]);
-      store.mapSettings.setCenter(coords);
-      store.mapSettings.setZoom(17);
+      setCenter(coords);
+      setZoom(17);
     }
   };
 
   const handleCloseOverlappingPicker = () => {
-    store.mapSettings.clearOverlappingBridgeIds();
+    clearOverlappingBridgeIds();
   };
 
   const renderContent = () => {
@@ -107,14 +122,14 @@ export const BridgeSidebar = ({ onClose }: BridgeSidebarProps) => {
     <>
       {/* Desktop: Left Sidebar - part of flex layout, pushes map */}
       <div
-        className={`hidden h-full overflow-hidden bg-white shadow-xl transition-[width] duration-300 ease-in-out md:flex md:flex-col ${isOpen ? 'w-96' : 'w-0'} `}
+        className={`hidden h-full overflow-hidden bg-white shadow-xl transition-[width] duration-300 ease-in-out md:flex md:flex-col ${isDesktopOpen ? 'w-80' : 'w-0'} `}
       >
-        <div className="h-full w-96 overflow-y-auto">{renderContent()}</div>
+        <div className="h-full w-80 overflow-y-auto">{renderContent()}</div>
       </div>
 
-      {/* Mobile: Bottom Sheet */}
+      {/* Mobile: Bottom Sheet - only shows bridge info, not lists */}
       <div
-        className={`fixed inset-x-0 bottom-0 z-50 flex transform flex-col rounded-t-2xl bg-white shadow-xl transition-transform duration-300 ease-in-out md:hidden ${isOpen ? 'translate-y-0' : 'translate-y-full'} `}
+        className={`fixed inset-x-0 bottom-0 z-50 flex transform flex-col rounded-t-2xl bg-white shadow-xl transition-transform duration-300 ease-in-out md:hidden ${isMobileOpen ? 'translate-y-0' : 'translate-y-full'} `}
         style={{ maxHeight: '80dvh' }}
       >
         {/* Drag handle indicator */}
@@ -122,12 +137,12 @@ export const BridgeSidebar = ({ onClose }: BridgeSidebarProps) => {
           <div className="mx-auto h-1 w-10 rounded-full bg-gray-300" />
         </div>
         <div className="-webkit-overflow-scrolling-touch min-h-0 flex-1 overflow-y-auto overscroll-contain">
-          {renderContent()}
+          <BridgePinInfo closeFn={handleClose} />
         </div>
       </div>
 
       {/* Backdrop for mobile */}
-      {isOpen && (
+      {isMobileOpen && (
         <div
           className="fixed inset-0 z-40 bg-black bg-opacity-25 md:hidden"
           onClick={handleClose}

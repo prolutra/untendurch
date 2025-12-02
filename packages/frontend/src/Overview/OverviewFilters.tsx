@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { Filter, Settings } from 'lucide-react';
+import { Filter, Settings, Shield } from 'lucide-react';
 import 'ol/ol.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -13,6 +13,7 @@ import { SafetyRisk } from '../Store/SafetyRisk';
 import { useStore } from '../Store/Store';
 
 type OverviewFiltersState = {
+  admin: string;
   canton: string;
   municipality: string;
   otterFriendly: string;
@@ -20,6 +21,7 @@ type OverviewFiltersState = {
 };
 
 const defaultState: OverviewFiltersState = {
+  admin: AllFilter,
   canton: AllFilter,
   municipality: AllFilter,
   otterFriendly: AllFilter,
@@ -30,8 +32,11 @@ export const OverviewFilters: FC = () => {
   const store = useStore();
   const [filterOpen, setFilterOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
+  const [adminOpen, setAdminOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<HTMLDivElement>(null);
+  const adminRef = useRef<HTMLDivElement>(null);
+  const isAdmin = !!store.auth.sessionToken;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [state, setState] = useState<OverviewFiltersState>(defaultState);
@@ -47,6 +52,12 @@ export const OverviewFilters: FC = () => {
       }
       if (viewRef.current && !viewRef.current.contains(event.target as Node)) {
         setViewOpen(false);
+      }
+      if (
+        adminRef.current &&
+        !adminRef.current.contains(event.target as Node)
+      ) {
+        setAdminOpen(false);
       }
     };
 
@@ -85,6 +96,11 @@ export const OverviewFilters: FC = () => {
     setSearchParams(state);
   }, [state.safetyRisk]);
 
+  useEffect(() => {
+    store.mapSettings.setFilterAdmin(state.admin);
+    setSearchParams(state);
+  }, [state.admin]);
+
   const handleChange = (e: React.FormEvent<HTMLSelectElement>) => {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
@@ -95,28 +111,21 @@ export const OverviewFilters: FC = () => {
         (m: Municipality) => value === m.name
       );
       setState((previousState) => ({
+        ...previousState,
         canton: municipality ? municipality.canton : AllFilter,
         municipality: value,
-        otterFriendly: previousState.otterFriendly,
-        safetyRisk: previousState.safetyRisk,
       }));
     } else if ('canton' === name) {
       setState((previousState) => ({
+        ...previousState,
         canton: value,
         municipality: AllFilter,
-        otterFriendly: previousState.otterFriendly,
-        safetyRisk: previousState.safetyRisk,
       }));
     } else {
-      /* eslint-disable */
-      setState(
-        (previousState) =>
-          ({
-            ...previousState,
-            [name]: value,
-          }) as any
-      );
-      /* eslint-enable */
+      setState((previousState) => ({
+        ...previousState,
+        [name]: value,
+      }));
     }
   };
 
@@ -140,6 +149,8 @@ export const OverviewFilters: FC = () => {
     state.safetyRisk !== AllFilter,
   ].filter(Boolean).length;
 
+  const adminFilterActive = state.admin !== AllFilter;
+
   return (
     <div className="flex gap-2">
       {/* Filter Dropdown */}
@@ -149,6 +160,7 @@ export const OverviewFilters: FC = () => {
           onClick={() => {
             setFilterOpen(!filterOpen);
             setViewOpen(false);
+            setAdminOpen(false);
           }}
         >
           <Filter className="h-4 w-4" />
@@ -299,6 +311,7 @@ export const OverviewFilters: FC = () => {
           onClick={() => {
             setViewOpen(!viewOpen);
             setFilterOpen(false);
+            setAdminOpen(false);
           }}
         >
           <Settings className="h-4 w-4" />
@@ -349,6 +362,82 @@ export const OverviewFilters: FC = () => {
           </div>
         )}
       </div>
+
+      {/* Admin Filter Dropdown - only visible for logged in users */}
+      {isAdmin && (
+        <div className="relative" ref={adminRef}>
+          <button
+            className={`btn btn-sm gap-1 border-gray-300 bg-white/90 hover:bg-white ${adminFilterActive ? 'btn-warning' : ''}`}
+            onClick={() => {
+              setAdminOpen(!adminOpen);
+              setFilterOpen(false);
+              setViewOpen(false);
+            }}
+          >
+            <Shield className="h-4 w-4" />
+            <FormattedMessage
+              defaultMessage="Admin"
+              id="overview_filters_admin"
+            />
+            {adminFilterActive && (
+              <span className="badge badge-warning badge-sm">1</span>
+            )}
+          </button>
+
+          {adminOpen && (
+            <div className="absolute right-0 top-full z-50 mt-2 w-56 rounded-box bg-base-100 p-4 shadow-lg">
+              <div className="mb-3 flex items-center justify-between">
+                <span className="text-sm font-medium">
+                  <FormattedMessage
+                    defaultMessage="Admin Filter"
+                    id="overview_filters_admin_header"
+                  />
+                </span>
+                <button
+                  className="btn btn-xs btn-ghost"
+                  onClick={() => {
+                    setState((prev) => ({ ...prev, admin: AllFilter }));
+                    setAdminOpen(false);
+                  }}
+                >
+                  <FormattedMessage
+                    defaultMessage="Zurücksetzen"
+                    id="overview_filters_admin_reset"
+                  />
+                </button>
+              </div>
+
+              <label className="form-control w-full">
+                <select
+                  className="select select-bordered w-full"
+                  name="admin"
+                  onChange={handleChange}
+                  value={state.admin}
+                >
+                  <option value={AllFilter}>
+                    <FormattedMessage
+                      defaultMessage="Alle Brücken"
+                      id="overview_filters_admin_all"
+                    />
+                  </option>
+                  <option value="NO_IMAGE">
+                    <FormattedMessage
+                      defaultMessage="Ohne Bild"
+                      id="overview_filters_admin_no_image"
+                    />
+                  </option>
+                  <option value="RECENT">
+                    <FormattedMessage
+                      defaultMessage="Letzte 30 Tage"
+                      id="overview_filters_admin_recent"
+                    />
+                  </option>
+                </select>
+              </label>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

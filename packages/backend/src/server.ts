@@ -22,7 +22,7 @@ import { uploadRoute } from './routes/upload.js';
 const app = express();
 
 const fsAdapter = new FSFilesAdapter({
-  filesSubDirectory: './images',
+  filesSubDirectory: './files/images',
 });
 
 const serverOptions = {
