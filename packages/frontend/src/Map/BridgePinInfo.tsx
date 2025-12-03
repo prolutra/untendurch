@@ -34,6 +34,7 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
     (s) => s.selectedBridgePinObjectId
   );
   const bridgeById = useExistingBridgesStore((s) => s.bridgeById);
+  const bridgePins = useExistingBridgesStore((s) => s.bridgePins);
   const verifyBridgeAction = useExistingBridgesStore((s) => s.verifyBridge);
   const deleteBridgeAction = useExistingBridgesStore((s) => s.deleteBridge);
   const sessionToken = useAuthStore((s) => s.sessionToken);
@@ -57,7 +58,7 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
       setImageErrors(new Set()); // Reset error state when bridge changes
       setCurrentImageIndex(0);
     }
-  }, [objectId, bridgeById]);
+  }, [objectId, bridgeById, bridgePins]);
 
   useEffect(() => {
     if (bridgePin) {
