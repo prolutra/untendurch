@@ -127,7 +127,7 @@ async function runOptimization(statusId: string, dryRun: boolean) {
               .toBuffer();
 
             // Write optimized image back to disk
-            fs.writeFileSync(filePath, optimizedBuffer);
+            fs.writeFileSync(filePath, new Uint8Array(optimizedBuffer));
 
             const newSize = optimizedBuffer.length;
             const savedBytes = originalSize - newSize;
