@@ -22,8 +22,9 @@ import { uploadRoute } from './routes/upload.js';
 
 const app = express();
 
+// FSFilesAdapter prepends 'files/' to filesSubDirectory, so use 'images' to get 'files/images'
 const fsAdapter = new FSFilesAdapter({
-  filesSubDirectory: './files/images',
+  filesSubDirectory: 'images',
 });
 
 const serverOptions = {

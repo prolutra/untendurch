@@ -126,26 +126,14 @@ async function runOptimization(statusId: string, dryRun: boolean) {
               .jpeg({ quality: 80 })
               .toBuffer();
 
-            // Write optimized image back to disk
+            // Write optimized image back to disk (overwrites in place)
+            // No need to update Parse.File reference - the file URL stays the same,
+            // only the content on disk changes
             fs.writeFileSync(filePath, new Uint8Array(optimizedBuffer));
 
             const newSize = optimizedBuffer.length;
             const savedBytes = originalSize - newSize;
             totalSavedBytes += savedBytes;
-
-            // Update Parse.File reference
-            const newParseFile = new Parse.File(filename, {
-              base64: optimizedBuffer.toString('base64'),
-            });
-            await newParseFile.save({ useMasterKey: true });
-
-            // Update bridge's images array
-            const currentImages = bridge.get('images') as Parse.File[];
-            const updatedImages = currentImages.map((img) =>
-              img.name() === filename ? newParseFile : img
-            );
-            bridge.set('images', updatedImages);
-            await bridge.save(null, { useMasterKey: true });
 
             results.push({
               bridgeId: bridge.id,
