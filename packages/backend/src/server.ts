@@ -40,6 +40,8 @@ const serverOptions = {
     enableForPublic: true,
   },
   masterKey: PARSE_SERVER_MASTER_KEY,
+  // Allow master key from any IP (container is behind reverse proxy)
+  masterKeyIps: ['0.0.0.0/0', '::/0'],
   // Use PagesRouter instead of deprecated PublicAPIRouter
   pages: {
     enableRouter: true,

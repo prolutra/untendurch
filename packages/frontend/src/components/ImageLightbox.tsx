@@ -74,7 +74,7 @@ export const ImageLightbox: FC<ImageLightboxProps> = ({
       onClose={onClose}
       ref={dialogRef}
     >
-      <div className="modal-box max-w-4xl bg-black/95 p-0">
+      <div className="modal-box !max-h-[1500px] !max-w-[1500px] bg-black/95 p-0">
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 z-10 text-white hover:bg-white/20"
           onClick={onClose}
@@ -96,7 +96,7 @@ export const ImageLightbox: FC<ImageLightboxProps> = ({
           {/* Image */}
           <img
             alt={alt}
-            className="max-h-[85vh] w-auto object-contain"
+            className="max-h-[min(85vh,1500px)] max-w-[min(90vw,1500px)] object-contain"
             src={srcs[currentIndex]}
           />
 

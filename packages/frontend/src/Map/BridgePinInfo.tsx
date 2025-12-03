@@ -117,10 +117,13 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
           {!imageErrors.has(currentImageIndex) ? (
             <img
               alt={bridgePin.name}
-              className={'h-auto w-full cursor-pointer object-cover'}
+              className={'h-auto w-full object-cover md:cursor-pointer'}
               onClick={() => {
-                setLightboxInitialIndex(currentImageIndex);
-                setShowImageLightbox(true);
+                // Only open lightbox on desktop (md and up)
+                if (window.innerWidth >= 768) {
+                  setLightboxInitialIndex(currentImageIndex);
+                  setShowImageLightbox(true);
+                }
               }}
               onError={() => {
                 setImageErrors((prev) => new Set([currentImageIndex, ...prev]));
