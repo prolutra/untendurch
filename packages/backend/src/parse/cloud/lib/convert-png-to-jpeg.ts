@@ -228,7 +228,7 @@ async function updateConversionStatus(
 
 // Start PNG to JPEG conversion - returns status ID immediately
 Parse.Cloud.define('convert-png-start', async (req) => {
-  if (!req.user) {
+  if (!req.user && !req.master) {
     throw new Parse.Error(
       Parse.Error.OPERATION_FORBIDDEN,
       'Authentication required'
@@ -257,7 +257,7 @@ Parse.Cloud.define('convert-png-start', async (req) => {
 
 // Get conversion status
 Parse.Cloud.define('convert-png-status', async (req) => {
-  if (!req.user) {
+  if (!req.user && !req.master) {
     throw new Parse.Error(
       Parse.Error.OPERATION_FORBIDDEN,
       'Authentication required'
@@ -283,4 +283,52 @@ Parse.Cloud.define('convert-png-status', async (req) => {
     results: statusObj.get('results'),
     status: statusObj.get('status'),
   };
+});
+
+// Background job for PNG to JPEG conversion (dry run) - can be run from Dashboard > Jobs
+Parse.Cloud.job('convert-png-dry-run', async (request) => {
+  const { message } = request;
+  message('Starting PNG to JPEG conversion dry run...');
+
+  const ConversionStatus = Parse.Object.extend('ConversionStatus');
+  const statusObj = new ConversionStatus();
+  statusObj.set('status', 'pending');
+  statusObj.set('progress', 0);
+  statusObj.set('message', 'Starting dry run...');
+  statusObj.set('dryRun', true);
+  await statusObj.save(null, { useMasterKey: true });
+
+  message(`Status ID: ${statusObj.id}`);
+
+  await runConversion(statusObj.id, true);
+
+  const updatedStatus = await new Parse.Query(ConversionStatus).get(
+    statusObj.id,
+    { useMasterKey: true }
+  );
+  message(updatedStatus.get('message'));
+});
+
+// Background job for PNG to JPEG conversion (actual) - can be run from Dashboard > Jobs
+Parse.Cloud.job('convert-png-run', async (request) => {
+  const { message } = request;
+  message('Starting PNG to JPEG conversion...');
+
+  const ConversionStatus = Parse.Object.extend('ConversionStatus');
+  const statusObj = new ConversionStatus();
+  statusObj.set('status', 'pending');
+  statusObj.set('progress', 0);
+  statusObj.set('message', 'Starting conversion...');
+  statusObj.set('dryRun', false);
+  await statusObj.save(null, { useMasterKey: true });
+
+  message(`Status ID: ${statusObj.id}`);
+
+  await runConversion(statusObj.id, false);
+
+  const updatedStatus = await new Parse.Query(ConversionStatus).get(
+    statusObj.id,
+    { useMasterKey: true }
+  );
+  message(updatedStatus.get('message'));
 });

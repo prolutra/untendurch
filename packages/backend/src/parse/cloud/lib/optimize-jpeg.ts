@@ -223,7 +223,7 @@ async function updateOptimizationStatus(
 
 // Start JPEG optimization - returns status ID immediately
 Parse.Cloud.define('optimize-jpeg-start', async (req) => {
-  if (!req.user) {
+  if (!req.user && !req.master) {
     throw new Parse.Error(
       Parse.Error.OPERATION_FORBIDDEN,
       'Authentication required'
@@ -252,7 +252,7 @@ Parse.Cloud.define('optimize-jpeg-start', async (req) => {
 
 // Get optimization status
 Parse.Cloud.define('optimize-jpeg-status', async (req) => {
-  if (!req.user) {
+  if (!req.user && !req.master) {
     throw new Parse.Error(
       Parse.Error.OPERATION_FORBIDDEN,
       'Authentication required'
@@ -278,4 +278,52 @@ Parse.Cloud.define('optimize-jpeg-status', async (req) => {
     results: statusObj.get('results'),
     status: statusObj.get('status'),
   };
+});
+
+// Background job for JPEG optimization (dry run) - can be run from Dashboard > Jobs
+Parse.Cloud.job('optimize-jpeg-dry-run', async (request) => {
+  const { message } = request;
+  message('Starting JPEG optimization dry run...');
+
+  const OptimizationStatus = Parse.Object.extend('OptimizationStatus');
+  const statusObj = new OptimizationStatus();
+  statusObj.set('status', 'pending');
+  statusObj.set('progress', 0);
+  statusObj.set('message', 'Starting dry run...');
+  statusObj.set('dryRun', true);
+  await statusObj.save(null, { useMasterKey: true });
+
+  message(`Status ID: ${statusObj.id}`);
+
+  await runOptimization(statusObj.id, true);
+
+  const updatedStatus = await new Parse.Query(OptimizationStatus).get(
+    statusObj.id,
+    { useMasterKey: true }
+  );
+  message(updatedStatus.get('message'));
+});
+
+// Background job for JPEG optimization (actual) - can be run from Dashboard > Jobs
+Parse.Cloud.job('optimize-jpeg-run', async (request) => {
+  const { message } = request;
+  message('Starting JPEG optimization...');
+
+  const OptimizationStatus = Parse.Object.extend('OptimizationStatus');
+  const statusObj = new OptimizationStatus();
+  statusObj.set('status', 'pending');
+  statusObj.set('progress', 0);
+  statusObj.set('message', 'Starting optimization...');
+  statusObj.set('dryRun', false);
+  await statusObj.save(null, { useMasterKey: true });
+
+  message(`Status ID: ${statusObj.id}`);
+
+  await runOptimization(statusObj.id, false);
+
+  const updatedStatus = await new Parse.Query(OptimizationStatus).get(
+    statusObj.id,
+    { useMasterKey: true }
+  );
+  message(updatedStatus.get('message'));
 });
