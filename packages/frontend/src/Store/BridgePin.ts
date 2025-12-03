@@ -7,7 +7,7 @@ export interface BridgePin {
   bridgeIndex: number;
   cantons: string[];
   createdAt: Date | undefined;
-  imageUrl: string;
+  imageUrls: string[];
   latLon: LatLon;
   municipalities: string[];
   name: string;
@@ -24,7 +24,7 @@ export function createBridgePin(data: {
   bridgeIndex: number;
   cantons: string[];
   createdAt?: Date;
-  imageUrl: string;
+  imageUrls: string[];
   latLon: LatLon;
   municipalities: string[];
   name: string;
@@ -40,7 +40,7 @@ export function createBridgePin(data: {
     bridgeIndex: data.bridgeIndex,
     cantons: data.cantons,
     createdAt: data.createdAt,
-    imageUrl: data.imageUrl,
+    imageUrls: data.imageUrls,
     latLon: data.latLon,
     municipalities: data.municipalities,
     name: data.name,

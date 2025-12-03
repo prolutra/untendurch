@@ -155,10 +155,10 @@ export const BridgeList: FC<BridgeListProps> = ({
                 onClick={() => onSelect(bridge.objectId)}
               >
                 {/* Thumbnail */}
-                {bridge.imageUrl ? (
+                {bridge.imageUrls.length > 0 ? (
                   <BridgeThumbnail
                     alt={bridge.name}
-                    src={getThumbnail(bridge.imageUrl)}
+                    src={getThumbnail(bridge.imageUrls[0])}
                   />
                 ) : (
                   <div className="flex h-12 w-16 flex-shrink-0 items-center justify-center rounded bg-base-200">

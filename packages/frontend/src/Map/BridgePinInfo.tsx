@@ -1,5 +1,13 @@
 import './Map.css';
-import { CheckCircle, ImageOff, Pencil, Trash2, X } from 'lucide-react';
+import {
+  CheckCircle,
+  ChevronLeft,
+  ChevronRight,
+  ImageOff,
+  Pencil,
+  Trash2,
+  X,
+} from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
@@ -35,7 +43,9 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
   const [lv95, setLv95] = useState<null | { east: number; west: number }>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showImageLightbox, setShowImageLightbox] = useState(false);
-  const [imageError, setImageError] = useState(false);
+  const [lightboxInitialIndex, setLightboxInitialIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     setObjectId(selectedBridgePinObjectId);
@@ -44,7 +54,8 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
   useEffect(() => {
     if (objectId) {
       setBridgePin(bridgeById(objectId) || null);
-      setImageError(false); // Reset error state when bridge changes
+      setImageErrors(new Set()); // Reset error state when bridge changes
+      setCurrentImageIndex(0);
     }
   }, [objectId, bridgeById]);
 
@@ -100,25 +111,64 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
         </div>
       </div>
 
-      {/* Bridge image */}
-      {bridgePin.imageUrl && !imageError && (
-        <div className={'flex-shrink-0 overflow-hidden'}>
-          <img
-            alt={bridgePin.name}
-            className={'h-auto w-full cursor-pointer object-cover'}
-            onClick={() => setShowImageLightbox(true)}
-            onError={() => setImageError(true)}
-            src={getThumbnail(bridgePin.imageUrl)}
-          />
-        </div>
-      )}
-      {bridgePin.imageUrl && imageError && (
-        <div
-          className={
-            'flex h-32 flex-shrink-0 items-center justify-center bg-base-200'
-          }
-        >
-          <ImageOff className="h-10 w-10 text-base-content/30" />
+      {/* Bridge images */}
+      {bridgePin.imageUrls.length > 0 && (
+        <div className={'relative flex-shrink-0 overflow-hidden'}>
+          {!imageErrors.has(currentImageIndex) ? (
+            <img
+              alt={bridgePin.name}
+              className={'h-auto w-full cursor-pointer object-cover'}
+              onClick={() => {
+                setLightboxInitialIndex(currentImageIndex);
+                setShowImageLightbox(true);
+              }}
+              onError={() => {
+                setImageErrors((prev) => new Set([currentImageIndex, ...prev]));
+              }}
+              src={getThumbnail(bridgePin.imageUrls[currentImageIndex])}
+            />
+          ) : (
+            <div
+              className={'flex h-32 items-center justify-center bg-base-200'}
+            >
+              <ImageOff className="h-10 w-10 text-base-content/30" />
+            </div>
+          )}
+
+          {/* Image counter badge */}
+          {bridgePin.imageUrls.length > 1 && (
+            <div className="absolute right-2 top-2 rounded bg-black/60 px-2 py-1 text-sm font-medium text-white">
+              {currentImageIndex + 1}/{bridgePin.imageUrls.length}
+            </div>
+          )}
+
+          {/* Navigation arrows for multiple images */}
+          {bridgePin.imageUrls.length > 1 && (
+            <>
+              <button
+                className="btn btn-circle btn-ghost absolute left-2 top-1/2 z-10 -translate-y-1/2 text-white hover:bg-white/20"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentImageIndex((prev) =>
+                    prev > 0 ? prev - 1 : bridgePin.imageUrls.length - 1
+                  );
+                }}
+              >
+                <ChevronLeft className="h-8 w-8" />
+              </button>
+              <button
+                className="btn btn-circle btn-ghost absolute right-2 top-1/2 z-10 -translate-y-1/2 text-white hover:bg-white/20"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentImageIndex((prev) =>
+                    prev < bridgePin.imageUrls.length - 1 ? prev + 1 : 0
+                  );
+                }}
+              >
+                <ChevronRight className="h-8 w-8" />
+              </button>
+            </>
+          )}
         </div>
       )}
 
@@ -335,12 +385,13 @@ export const BridgePinInfo = ({ closeFn }: BridgePinInfoProps) => {
         }
         variant="danger"
       />
-      {bridgePin.imageUrl && (
+      {bridgePin.imageUrls.length > 0 && (
         <ImageLightbox
           alt={bridgePin.name}
+          initialIndex={lightboxInitialIndex}
           isOpen={showImageLightbox}
           onClose={() => setShowImageLightbox(false)}
-          src={getFullSizeImage(bridgePin.imageUrl)}
+          srcs={bridgePin.imageUrls.map(getFullSizeImage)}
         />
       )}
     </div>

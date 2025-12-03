@@ -76,14 +76,16 @@ export const useExistingBridgesStore = create<ExistingBridgesStore>(
         ] as number;
         const createdAt = bridge.createdAt;
 
-        const imageUrl = images && images[0] ? (images[0].url() ?? '') : '';
+        const imageUrls = images
+          ? images.map((img) => img.url() ?? '').filter(Boolean)
+          : [];
 
         return createBridgePin({
           averageDailyTraffic: averageDailyTraffic,
           bridgeIndex: bridgeIndex,
           cantons: cantons,
           createdAt: createdAt,
-          imageUrl: imageUrl,
+          imageUrls: imageUrls,
           latLon: createLatLon(position.latitude, position.longitude),
           municipalities: municipality,
           name: name,
@@ -143,7 +145,10 @@ export const useExistingBridgesStore = create<ExistingBridgesStore>(
         }
         // Admin filters
         if (mapSettings.filterAdmin !== AllFilter) {
-          if (mapSettings.filterAdmin === 'NO_IMAGE' && b.imageUrl) {
+          if (
+            mapSettings.filterAdmin === 'NO_IMAGE' &&
+            b.imageUrls.length > 0
+          ) {
             return false;
           }
           if (mapSettings.filterAdmin === 'RECENT') {

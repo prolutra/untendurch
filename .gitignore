@@ -21,3 +21,4 @@ dist/
 .env
 .env.local
 db-backup
+.DS_Store
