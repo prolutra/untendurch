@@ -88,12 +88,15 @@ app.use(uploadRoute);
 
 // Serve index.html with no-cache for SPA routes to ensure users always get latest version
 const publicDir = path.join(import.meta.dirname, '../public');
-app.get(['/', '/index.html', '/bridges/*', '/admin*'], (req, res) => {
-  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Expires', '0');
-  res.sendFile(path.join(publicDir, 'index.html'));
-});
+app.get(
+  ['/', '/index.html', '/bridges/:id', '/admin', '/admin/:path'],
+  (req, res) => {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.sendFile(path.join(publicDir, 'index.html'));
+  }
+);
 
 // Serve hashed assets with long cache (immutable since filename changes on content change)
 app.use(
