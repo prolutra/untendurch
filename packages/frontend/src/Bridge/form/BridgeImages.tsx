@@ -2,7 +2,7 @@ import type { FC } from 'react';
 
 import { ImagePlus, X } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 import type { BridgeFormState } from '../BridgeFormState';
 
@@ -18,14 +18,72 @@ type Props = {
   state: BridgeFormState;
 };
 
-// Map error codes to translation keys
-const ERROR_CODE_TO_TRANSLATION: Record<string, string> = {
-  PORTRAIT_MODE_NOT_SUPPORTED: 'report_bridge_images_error_portrait',
-};
+const MAX_IMAGE_SIZE = 2000;
+
+/**
+ * Resizes an image file so that its longest side is at most MAX_IMAGE_SIZE pixels.
+ * Uses Canvas API for cross-browser/cross-platform compatibility.
+ * Returns a JPEG blob with 80% quality.
+ */
+async function resizeImage(file: File): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+
+      let { height, width } = img;
+
+      // Only resize if larger than MAX_IMAGE_SIZE
+      if (width > MAX_IMAGE_SIZE || height > MAX_IMAGE_SIZE) {
+        if (width > height) {
+          // Landscape or square
+          height = Math.round((height / width) * MAX_IMAGE_SIZE);
+          width = MAX_IMAGE_SIZE;
+        } else {
+          // Portrait
+          width = Math.round((width / height) * MAX_IMAGE_SIZE);
+          height = MAX_IMAGE_SIZE;
+        }
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        reject(new Error('Could not get canvas context'));
+        return;
+      }
+
+      ctx.drawImage(img, 0, 0, width, height);
+
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error('Could not create blob from canvas'));
+          }
+        },
+        'image/jpeg',
+        0.8
+      );
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error('Failed to load image'));
+    };
+
+    img.src = url;
+  });
+}
 
 export const BridgeImages: FC<Props> = ({ setState, state }) => {
   const hiddenFileInputRef = useRef<HTMLInputElement>(null);
-  const intl = useIntl();
   const [newFiles, setNewFiles] = useState<DisplayFile[]>([]);
   const [displayFiles, setDisplayFiles] = useState<DisplayFile[]>([]);
   const [isBusy, setIsBusy] = useState(false);
@@ -68,9 +126,19 @@ export const BridgeImages: FC<Props> = ({ setState, state }) => {
 
     const formData = new FormData();
 
-    Array.from(files).forEach((file) => {
-      formData.append('images', file, file.name);
-    });
+    // Resize images client-side before uploading to reduce upload time
+    for (const file of Array.from(files)) {
+      try {
+        const resizedBlob = await resizeImage(file);
+        // Preserve original filename but ensure .jpg extension
+        const filename = file.name.replace(/\.[^/.]+$/, '') + '.jpg';
+        formData.append('images', resizedBlob, filename);
+      } catch (error) {
+        console.error('Failed to resize image:', error);
+        // Fall back to original file if resize fails
+        formData.append('images', file, file.name);
+      }
+    }
 
     try {
       const response = await fetch(
@@ -108,19 +176,7 @@ export const BridgeImages: FC<Props> = ({ setState, state }) => {
             url: file.url,
           };
         } else {
-          // Translate error code if known, otherwise show raw error
-          const translationKey = ERROR_CODE_TO_TRANSLATION[file.error];
-          if (translationKey) {
-            setUploadError(
-              intl.formatMessage({
-                defaultMessage:
-                  'Bilder im Hochformat werden nicht unterstützt und automatisch abgelehnt. Bitte laden Sie Bilder im Querformat hoch.',
-                id: translationKey,
-              })
-            );
-          } else {
-            setUploadError(file.error);
-          }
+          setUploadError(file.error);
           return null;
         }
       })
@@ -192,20 +248,12 @@ export const BridgeImages: FC<Props> = ({ setState, state }) => {
         </div>
       )}
       {displayFiles.length === 0 && (
-        <>
-          <p className={'italic'}>
-            <FormattedMessage
-              defaultMessage={'Es muss mindestens ein Bild ausgewählt werden'}
-              id="report_bridge_images_required"
-            />
-          </p>
-          <p className={'italic'}>
-            <FormattedMessage
-              defaultMessage={'Bitte Bilder im Querformat hochladen.'}
-              id="report_bridge_images_request_landscape"
-            />
-          </p>
-        </>
+        <p className={'italic'}>
+          <FormattedMessage
+            defaultMessage={'Es muss mindestens ein Bild ausgewählt werden'}
+            id="report_bridge_images_required"
+          />
+        </p>
       )}
       <div className={'flex flex-col'}>
         {hiddenFileInputRef && (
@@ -238,7 +286,7 @@ export const BridgeImages: FC<Props> = ({ setState, state }) => {
           type={'file'}
         />
       </div>
-      <div className={'grid grid-cols-3 gap-4'}>
+      <div className={'grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4'}>
         {displayFiles.length > 0 &&
           displayFiles.map((file) => {
             return (

@@ -54,7 +54,7 @@
     "defaultMessage": "Segna posizione"
   },
   "howto_modal_step2_desc": {
-    "defaultMessage": "Fotografa il ponte frontalmente dal lato dell'acqua – dalla prospettiva di una lontra. La foto dovrebbe mostrare il passaggio sotto il ponte. Importante: fotografa in formato orizzontale, non verticale. Questo ci aiuta a valutare quanto sia accessibile il passaggio per le lontre."
+    "defaultMessage": "Fotografa il ponte frontalmente dal lato dell'acqua – dalla prospettiva di una lontra. La foto dovrebbe mostrare il passaggio sotto il ponte. Questo ci aiuta a valutare quanto sia accessibile il passaggio per le lontre."
   },
   "howto_modal_step2_title": {
     "defaultMessage": "Foto dal punto di vista della lontra"
@@ -148,12 +148,6 @@
   },
   "report_bridge_heading_varia": {
     "defaultMessage": "Varie"
-  },
-  "report_bridge_images_error_portrait": {
-    "defaultMessage": "Le immagini in formato verticale non sono supportate e verranno rifiutate automaticamente. Carica le immagini in formato orizzontale."
-  },
-  "report_bridge_images_request_landscape": {
-    "defaultMessage": "Carica le immagini in formato orizzontale."
   },
   "report_bridge_images_required": {
     "defaultMessage": "Deve essere caricata almeno una immagine"

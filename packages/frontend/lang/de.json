@@ -54,7 +54,7 @@
     "defaultMessage": "Standort markieren"
   },
   "howto_modal_step2_desc": {
-    "defaultMessage": "Fotografieren Sie die Brücke frontal von der Wasserseite aus – quasi aus der Perspektive eines Otters. Das Foto sollte den Durchgang unter der Brücke zeigen. Wichtig: Bitte im Querformat (Landschaft) fotografieren, nicht im Hochformat. So können wir beurteilen, wie zugänglich der Durchgang für Fischotter ist."
+    "defaultMessage": "Fotografieren Sie die Brücke frontal von der Wasserseite aus – quasi aus der Perspektive eines Otters. Das Foto sollte den Durchgang unter der Brücke zeigen. So können wir beurteilen, wie zugänglich der Durchgang für Fischotter ist."
   },
   "howto_modal_step2_title": {
     "defaultMessage": "Foto aus Ottersicht"
@@ -148,12 +148,6 @@
   },
   "report_bridge_heading_varia": {
     "defaultMessage": "Sonstiges"
-  },
-  "report_bridge_images_error_portrait": {
-    "defaultMessage": "Bilder im Hochformat werden nicht unterstützt und automatisch abgelehnt. Bitte laden Sie Bilder im Querformat hoch."
-  },
-  "report_bridge_images_request_landscape": {
-    "defaultMessage": "Bitte Bilder im Querformat hochladen."
   },
   "report_bridge_images_required": {
     "defaultMessage": "Es muss mindestens ein Bild hochgeladen werden"

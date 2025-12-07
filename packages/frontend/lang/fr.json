@@ -54,7 +54,7 @@
     "defaultMessage": "Marquer l'emplacement"
   },
   "howto_modal_step2_desc": {
-    "defaultMessage": "Photographiez le pont de face depuis le côté de l'eau – du point de vue d'une loutre. La photo doit montrer le passage sous le pont. Important: Veuillez photographier en format paysage, pas en portrait. Cela nous aide à évaluer l'accessibilité du passage pour les loutres."
+    "defaultMessage": "Photographiez le pont de face depuis le côté de l'eau – du point de vue d'une loutre. La photo doit montrer le passage sous le pont. Cela nous aide à évaluer l'accessibilité du passage pour les loutres."
   },
   "howto_modal_step2_title": {
     "defaultMessage": "Photo du point de vue de la loutre"
@@ -148,12 +148,6 @@
   },
   "report_bridge_heading_varia": {
     "defaultMessage": "Autre"
-  },
-  "report_bridge_images_error_portrait": {
-    "defaultMessage": "Les images en mode portrait ne sont pas prises en charge et seront automatiquement rejetées. Veuillez télécharger des images en mode paysage."
-  },
-  "report_bridge_images_request_landscape": {
-    "defaultMessage": "Veuillez télécharger des images en format paysage."
   },
   "report_bridge_images_required": {
     "defaultMessage": "Au moins une image doit être téléchargée"

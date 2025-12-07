@@ -3,6 +3,7 @@ import cors from 'cors';
 import express from 'express';
 import ParseDashboard from 'parse-dashboard';
 import { ParseServer } from 'parse-server';
+import path from 'path';
 
 import {
   CORS_ORIGINS,
@@ -85,6 +86,27 @@ app.use('/dashboard', dashboard);
 app.use(thumbnailRoute);
 app.use(uploadRoute);
 
+// Serve index.html with no-cache for SPA routes to ensure users always get latest version
+const publicDir = path.join(import.meta.dirname, '../public');
+app.get(['/', '/index.html', '/bridges/*', '/admin*'], (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.sendFile(path.join(publicDir, 'index.html'));
+});
+
+// Serve hashed assets with long cache (immutable since filename changes on content change)
+app.use(
+  '/assets',
+  express.static(path.join(publicDir, 'assets'), {
+    cacheControl: true,
+    etag: true,
+    immutable: true,
+    maxAge: '1y',
+  })
+);
+
+// Serve other static files with moderate cache
 app.use(
   express.static('public', { cacheControl: true, etag: true, maxAge: '1d' })
 );

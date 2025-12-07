@@ -62,21 +62,10 @@ uploadRoute.post(
           .jpeg({ quality: 80 })
           .toBuffer();
 
-        const newMeta = await sharp(processedImage).metadata();
-
-        if (newMeta.width && newMeta.height && newMeta.width > newMeta.height) {
-          // Overwrite the multer-saved file with the processed image
-          fs.writeFileSync(file.path, new Uint8Array(processedImage));
-          const url = `${PARSE_SERVER_ROOT_URL}/uploads/${file.filename}`;
-          processedImages.push({ isValid: true, name: file.filename, url });
-        } else {
-          // Remove the uploaded file since it's not valid
-          fs.unlinkSync(file.path);
-          processedImages.push({
-            error: 'PORTRAIT_MODE_NOT_SUPPORTED',
-            isValid: false,
-          });
-        }
+        // Overwrite the multer-saved file with the processed image
+        fs.writeFileSync(file.path, new Uint8Array(processedImage));
+        const url = `${PARSE_SERVER_ROOT_URL}/uploads/${file.filename}`;
+        processedImages.push({ isValid: true, name: file.filename, url });
       }
 
       console.log('Processed images:', processedImages);

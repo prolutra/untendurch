@@ -141,7 +141,7 @@ export const HowToModal: FC<HowToModalProps> = ({ forceOpen, onClose }) => {
           <StepItem
             description={
               <FormattedMessage
-                defaultMessage="Fotografieren Sie die Brücke frontal von der Wasserseite aus – quasi aus der Perspektive eines Otters. Das Foto sollte den Durchgang unter der Brücke zeigen. Wichtig: Bitte im Querformat (Landschaft) fotografieren, nicht im Hochformat. So können wir beurteilen, wie zugänglich der Durchgang für Fischotter ist."
+                defaultMessage="Fotografieren Sie die Brücke frontal von der Wasserseite aus – quasi aus der Perspektive eines Otters. Das Foto sollte den Durchgang unter der Brücke zeigen. So können wir beurteilen, wie zugänglich der Durchgang für Fischotter ist."
                 id="howto_modal_step2_desc"
               />
             }

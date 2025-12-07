@@ -54,7 +54,7 @@
     "defaultMessage": "Mark location"
   },
   "howto_modal_step2_desc": {
-    "defaultMessage": "Photograph the bridge frontally from the water side – from an otter's perspective. The photo should show the passage under the bridge. Important: Please photograph in landscape format, not portrait. This helps us assess how accessible the passage is for otters."
+    "defaultMessage": "Photograph the bridge frontally from the water side – from an otter's perspective. The photo should show the passage under the bridge. This helps us assess how accessible the passage is for otters."
   },
   "howto_modal_step2_title": {
     "defaultMessage": "Photo from otter's view"
@@ -148,12 +148,6 @@
   },
   "report_bridge_heading_varia": {
     "defaultMessage": "Other"
-  },
-  "report_bridge_images_error_portrait": {
-    "defaultMessage": "Images in portrait mode are not supported and will be automatically rejected. Please upload images in landscape mode."
-  },
-  "report_bridge_images_request_landscape": {
-    "defaultMessage": "Please upload images in landscape format."
   },
   "report_bridge_images_required": {
     "defaultMessage": "At least one image must be uploaded"

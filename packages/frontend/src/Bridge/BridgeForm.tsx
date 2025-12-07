@@ -460,6 +460,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
                 <BridgeLegendNumber n={1} />
                 <input
                   className={'input input-bordered grow'}
+                  inputMode="decimal"
                   name="bridgeWidth"
                   onChange={handleChange}
                   placeholder={intl.formatMessage({
@@ -475,6 +476,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
                 <BridgeLegendNumber n={2} />
                 <input
                   className={'input input-bordered grow'}
+                  inputMode="decimal"
                   name="bridgeHeight"
                   onChange={handleChange}
                   placeholder={intl.formatMessage({
@@ -490,6 +492,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
                 <BridgeLegendNumber n={3} />
                 <input
                   className={'input input-bordered grow'}
+                  inputMode="decimal"
                   name="bridgeLength"
                   onChange={handleChange}
                   placeholder={intl.formatMessage({
