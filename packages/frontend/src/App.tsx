@@ -30,7 +30,10 @@ export const App = () => {
           <Route element={<EditBridgeRoute />} path="/bridges/:id" />
           <Route element={<AdminRoute />} path="/admin" />
           <Route element={<CampaignLandingRoute />} path="/campaign/:code" />
-          <Route element={<CampaignResultsRoute />} path="/campaign/:code/results" />
+          <Route
+            element={<CampaignResultsRoute />}
+            path="/campaign/:code/results"
+          />
         </Routes>
       </Router>
     </React.StrictMode>
