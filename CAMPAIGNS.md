@@ -21,7 +21,7 @@ Where `:code` is the unique campaign identifier (e.g., `SUMMER2024`, `SCHOOL-VIS
 The landing page:
 - Displays a welcome message with the campaign code
 - Stores the campaign code in a cookie (valid for 30 days)
-- Automatically redirects to the main page after 2 seconds
+- Automatically redirects to the main page after 5 seconds
 
 **Example URL:** `https://untendurch.example.com/campaign/SUMMER2024`
 
@@ -30,7 +30,7 @@ The landing page:
 The campaign code is stored in a browser cookie named `untendurch_campaign`:
 - **Duration:** 30 days
 - **Scope:** Entire site (path=/)
-- **Security:** SameSite=Lax
+- **Security:** SameSite=Lax, Secure flag when using HTTPS
 
 This means users can report multiple bridges over several sessions, and they will all be associated with the same campaign code.
 
