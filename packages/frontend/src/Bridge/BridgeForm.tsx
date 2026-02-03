@@ -12,6 +12,7 @@ import type { BridgeLogItem } from '../Store/BridgeSchema';
 import type { BridgeFormState } from './BridgeFormState';
 
 import { fetchPointInformation } from '../GeoAdmin/FetchPointInformation';
+import { getCampaignCode } from '../lib/campaignCookie';
 import { CloseChar } from '../lib/closeChar';
 import { useStore } from '../Store/Store';
 import { BridgeLegendNumber } from './BridgeLegendNumber';
@@ -134,6 +135,12 @@ export const BridgeForm: FC<BridgeFormProps> = ({
       'averageDailyTraffic',
       pointInformation.averageDailyTraffic
     );
+
+    // Add campaign code if available
+    const campaignCode = getCampaignCode();
+    if (campaignCode) {
+      reportedBridge.set('campaignCode', campaignCode);
+    }
 
     setSaveStatus('saving');
 

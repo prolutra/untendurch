@@ -8,6 +8,8 @@ import './parseConfig'; // Initialize Parse once
 import { AdminRoute } from './Auth/AdminRoute';
 import { EditBridgeRoute } from './Bridge/EditBridgeRoute';
 import { ReportBridgeRoute } from './Bridge/ReportBridgeRoute';
+import { CampaignLandingRoute } from './Campaign/CampaignLandingRoute';
+import { CampaignResultsRoute } from './Campaign/CampaignResultsRoute';
 import { RootRoute } from './Overview/RootRoute';
 import { initializeAuthStore } from './Store/AuthStore';
 import { initializeCantonMunicipalityStore } from './Store/CantonMunicipalityStore';
@@ -27,6 +29,8 @@ export const App = () => {
           <Route element={<ReportBridgeRoute />} path="/bridges/new" />
           <Route element={<EditBridgeRoute />} path="/bridges/:id" />
           <Route element={<AdminRoute />} path="/admin" />
+          <Route element={<CampaignLandingRoute />} path="/campaign/:code" />
+          <Route element={<CampaignResultsRoute />} path="/campaign/:code/results" />
         </Routes>
       </Router>
     </React.StrictMode>
