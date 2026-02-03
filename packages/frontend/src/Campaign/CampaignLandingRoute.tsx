@@ -14,10 +14,10 @@ export const CampaignLandingRoute: FC = () => {
     if (code) {
       // Store the campaign code in a cookie
       setCampaignCode(code);
-      // Redirect to the home page after a short delay
+      // Redirect to the home page after 5 seconds to allow screen readers time to read content
       const timer = setTimeout(() => {
         navigate('/');
-      }, 2000);
+      }, 5000);
       return () => clearTimeout(timer);
     }
   }, [code, navigate]);
@@ -32,7 +32,7 @@ export const CampaignLandingRoute: FC = () => {
           weitergeleitet...
         </p>
         <p className="mt-4 text-sm text-gray-500">
-          Alle Brücken, die Sie während dieser Sitzung melden, werden dieser
+          Alle Brücken, die Sie in den nächsten 30 Tagen melden, werden dieser
           Kampagne zugeordnet.
         </p>
       </div>

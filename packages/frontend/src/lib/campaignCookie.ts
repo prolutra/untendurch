@@ -16,5 +16,8 @@ export function getCampaignCode(): null | string {
 export function setCampaignCode(code: string): void {
   const expires = new Date();
   expires.setDate(expires.getDate() + CAMPAIGN_COOKIE_DAYS);
-  document.cookie = `${CAMPAIGN_COOKIE_NAME}=${encodeURIComponent(code)}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
+  // Add Secure flag only when using HTTPS (production)
+  const isSecure = window.location.protocol === 'https:';
+  const secureFlag = isSecure ? '; Secure' : '';
+  document.cookie = `${CAMPAIGN_COOKIE_NAME}=${encodeURIComponent(code)}; expires=${expires.toUTCString()}; path=/; SameSite=Lax${secureFlag}`;
 }
