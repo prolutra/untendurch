@@ -89,7 +89,15 @@ app.use(uploadRoute);
 // Serve index.html with no-cache for SPA routes to ensure users always get latest version
 const publicDir = path.join(import.meta.dirname, '../public');
 app.get(
-  ['/', '/index.html', '/bridges/:id', '/admin', '/admin/:path'],
+  [
+    '/',
+    '/index.html',
+    '/bridges/:id',
+    '/admin',
+    '/admin/:path',
+    '/campaign/:code',
+    '/campaign/:code/results',
+  ],
   (req, res) => {
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
