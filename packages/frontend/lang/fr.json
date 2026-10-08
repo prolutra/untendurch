@@ -60,7 +60,7 @@
     "defaultMessage": "Photo du point de vue de la loutre"
   },
   "howto_modal_step3_desc": {
-    "defaultMessage": "Estimez les dimensions du pont: largeur (portée du passage), hauteur (du niveau de l'eau au dessous du pont) et longueur/profondeur (longueur du passage). L'indice du pont (IP) est calculé à partir de ces mesures. Un IP supérieur à 1.5 est considéré comme favorable aux loutres – le passage est assez grand pour un passage sûr."
+    "defaultMessage": "Estimez les dimensions du pont: largeur (portée du passage), hauteur (du niveau de l'eau au dessous du pont) et longueur/profondeur (longueur du passage). L'indice du pont (IP) est calculé à partir de ces mesures et aide à évaluer si un pont est favorable aux loutres."
   },
   "howto_modal_step3_title": {
     "defaultMessage": "Estimer les dimensions"
@@ -136,6 +136,9 @@
   },
   "report_bridge_heading_dimensions": {
     "defaultMessage": "Dimensions du pont"
+  },
+  "report_bridge_dimensions_help": {
+    "defaultMessage": "L'indice du pont (IP) est calculé à partir de ces mesures et aide à évaluer si un pont est favorable aux loutres. Estimez les mesures aussi précisément que possible."
   },
   "report_bridge_heading_info": {
     "defaultMessage": "Informations sur le pont"
@@ -318,7 +321,7 @@
     "defaultMessage": "C'est parti"
   },
   "welcome_modal_description": {
-    "defaultMessage": "Avec cette application, vous pouvez enregistrer des ponts en Suisse et évaluer leur sécurité pour les loutres. L'indice de pont (IP) indique si un pont est favorable aux loutres (IP > 1.5)."
+    "defaultMessage": "Avec cette application, vous pouvez enregistrer des ponts en Suisse et évaluer leur sécurité pour les loutres. L'indice de pont (IP) aide à évaluer si un pont est favorable aux loutres."
   },
   "welcome_modal_feature_clustering_desc": {
     "defaultMessage": "Avec de nombreux ponts, les marqueurs proches sont regroupés en cercles avec un nombre. Zoomez pour voir les ponts individuels."

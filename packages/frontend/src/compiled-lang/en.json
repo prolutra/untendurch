@@ -23,6 +23,12 @@
       "value": "Username"
     }
   ],
+  "bridge_list_overlap_tooltip": [
+    {
+      "type": 0,
+      "value": "This bridge overlaps with another"
+    }
+  ],
   "bridge_pin_info_bridge_averageDailyTraffic": [
     {
       "type": 0,
@@ -65,6 +71,96 @@
       "value": "Reported by"
     }
   ],
+  "confirm_dialog_cancel": [
+    {
+      "type": 0,
+      "value": "Cancel"
+    }
+  ],
+  "confirm_dialog_confirm": [
+    {
+      "type": 0,
+      "value": "Confirm"
+    }
+  ],
+  "howto_modal_button": [
+    {
+      "type": 0,
+      "value": "Got it"
+    }
+  ],
+  "howto_modal_description": [
+    {
+      "type": 0,
+      "value": "Follow these steps to properly document a bridge."
+    }
+  ],
+  "howto_modal_step1_desc": [
+    {
+      "type": 0,
+      "value": "Position the marker on the map exactly on the bridge. You can use the location feature to use your current GPS position, or manually move the marker to the correct position. Accurate positioning is important for documentation."
+    }
+  ],
+  "howto_modal_step1_title": [
+    {
+      "type": 0,
+      "value": "Mark location"
+    }
+  ],
+  "howto_modal_step2_desc": [
+    {
+      "type": 0,
+      "value": "Photograph the bridge frontally from the water side – from an otter's perspective. The photo should show the passage under the bridge. This helps us assess how accessible the passage is for otters."
+    }
+  ],
+  "howto_modal_step2_title": [
+    {
+      "type": 0,
+      "value": "Photo from otter's view"
+    }
+  ],
+  "howto_modal_step3_desc": [
+    {
+      "type": 0,
+      "value": "Estimate the bridge dimensions: width (span of the passage), height (from water level to bridge underside) and length/depth (how long is the passage). The bridge index (BI) is calculated from these measurements and helps to classify how otter-friendly a bridge is."
+    }
+  ],
+  "howto_modal_step3_title": [
+    {
+      "type": 0,
+      "value": "Estimate dimensions"
+    }
+  ],
+  "howto_modal_step4_desc": [
+    {
+      "type": 0,
+      "value": "Assess the bridge surroundings: Is there a continuous banquette (bank strip) of at least 30 cm width on one side? Are there stones protruding from the water that can serve as marking spots? Is the bank continuous before and after the bridge, or do animals need to cross the road? Are there obstacles like weirs or drops over 1 meter within 20 meters?"
+    }
+  ],
+  "howto_modal_step4_title": [
+    {
+      "type": 0,
+      "value": "Assess surroundings"
+    }
+  ],
+  "howto_modal_step5_desc": [
+    {
+      "type": 0,
+      "value": "Record the traffic situation: How many vehicles pass the bridge during your observation? What is the speed limit on the road? Are there barriers like fences or walls that could prevent animals from safely crossing the road? This data helps with risk assessment."
+    }
+  ],
+  "howto_modal_step5_title": [
+    {
+      "type": 0,
+      "value": "Record traffic"
+    }
+  ],
+  "howto_modal_title": [
+    {
+      "type": 0,
+      "value": "How to report a bridge"
+    }
+  ],
   "otter_friendly_FRIENDLY": [
     {
       "type": 0,
@@ -75,6 +171,22 @@
     {
       "type": 0,
       "value": "Unfriendly"
+    }
+  ],
+  "overlapping_bridges_subtitle": [
+    {
+      "type": 0,
+      "value": "Select a bridge to view details"
+    }
+  ],
+  "overlapping_bridges_title": [
+    {
+      "type": 1,
+      "value": "count"
+    },
+    {
+      "type": 0,
+      "value": " bridges at this location"
     }
   ],
   "overview_button_report": [
@@ -159,6 +271,12 @@
     {
       "type": 0,
       "value": "Select images"
+    }
+  ],
+  "report_bridge_dimensions_help": [
+    {
+      "type": 0,
+      "value": "The bridge index (BI) is calculated from these measurements and helps to classify how otter-friendly a bridge is. Estimate the measurements as accurately as possible."
     }
   ],
   "report_bridge_heading_dimensions": [
@@ -459,6 +577,164 @@
     {
       "type": 0,
       "value": "Extremely dangerous"
+    }
+  ],
+  "settings_about_text": [
+    {
+      "type": 0,
+      "value": "This app was developed by "
+    },
+    {
+      "type": 1,
+      "value": "tegonalLink"
+    },
+    {
+      "type": 0,
+      "value": " on behalf of "
+    },
+    {
+      "type": 1,
+      "value": "prolutraLink"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
+  "settings_button_close": [
+    {
+      "type": 0,
+      "value": "Close"
+    }
+  ],
+  "settings_button_title": [
+    {
+      "type": 0,
+      "value": "Settings"
+    }
+  ],
+  "settings_language_label": [
+    {
+      "type": 0,
+      "value": "Language"
+    }
+  ],
+  "settings_legal_heading": [
+    {
+      "type": 0,
+      "value": "Legal"
+    }
+  ],
+  "settings_link_imprint": [
+    {
+      "type": 0,
+      "value": "Imprint"
+    }
+  ],
+  "settings_link_privacy": [
+    {
+      "type": 0,
+      "value": "Privacy Policy"
+    }
+  ],
+  "settings_modal_title": [
+    {
+      "type": 0,
+      "value": "Settings"
+    }
+  ],
+  "visible_bridges_subtitle": [
+    {
+      "type": 0,
+      "value": "Bridges in the current map view"
+    }
+  ],
+  "visible_bridges_title": [
+    {
+      "type": 1,
+      "value": "count"
+    },
+    {
+      "type": 0,
+      "value": " bridges visible"
+    }
+  ],
+  "welcome_modal_button": [
+    {
+      "type": 0,
+      "value": "Let's go"
+    }
+  ],
+  "welcome_modal_description": [
+    {
+      "type": 0,
+      "value": "With this app you can record bridges in Switzerland and assess their safety for otters. The bridge index (BI) helps to classify how otter-friendly a bridge is."
+    }
+  ],
+  "welcome_modal_feature_clustering_desc": [
+    {
+      "type": 0,
+      "value": "With many bridges, nearby pins are grouped into circles with a number. Zoom in to see individual bridges."
+    }
+  ],
+  "welcome_modal_feature_clustering_title": [
+    {
+      "type": 0,
+      "value": "Clustering"
+    }
+  ],
+  "welcome_modal_feature_filters_desc": [
+    {
+      "type": 0,
+      "value": "Filter bridges by safety risk or canton. In the view options you can turn clustering on or off and choose the map style."
+    }
+  ],
+  "welcome_modal_feature_filters_title": [
+    {
+      "type": 0,
+      "value": "Filters & View"
+    }
+  ],
+  "welcome_modal_feature_locate_desc": [
+    {
+      "type": 0,
+      "value": "Position the map to your current location to find bridges near you."
+    }
+  ],
+  "welcome_modal_feature_locate_title": [
+    {
+      "type": 0,
+      "value": "Find location"
+    }
+  ],
+  "welcome_modal_feature_pins_desc": [
+    {
+      "type": 0,
+      "value": "The pins show recorded bridges. The color indicates the safety risk: green (otter-friendly) to purple (very high risk). Tap a pin for details."
+    }
+  ],
+  "welcome_modal_feature_pins_title": [
+    {
+      "type": 0,
+      "value": "Bridges on the map"
+    }
+  ],
+  "welcome_modal_feature_report_desc": [
+    {
+      "type": 0,
+      "value": "Report a new bridge with photos from the water side, bridge dimensions and traffic data."
+    }
+  ],
+  "welcome_modal_feature_report_title": [
+    {
+      "type": 0,
+      "value": "Report bridge"
+    }
+  ],
+  "welcome_modal_title": [
+    {
+      "type": 0,
+      "value": "Welcome to Untendurch"
     }
   ]
 }

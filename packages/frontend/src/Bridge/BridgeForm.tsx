@@ -448,7 +448,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
           <p className={'text-base text-base-content/70'}>
             <FormattedMessage
               defaultMessage={
-                'Aus diesen Massen wird der Brückenindex (BI) berechnet. Ein BI > 1.5 gilt als fischotterfreundlich.'
+                'Aus diesen Massen wird der Brückenindex (BI) berechnet, welcher hilft, die Otterfreundlichkeit einer Brücke einzustufen. Schätzen Sie die Masse so gut wie möglich.'
               }
               id="report_bridge_dimensions_help"
             />

@@ -23,6 +23,12 @@
       "value": "nom d'utilisateur"
     }
   ],
+  "bridge_list_overlap_tooltip": [
+    {
+      "type": 0,
+      "value": "Ce pont chevauche un autre"
+    }
+  ],
   "bridge_pin_info_bridge_averageDailyTraffic": [
     {
       "type": 0,
@@ -65,6 +71,96 @@
       "value": "Rapporté par"
     }
   ],
+  "confirm_dialog_cancel": [
+    {
+      "type": 0,
+      "value": "Annuler"
+    }
+  ],
+  "confirm_dialog_confirm": [
+    {
+      "type": 0,
+      "value": "Confirmer"
+    }
+  ],
+  "howto_modal_button": [
+    {
+      "type": 0,
+      "value": "Compris"
+    }
+  ],
+  "howto_modal_description": [
+    {
+      "type": 0,
+      "value": "Suivez ces étapes pour documenter correctement un pont."
+    }
+  ],
+  "howto_modal_step1_desc": [
+    {
+      "type": 0,
+      "value": "Placez le marqueur sur la carte exactement sur le pont. Vous pouvez utiliser la fonction de localisation pour utiliser votre position GPS actuelle, ou déplacer manuellement le marqueur vers la bonne position. Un positionnement précis est important pour la documentation."
+    }
+  ],
+  "howto_modal_step1_title": [
+    {
+      "type": 0,
+      "value": "Marquer l'emplacement"
+    }
+  ],
+  "howto_modal_step2_desc": [
+    {
+      "type": 0,
+      "value": "Photographiez le pont de face depuis le côté de l'eau – du point de vue d'une loutre. La photo doit montrer le passage sous le pont. Cela nous aide à évaluer l'accessibilité du passage pour les loutres."
+    }
+  ],
+  "howto_modal_step2_title": [
+    {
+      "type": 0,
+      "value": "Photo du point de vue de la loutre"
+    }
+  ],
+  "howto_modal_step3_desc": [
+    {
+      "type": 0,
+      "value": "Estimez les dimensions du pont: largeur (portée du passage), hauteur (du niveau de l'eau au dessous du pont) et longueur/profondeur (longueur du passage). L'indice du pont (IP) est calculé à partir de ces mesures et aide à évaluer si un pont est favorable aux loutres."
+    }
+  ],
+  "howto_modal_step3_title": [
+    {
+      "type": 0,
+      "value": "Estimer les dimensions"
+    }
+  ],
+  "howto_modal_step4_desc": [
+    {
+      "type": 0,
+      "value": "Évaluez les environs du pont: Y a-t-il une banquette continue (bande de rive) d'au moins 30 cm de largeur d'un côté? Y a-t-il des pierres dépassant de l'eau qui peuvent servir de points de repère? La rive est-elle continue avant et après le pont, ou les animaux doivent-ils traverser la route? Y a-t-il des obstacles comme des barrages ou des chutes de plus d'un mètre dans un rayon de 20 mètres?"
+    }
+  ],
+  "howto_modal_step4_title": [
+    {
+      "type": 0,
+      "value": "Évaluer les environs"
+    }
+  ],
+  "howto_modal_step5_desc": [
+    {
+      "type": 0,
+      "value": "Enregistrez la situation du trafic: Combien de véhicules passent le pont pendant votre observation? Quelle est la limite de vitesse sur la route? Y a-t-il des barrières comme des clôtures ou des murs qui pourraient empêcher les animaux de traverser la route en toute sécurité? Ces données aident à l'évaluation des risques."
+    }
+  ],
+  "howto_modal_step5_title": [
+    {
+      "type": 0,
+      "value": "Enregistrer le trafic"
+    }
+  ],
+  "howto_modal_title": [
+    {
+      "type": 0,
+      "value": "Comment signaler un pont"
+    }
+  ],
   "otter_friendly_FRIENDLY": [
     {
       "type": 0,
@@ -75,6 +171,22 @@
     {
       "type": 0,
       "value": "Inamical"
+    }
+  ],
+  "overlapping_bridges_subtitle": [
+    {
+      "type": 0,
+      "value": "Sélectionnez un pont pour afficher les détails"
+    }
+  ],
+  "overlapping_bridges_title": [
+    {
+      "type": 1,
+      "value": "count"
+    },
+    {
+      "type": 0,
+      "value": " ponts à cet endroit"
     }
   ],
   "overview_button_report": [
@@ -159,6 +271,12 @@
     {
       "type": 0,
       "value": "Sélectionner des images"
+    }
+  ],
+  "report_bridge_dimensions_help": [
+    {
+      "type": 0,
+      "value": "L'indice du pont (IP) est calculé à partir de ces mesures et aide à évaluer si un pont est favorable aux loutres. Estimez les mesures aussi précisément que possible."
     }
   ],
   "report_bridge_heading_dimensions": [
@@ -459,6 +577,164 @@
     {
       "type": 0,
       "value": "Extrêmement dangereux"
+    }
+  ],
+  "settings_about_text": [
+    {
+      "type": 0,
+      "value": "Cette application a été développée par "
+    },
+    {
+      "type": 1,
+      "value": "tegonalLink"
+    },
+    {
+      "type": 0,
+      "value": " pour le compte de "
+    },
+    {
+      "type": 1,
+      "value": "prolutraLink"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
+  "settings_button_close": [
+    {
+      "type": 0,
+      "value": "Fermer"
+    }
+  ],
+  "settings_button_title": [
+    {
+      "type": 0,
+      "value": "Paramètres"
+    }
+  ],
+  "settings_language_label": [
+    {
+      "type": 0,
+      "value": "Langue"
+    }
+  ],
+  "settings_legal_heading": [
+    {
+      "type": 0,
+      "value": "Mentions légales"
+    }
+  ],
+  "settings_link_imprint": [
+    {
+      "type": 0,
+      "value": "Mentions légales"
+    }
+  ],
+  "settings_link_privacy": [
+    {
+      "type": 0,
+      "value": "Politique de confidentialité"
+    }
+  ],
+  "settings_modal_title": [
+    {
+      "type": 0,
+      "value": "Paramètres"
+    }
+  ],
+  "visible_bridges_subtitle": [
+    {
+      "type": 0,
+      "value": "Ponts dans la vue actuelle de la carte"
+    }
+  ],
+  "visible_bridges_title": [
+    {
+      "type": 1,
+      "value": "count"
+    },
+    {
+      "type": 0,
+      "value": " ponts visibles"
+    }
+  ],
+  "welcome_modal_button": [
+    {
+      "type": 0,
+      "value": "C'est parti"
+    }
+  ],
+  "welcome_modal_description": [
+    {
+      "type": 0,
+      "value": "Avec cette application, vous pouvez enregistrer des ponts en Suisse et évaluer leur sécurité pour les loutres. L'indice de pont (IP) aide à évaluer si un pont est favorable aux loutres."
+    }
+  ],
+  "welcome_modal_feature_clustering_desc": [
+    {
+      "type": 0,
+      "value": "Avec de nombreux ponts, les marqueurs proches sont regroupés en cercles avec un nombre. Zoomez pour voir les ponts individuels."
+    }
+  ],
+  "welcome_modal_feature_clustering_title": [
+    {
+      "type": 0,
+      "value": "Regroupement"
+    }
+  ],
+  "welcome_modal_feature_filters_desc": [
+    {
+      "type": 0,
+      "value": "Filtrez les ponts par risque de sécurité ou canton. Dans les options d'affichage, vous pouvez activer ou désactiver le regroupement et choisir le style de carte."
+    }
+  ],
+  "welcome_modal_feature_filters_title": [
+    {
+      "type": 0,
+      "value": "Filtres & Affichage"
+    }
+  ],
+  "welcome_modal_feature_locate_desc": [
+    {
+      "type": 0,
+      "value": "Positionnez la carte sur votre emplacement actuel pour trouver des ponts près de chez vous."
+    }
+  ],
+  "welcome_modal_feature_locate_title": [
+    {
+      "type": 0,
+      "value": "Trouver l'emplacement"
+    }
+  ],
+  "welcome_modal_feature_pins_desc": [
+    {
+      "type": 0,
+      "value": "Les marqueurs montrent les ponts enregistrés. La couleur indique le risque de sécurité: vert (favorable aux loutres) à violet (risque très élevé). Appuyez sur un marqueur pour plus de détails."
+    }
+  ],
+  "welcome_modal_feature_pins_title": [
+    {
+      "type": 0,
+      "value": "Ponts sur la carte"
+    }
+  ],
+  "welcome_modal_feature_report_desc": [
+    {
+      "type": 0,
+      "value": "Signalez un nouveau pont avec des photos depuis le côté de l'eau, les dimensions du pont et les données de trafic."
+    }
+  ],
+  "welcome_modal_feature_report_title": [
+    {
+      "type": 0,
+      "value": "Signaler un pont"
+    }
+  ],
+  "welcome_modal_title": [
+    {
+      "type": 0,
+      "value": "Bienvenue sur Untendurch"
     }
   ]
 }

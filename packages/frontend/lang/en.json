@@ -60,7 +60,7 @@
     "defaultMessage": "Photo from otter's view"
   },
   "howto_modal_step3_desc": {
-    "defaultMessage": "Estimate the bridge dimensions: width (span of the passage), height (from water level to bridge underside) and length/depth (how long is the passage). The bridge index (BI) is calculated from these measurements. A BI above 1.5 is considered otter-friendly – the passage is large enough for safe crossing."
+    "defaultMessage": "Estimate the bridge dimensions: width (span of the passage), height (from water level to bridge underside) and length/depth (how long is the passage). The bridge index (BI) is calculated from these measurements and helps to classify how otter-friendly a bridge is."
   },
   "howto_modal_step3_title": {
     "defaultMessage": "Estimate dimensions"
@@ -136,6 +136,9 @@
   },
   "report_bridge_heading_dimensions": {
     "defaultMessage": "Bridge dimensions"
+  },
+  "report_bridge_dimensions_help": {
+    "defaultMessage": "The bridge index (BI) is calculated from these measurements and helps to classify how otter-friendly a bridge is. Estimate the measurements as accurately as possible."
   },
   "report_bridge_heading_info": {
     "defaultMessage": "Information about the bridge"
@@ -318,7 +321,7 @@
     "defaultMessage": "Let's go"
   },
   "welcome_modal_description": {
-    "defaultMessage": "With this app you can record bridges in Switzerland and assess their safety for otters. The bridge index (BI) shows whether a bridge is otter-friendly (BI > 1.5)."
+    "defaultMessage": "With this app you can record bridges in Switzerland and assess their safety for otters. The bridge index (BI) helps to classify how otter-friendly a bridge is."
   },
   "welcome_modal_feature_clustering_desc": {
     "defaultMessage": "With many bridges, nearby pins are grouped into circles with a number. Zoom in to see individual bridges."

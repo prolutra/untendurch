@@ -23,6 +23,12 @@
       "value": "Nome utente"
     }
   ],
+  "bridge_list_overlap_tooltip": [
+    {
+      "type": 0,
+      "value": "Questo ponte si sovrappone a un altro"
+    }
+  ],
   "bridge_pin_info_bridge_averageDailyTraffic": [
     {
       "type": 0,
@@ -65,6 +71,96 @@
       "value": "Segnalato da"
     }
   ],
+  "confirm_dialog_cancel": [
+    {
+      "type": 0,
+      "value": "Annulla"
+    }
+  ],
+  "confirm_dialog_confirm": [
+    {
+      "type": 0,
+      "value": "Conferma"
+    }
+  ],
+  "howto_modal_button": [
+    {
+      "type": 0,
+      "value": "Capito"
+    }
+  ],
+  "howto_modal_description": [
+    {
+      "type": 0,
+      "value": "Seguire questi passaggi per documentare correttamente un ponte."
+    }
+  ],
+  "howto_modal_step1_desc": [
+    {
+      "type": 0,
+      "value": "Posiziona il marker sulla mappa esattamente sul ponte. Puoi utilizzare la funzione di localizzazione per usare la tua posizione GPS attuale, oppure spostare manualmente il marker nella posizione corretta. Un posizionamento preciso è importante per la documentazione."
+    }
+  ],
+  "howto_modal_step1_title": [
+    {
+      "type": 0,
+      "value": "Segna posizione"
+    }
+  ],
+  "howto_modal_step2_desc": [
+    {
+      "type": 0,
+      "value": "Fotografa il ponte frontalmente dal lato dell'acqua – dalla prospettiva di una lontra. La foto dovrebbe mostrare il passaggio sotto il ponte. Questo ci aiuta a valutare quanto sia accessibile il passaggio per le lontre."
+    }
+  ],
+  "howto_modal_step2_title": [
+    {
+      "type": 0,
+      "value": "Foto dal punto di vista della lontra"
+    }
+  ],
+  "howto_modal_step3_desc": [
+    {
+      "type": 0,
+      "value": "Stima le dimensioni del ponte: larghezza (apertura del passaggio), altezza (dal livello dell'acqua alla parte inferiore del ponte) e lunghezza/profondità (quanto è lungo il passaggio). L'indice del ponte (IP) viene calcolato da queste misure e aiuta a valutare quanto un ponte sia adatto alle lontre."
+    }
+  ],
+  "howto_modal_step3_title": [
+    {
+      "type": 0,
+      "value": "Stima le dimensioni"
+    }
+  ],
+  "howto_modal_step4_desc": [
+    {
+      "type": 0,
+      "value": "Valuta i dintorni del ponte: C'è una banchina continua (striscia di riva) di almeno 30 cm di larghezza su un lato? Ci sono pietre che sporgono dall'acqua che possono servire come punti di marcatura? La riva è continua prima e dopo il ponte, o gli animali devono attraversare la strada? Ci sono ostacoli come dighe o dislivelli superiori a 1 metro entro 20 metri?"
+    }
+  ],
+  "howto_modal_step4_title": [
+    {
+      "type": 0,
+      "value": "Valuta i dintorni"
+    }
+  ],
+  "howto_modal_step5_desc": [
+    {
+      "type": 0,
+      "value": "Registra la situazione del traffico: Quanti veicoli passano il ponte durante la tua osservazione? Qual è il limite di velocità sulla strada? Ci sono barriere come recinzioni o muri che potrebbero impedire agli animali di attraversare la strada in sicurezza? Questi dati aiutano nella valutazione del rischio."
+    }
+  ],
+  "howto_modal_step5_title": [
+    {
+      "type": 0,
+      "value": "Registra il traffico"
+    }
+  ],
+  "howto_modal_title": [
+    {
+      "type": 0,
+      "value": "Come segnalare un ponte"
+    }
+  ],
   "otter_friendly_FRIENDLY": [
     {
       "type": 0,
@@ -75,6 +171,22 @@
     {
       "type": 0,
       "value": "Non amichevole"
+    }
+  ],
+  "overlapping_bridges_subtitle": [
+    {
+      "type": 0,
+      "value": "Seleziona un ponte per visualizzare i dettagli"
+    }
+  ],
+  "overlapping_bridges_title": [
+    {
+      "type": 1,
+      "value": "count"
+    },
+    {
+      "type": 0,
+      "value": " ponti in questa posizione"
     }
   ],
   "overview_button_report": [
@@ -159,6 +271,12 @@
     {
       "type": 0,
       "value": "Seleziona immagini"
+    }
+  ],
+  "report_bridge_dimensions_help": [
+    {
+      "type": 0,
+      "value": "Da queste misure viene calcolato l'indice del ponte (IP), che aiuta a valutare quanto un ponte sia adatto alle lontre. Stima le misure nel modo più preciso possibile."
     }
   ],
   "report_bridge_heading_dimensions": [
@@ -459,6 +577,164 @@
     {
       "type": 0,
       "value": "Estremamente pericoloso"
+    }
+  ],
+  "settings_about_text": [
+    {
+      "type": 0,
+      "value": "Questa app è stata sviluppata da "
+    },
+    {
+      "type": 1,
+      "value": "tegonalLink"
+    },
+    {
+      "type": 0,
+      "value": " per conto di "
+    },
+    {
+      "type": 1,
+      "value": "prolutraLink"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
+  "settings_button_close": [
+    {
+      "type": 0,
+      "value": "Chiudi"
+    }
+  ],
+  "settings_button_title": [
+    {
+      "type": 0,
+      "value": "Impostazioni"
+    }
+  ],
+  "settings_language_label": [
+    {
+      "type": 0,
+      "value": "Lingua"
+    }
+  ],
+  "settings_legal_heading": [
+    {
+      "type": 0,
+      "value": "Note legali"
+    }
+  ],
+  "settings_link_imprint": [
+    {
+      "type": 0,
+      "value": "Impressum"
+    }
+  ],
+  "settings_link_privacy": [
+    {
+      "type": 0,
+      "value": "Informativa sulla privacy"
+    }
+  ],
+  "settings_modal_title": [
+    {
+      "type": 0,
+      "value": "Impostazioni"
+    }
+  ],
+  "visible_bridges_subtitle": [
+    {
+      "type": 0,
+      "value": "Ponti nella vista corrente della mappa"
+    }
+  ],
+  "visible_bridges_title": [
+    {
+      "type": 1,
+      "value": "count"
+    },
+    {
+      "type": 0,
+      "value": " ponti visibili"
+    }
+  ],
+  "welcome_modal_button": [
+    {
+      "type": 0,
+      "value": "Iniziamo"
+    }
+  ],
+  "welcome_modal_description": [
+    {
+      "type": 0,
+      "value": "Con questa app puoi registrare ponti in Svizzera e valutare la loro sicurezza per le lontre. L'indice del ponte (IP) aiuta a valutare quanto un ponte sia adatto alle lontre."
+    }
+  ],
+  "welcome_modal_feature_clustering_desc": [
+    {
+      "type": 0,
+      "value": "Con molti ponti, i marker vicini vengono raggruppati in cerchi con un numero. Ingrandisci per vedere i singoli ponti."
+    }
+  ],
+  "welcome_modal_feature_clustering_title": [
+    {
+      "type": 0,
+      "value": "Raggruppamento"
+    }
+  ],
+  "welcome_modal_feature_filters_desc": [
+    {
+      "type": 0,
+      "value": "Filtra i ponti per rischio di sicurezza o cantone. Nelle opzioni di visualizzazione puoi attivare o disattivare il raggruppamento e scegliere lo stile della mappa."
+    }
+  ],
+  "welcome_modal_feature_filters_title": [
+    {
+      "type": 0,
+      "value": "Filtri & Visualizzazione"
+    }
+  ],
+  "welcome_modal_feature_locate_desc": [
+    {
+      "type": 0,
+      "value": "Posiziona la mappa sulla tua posizione attuale per trovare ponti vicino a te."
+    }
+  ],
+  "welcome_modal_feature_locate_title": [
+    {
+      "type": 0,
+      "value": "Trova posizione"
+    }
+  ],
+  "welcome_modal_feature_pins_desc": [
+    {
+      "type": 0,
+      "value": "I marker mostrano i ponti registrati. Il colore indica il rischio di sicurezza: verde (adatto alle lontre) a viola (rischio molto alto). Tocca un marker per i dettagli."
+    }
+  ],
+  "welcome_modal_feature_pins_title": [
+    {
+      "type": 0,
+      "value": "Ponti sulla mappa"
+    }
+  ],
+  "welcome_modal_feature_report_desc": [
+    {
+      "type": 0,
+      "value": "Segnala un nuovo ponte con foto dal lato dell'acqua, dimensioni del ponte e dati sul traffico."
+    }
+  ],
+  "welcome_modal_feature_report_title": [
+    {
+      "type": 0,
+      "value": "Segnala ponte"
+    }
+  ],
+  "welcome_modal_title": [
+    {
+      "type": 0,
+      "value": "Benvenuto su Untendurch"
     }
   ]
 }

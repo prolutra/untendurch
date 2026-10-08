@@ -158,7 +158,7 @@ export const HowToModal: FC<HowToModalProps> = ({ forceOpen, onClose }) => {
           <StepItem
             description={
               <FormattedMessage
-                defaultMessage="Schätzen Sie die Masse der Brücke: Breite (Spannweite des Durchgangs), Höhe (vom Wasserspiegel bis zur Brückenunterkante) und Länge/Tiefe (wie lang ist der Durchgang). Aus diesen Massen wird der Brückenindex (BI) berechnet. Ein BI über 1.5 gilt als otterfreundlich – der Durchgang ist gross genug für sichere Passage."
+                defaultMessage="Schätzen Sie die Masse der Brücke: Breite (Spannweite des Durchgangs), Höhe (vom Wasserspiegel bis zur Brückenunterkante) und Länge/Tiefe (wie lang ist der Durchgang). Aus diesen Massen wird der Brückenindex (BI) berechnet, welcher hilft, die Otterfreundlichkeit einer Brücke einzustufen."
                 id="howto_modal_step3_desc"
               />
             }

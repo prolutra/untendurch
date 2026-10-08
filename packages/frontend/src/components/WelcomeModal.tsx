@@ -103,7 +103,7 @@ export const WelcomeModal: FC = () => {
 
         <p className="mb-6 text-base-content/80">
           <FormattedMessage
-            defaultMessage="Mit dieser App können Sie Brücken in der Schweiz erfassen und deren Sicherheit für Fischotter bewerten. Der Brückenindex (BI) zeigt, ob eine Brücke fischotterfreundlich ist (BI > 1.5)."
+            defaultMessage="Mit dieser App können Sie Brücken in der Schweiz erfassen und deren Sicherheit für Fischotter bewerten. Der Brückenindex (BI) hilft, die Otterfreundlichkeit einer Brücke einzustufen."
             id="welcome_modal_description"
           />
         </p>

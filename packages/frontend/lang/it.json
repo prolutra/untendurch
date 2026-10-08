@@ -60,7 +60,7 @@
     "defaultMessage": "Foto dal punto di vista della lontra"
   },
   "howto_modal_step3_desc": {
-    "defaultMessage": "Stima le dimensioni del ponte: larghezza (apertura del passaggio), altezza (dal livello dell'acqua alla parte inferiore del ponte) e lunghezza/profondità (quanto è lungo il passaggio). L'indice del ponte (IP) viene calcolato da queste misure. Un IP superiore a 1.5 è considerato adatto alle lontre – il passaggio è abbastanza grande per un attraversamento sicuro."
+    "defaultMessage": "Stima le dimensioni del ponte: larghezza (apertura del passaggio), altezza (dal livello dell'acqua alla parte inferiore del ponte) e lunghezza/profondità (quanto è lungo il passaggio). L'indice del ponte (IP) viene calcolato da queste misure e aiuta a valutare quanto un ponte sia adatto alle lontre."
   },
   "howto_modal_step3_title": {
     "defaultMessage": "Stima le dimensioni"
@@ -136,6 +136,9 @@
   },
   "report_bridge_heading_dimensions": {
     "defaultMessage": "Dimensioni del ponte"
+  },
+  "report_bridge_dimensions_help": {
+    "defaultMessage": "Da queste misure viene calcolato l'indice del ponte (IP), che aiuta a valutare quanto un ponte sia adatto alle lontre. Stima le misure nel modo più preciso possibile."
   },
   "report_bridge_heading_info": {
     "defaultMessage": "Informazioni sul ponte"
@@ -318,7 +321,7 @@
     "defaultMessage": "Iniziamo"
   },
   "welcome_modal_description": {
-    "defaultMessage": "Con questa app puoi registrare ponti in Svizzera e valutare la loro sicurezza per le lontre. L'indice del ponte (IP) mostra se un ponte è adatto alle lontre (IP > 1.5)."
+    "defaultMessage": "Con questa app puoi registrare ponti in Svizzera e valutare la loro sicurezza per le lontre. L'indice del ponte (IP) aiuta a valutare quanto un ponte sia adatto alle lontre."
   },
   "welcome_modal_feature_clustering_desc": {
     "defaultMessage": "Con molti ponti, i marker vicini vengono raggruppati in cerchi con un numero. Ingrandisci per vedere i singoli ponti."

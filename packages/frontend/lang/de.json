@@ -60,7 +60,7 @@
     "defaultMessage": "Foto aus Ottersicht"
   },
   "howto_modal_step3_desc": {
-    "defaultMessage": "Schätzen Sie die Masse der Brücke: Breite (Spannweite des Durchgangs), Höhe (vom Wasserspiegel bis zur Brückenunterkante) und Länge/Tiefe (wie lang ist der Durchgang). Aus diesen Massen wird der Brückenindex (BI) berechnet. Ein BI über 1.5 gilt als otterfreundlich – der Durchgang ist gross genug für sichere Passage."
+    "defaultMessage": "Schätzen Sie die Masse der Brücke: Breite (Spannweite des Durchgangs), Höhe (vom Wasserspiegel bis zur Brückenunterkante) und Länge/Tiefe (wie lang ist der Durchgang). Aus diesen Massen wird der Brückenindex (BI) berechnet, welcher hilft, die Otterfreundlichkeit einer Brücke einzustufen."
   },
   "howto_modal_step3_title": {
     "defaultMessage": "Masse schätzen"
@@ -136,6 +136,9 @@
   },
   "report_bridge_heading_dimensions": {
     "defaultMessage": "Brückendimensionen"
+  },
+  "report_bridge_dimensions_help": {
+    "defaultMessage": "Aus diesen Massen wird der Brückenindex (BI) berechnet, welcher hilft, die Otterfreundlichkeit einer Brücke einzustufen. Schätzen Sie die Masse so gut wie möglich."
   },
   "report_bridge_heading_info": {
     "defaultMessage": "Informationen zur Brücke"
@@ -318,7 +321,7 @@
     "defaultMessage": "Los geht's"
   },
   "welcome_modal_description": {
-    "defaultMessage": "Mit dieser App können Sie Brücken in der Schweiz erfassen und deren Sicherheit für Fischotter bewerten. Der Brückenindex (BI) zeigt, ob eine Brücke fischotterfreundlich ist (BI > 1.5)."
+    "defaultMessage": "Mit dieser App können Sie Brücken in der Schweiz erfassen und deren Sicherheit für Fischotter bewerten. Der Brückenindex (BI) hilft, die Otterfreundlichkeit einer Brücke einzustufen."
   },
   "welcome_modal_feature_clustering_desc": {
     "defaultMessage": "Bei vielen Brücken werden nahe beieinanderliegende Pins zu Kreisen mit einer Zahl zusammengefasst. Zoomen Sie hinein, um einzelne Brücken zu sehen."

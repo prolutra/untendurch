@@ -23,6 +23,12 @@
       "value": "Benutzername"
     }
   ],
+  "bridge_list_overlap_tooltip": [
+    {
+      "type": 0,
+      "value": "Diese Brücke überlappt mit einer anderen"
+    }
+  ],
   "bridge_pin_info_bridge_averageDailyTraffic": [
     {
       "type": 0,
@@ -65,6 +71,96 @@
       "value": "Rapportiert von"
     }
   ],
+  "confirm_dialog_cancel": [
+    {
+      "type": 0,
+      "value": "Abbrechen"
+    }
+  ],
+  "confirm_dialog_confirm": [
+    {
+      "type": 0,
+      "value": "Bestätigen"
+    }
+  ],
+  "howto_modal_button": [
+    {
+      "type": 0,
+      "value": "Verstanden"
+    }
+  ],
+  "howto_modal_description": [
+    {
+      "type": 0,
+      "value": "Folgen Sie diesen Schritten, um eine Brücke korrekt zu dokumentieren."
+    }
+  ],
+  "howto_modal_step1_desc": [
+    {
+      "type": 0,
+      "value": "Positionieren Sie den Marker auf der Karte genau auf der Brücke. Sie können die Standortfunktion nutzen, um Ihren aktuellen GPS-Standort zu verwenden, oder den Marker manuell auf die richtige Position verschieben. Die genaue Positionierung ist wichtig für die Dokumentation."
+    }
+  ],
+  "howto_modal_step1_title": [
+    {
+      "type": 0,
+      "value": "Standort markieren"
+    }
+  ],
+  "howto_modal_step2_desc": [
+    {
+      "type": 0,
+      "value": "Fotografieren Sie die Brücke frontal von der Wasserseite aus – quasi aus der Perspektive eines Otters. Das Foto sollte den Durchgang unter der Brücke zeigen. So können wir beurteilen, wie zugänglich der Durchgang für Fischotter ist."
+    }
+  ],
+  "howto_modal_step2_title": [
+    {
+      "type": 0,
+      "value": "Foto aus Ottersicht"
+    }
+  ],
+  "howto_modal_step3_desc": [
+    {
+      "type": 0,
+      "value": "Schätzen Sie die Masse der Brücke: Breite (Spannweite des Durchgangs), Höhe (vom Wasserspiegel bis zur Brückenunterkante) und Länge/Tiefe (wie lang ist der Durchgang). Aus diesen Massen wird der Brückenindex (BI) berechnet, welcher hilft, die Otterfreundlichkeit einer Brücke einzustufen."
+    }
+  ],
+  "howto_modal_step3_title": [
+    {
+      "type": 0,
+      "value": "Masse schätzen"
+    }
+  ],
+  "howto_modal_step4_desc": [
+    {
+      "type": 0,
+      "value": "Beurteilen Sie die Umgebung der Brücke: Gibt es ein durchgängiges Bankett (Uferstreifen) von mindestens 30 cm Breite auf einer Seite? Sind Steine vorhanden, die aus dem Wasser ragen und als Markierplatz dienen können? Ist das Ufer vor und nach der Brücke durchgehend, oder müssen Tiere die Strasse überqueren? Gibt es Hindernisse wie Wehre oder Abstürze über 1 Meter innerhalb von 20 Metern?"
+    }
+  ],
+  "howto_modal_step4_title": [
+    {
+      "type": 0,
+      "value": "Umgebung beurteilen"
+    }
+  ],
+  "howto_modal_step5_desc": [
+    {
+      "type": 0,
+      "value": "Erfassen Sie die Verkehrssituation: Wie viele Fahrzeuge passieren die Brücke während Ihrer Beobachtung? Welches Tempolimit gilt auf der Strasse? Gibt es Barrieren wie Zäune oder Mauern, die Tiere daran hindern könnten, die Strasse sicher zu überqueren? Diese Daten helfen bei der Risikobewertung."
+    }
+  ],
+  "howto_modal_step5_title": [
+    {
+      "type": 0,
+      "value": "Verkehr erfassen"
+    }
+  ],
+  "howto_modal_title": [
+    {
+      "type": 0,
+      "value": "So erfassen Sie eine Brücke"
+    }
+  ],
   "otter_friendly_FRIENDLY": [
     {
       "type": 0,
@@ -75,6 +171,22 @@
     {
       "type": 0,
       "value": "Unfreundlich"
+    }
+  ],
+  "overlapping_bridges_subtitle": [
+    {
+      "type": 0,
+      "value": "Wählen Sie eine Brücke aus, um Details anzuzeigen"
+    }
+  ],
+  "overlapping_bridges_title": [
+    {
+      "type": 1,
+      "value": "count"
+    },
+    {
+      "type": 0,
+      "value": " Brücken an diesem Standort"
     }
   ],
   "overview_button_report": [
@@ -159,6 +271,12 @@
     {
       "type": 0,
       "value": "Bilder auswählen"
+    }
+  ],
+  "report_bridge_dimensions_help": [
+    {
+      "type": 0,
+      "value": "Aus diesen Massen wird der Brückenindex (BI) berechnet, welcher hilft, die Otterfreundlichkeit einer Brücke einzustufen. Schätzen Sie die Masse so gut wie möglich."
     }
   ],
   "report_bridge_heading_dimensions": [
@@ -459,6 +577,164 @@
     {
       "type": 0,
       "value": "Äusserst gefährlich"
+    }
+  ],
+  "settings_about_text": [
+    {
+      "type": 0,
+      "value": "Diese App wurde entwickelt von "
+    },
+    {
+      "type": 1,
+      "value": "tegonalLink"
+    },
+    {
+      "type": 0,
+      "value": " im Auftrag von "
+    },
+    {
+      "type": 1,
+      "value": "prolutraLink"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
+  "settings_button_close": [
+    {
+      "type": 0,
+      "value": "Schliessen"
+    }
+  ],
+  "settings_button_title": [
+    {
+      "type": 0,
+      "value": "Einstellungen"
+    }
+  ],
+  "settings_language_label": [
+    {
+      "type": 0,
+      "value": "Sprache"
+    }
+  ],
+  "settings_legal_heading": [
+    {
+      "type": 0,
+      "value": "Rechtliches"
+    }
+  ],
+  "settings_link_imprint": [
+    {
+      "type": 0,
+      "value": "Impressum"
+    }
+  ],
+  "settings_link_privacy": [
+    {
+      "type": 0,
+      "value": "Datenschutzerklärung"
+    }
+  ],
+  "settings_modal_title": [
+    {
+      "type": 0,
+      "value": "Einstellungen"
+    }
+  ],
+  "visible_bridges_subtitle": [
+    {
+      "type": 0,
+      "value": "Brücken im aktuellen Kartenausschnitt"
+    }
+  ],
+  "visible_bridges_title": [
+    {
+      "type": 1,
+      "value": "count"
+    },
+    {
+      "type": 0,
+      "value": " Brücken sichtbar"
+    }
+  ],
+  "welcome_modal_button": [
+    {
+      "type": 0,
+      "value": "Los geht's"
+    }
+  ],
+  "welcome_modal_description": [
+    {
+      "type": 0,
+      "value": "Mit dieser App können Sie Brücken in der Schweiz erfassen und deren Sicherheit für Fischotter bewerten. Der Brückenindex (BI) hilft, die Otterfreundlichkeit einer Brücke einzustufen."
+    }
+  ],
+  "welcome_modal_feature_clustering_desc": [
+    {
+      "type": 0,
+      "value": "Bei vielen Brücken werden nahe beieinanderliegende Pins zu Kreisen mit einer Zahl zusammengefasst. Zoomen Sie hinein, um einzelne Brücken zu sehen."
+    }
+  ],
+  "welcome_modal_feature_clustering_title": [
+    {
+      "type": 0,
+      "value": "Gruppierung"
+    }
+  ],
+  "welcome_modal_feature_filters_desc": [
+    {
+      "type": 0,
+      "value": "Filtern Sie Brücken nach Sicherheitsrisiko oder Kanton. In den Ansichtsoptionen können Sie die Gruppierung ein- oder ausschalten und den Kartenstil wählen."
+    }
+  ],
+  "welcome_modal_feature_filters_title": [
+    {
+      "type": 0,
+      "value": "Filter & Ansicht"
+    }
+  ],
+  "welcome_modal_feature_locate_desc": [
+    {
+      "type": 0,
+      "value": "Positionieren Sie die Karte auf Ihren aktuellen Standort, um Brücken in Ihrer Nähe zu finden."
+    }
+  ],
+  "welcome_modal_feature_locate_title": [
+    {
+      "type": 0,
+      "value": "Standort finden"
+    }
+  ],
+  "welcome_modal_feature_pins_desc": [
+    {
+      "type": 0,
+      "value": "Die Pins zeigen erfasste Brücken. Die Farbe zeigt das Sicherheitsrisiko: Grün (fischotterfreundlich) bis Violett (sehr hohes Risiko). Tippen Sie auf einen Pin für Details."
+    }
+  ],
+  "welcome_modal_feature_pins_title": [
+    {
+      "type": 0,
+      "value": "Brücken auf der Karte"
+    }
+  ],
+  "welcome_modal_feature_report_desc": [
+    {
+      "type": 0,
+      "value": "Erfassen Sie eine neue Brücke mit Fotos von der Wasserseite, Brückenmassen und Verkehrsdaten."
+    }
+  ],
+  "welcome_modal_feature_report_title": [
+    {
+      "type": 0,
+      "value": "Brücke erfassen"
+    }
+  ],
+  "welcome_modal_title": [
+    {
+      "type": 0,
+      "value": "Willkommen bei Untendurch"
     }
   ]
 }
