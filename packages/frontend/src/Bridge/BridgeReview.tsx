@@ -316,16 +316,6 @@ export const BridgeReview: FC<Props> = ({
         <Row
           label={
             <FormattedMessage
-              defaultMessage={'Unzugänglich für Menschen'}
-              id="report_bridge_label_isInaccessibleForHumans"
-            />
-          }
-        >
-          {yesNo(state.isInaccessibleForHumans)}
-        </Row>
-        <Row
-          label={
-            <FormattedMessage
               defaultMessage={
                 'Uferbereich mind. einseitig durchgehend vor- und nach der Brücke?'
               }
@@ -397,6 +387,16 @@ export const BridgeReview: FC<Props> = ({
           />
         }
       >
+        <Row
+          label={
+            <FormattedMessage
+              defaultMessage={'Unzugänglich für Menschen'}
+              id="report_bridge_label_isInaccessibleForHumans"
+            />
+          }
+        >
+          {yesNo(state.isInaccessibleForHumans)}
+        </Row>
         <Row
           label={
             <FormattedMessage

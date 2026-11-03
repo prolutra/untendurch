@@ -590,23 +590,6 @@ export const BridgeForm: FC<BridgeFormProps> = ({
             <div className={'form-control w-full'}>
               <label className="label cursor-pointer justify-start gap-4 py-3">
                 <input
-                  checked={state.isInaccessibleForHumans}
-                  className="checkbox-primary checkbox flex-shrink-0"
-                  name="isInaccessibleForHumans"
-                  onChange={handleChange}
-                  type="checkbox"
-                />
-                <span className="label-text">
-                  <FormattedMessage
-                    defaultMessage={'Unzugänglich für Menschen'}
-                    id="report_bridge_label_isInaccessibleForHumans"
-                  />
-                </span>
-              </label>
-            </div>
-            <div className={'form-control w-full'}>
-              <label className="label cursor-pointer justify-start gap-4 py-3">
-                <input
                   checked={state.hasContinuousShore}
                   className="checkbox-primary checkbox flex-shrink-0"
                   name="hasContinuousShore"
@@ -652,6 +635,23 @@ export const BridgeForm: FC<BridgeFormProps> = ({
               id="report_bridge_heading_varia"
             />
           </h3>
+          <div className={'form-control w-full'}>
+            <label className="label cursor-pointer justify-start gap-4 py-3">
+              <input
+                checked={state.isInaccessibleForHumans}
+                className="checkbox-primary checkbox flex-shrink-0"
+                name="isInaccessibleForHumans"
+                onChange={handleChange}
+                type="checkbox"
+              />
+              <span className="label-text">
+                <FormattedMessage
+                  defaultMessage={'Unzugänglich für Menschen'}
+                  id="report_bridge_label_isInaccessibleForHumans"
+                />
+              </span>
+            </label>
+          </div>
           <div className={'form-control'}>
             <label className={'label'} htmlFor="nickname">
               <FormattedMessage
