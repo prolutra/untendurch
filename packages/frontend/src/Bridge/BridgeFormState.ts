@@ -17,6 +17,7 @@ export type BridgeFormState = {
   images: Parse.File[];
   imagesToDelete?: Parse.File[];
   imagesToUpload?: { isNew: boolean; name: string; url: string }[];
+  isInaccessibleForHumans: boolean;
   itemLog: BridgeLogItem[] | undefined;
   municipalities: string;
   name: string;

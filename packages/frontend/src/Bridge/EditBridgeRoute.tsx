@@ -6,6 +6,7 @@ import React, { useEffect } from 'react';
 
 import { Layout } from '../Layout';
 import { MapWrapper } from '../Map/MapWrapper';
+import { ReviewMapLock } from '../Map/ReviewMapLock';
 import { useStore } from '../Store/Store';
 import { EditBridgeWrapper } from './EditBridgeWrapper';
 
@@ -21,7 +22,9 @@ export const EditBridgeRoute: FC = () => {
 
   return (
     <Layout>
-      <MapWrapper variant={'small'}></MapWrapper>
+      <ReviewMapLock>
+        <MapWrapper variant={'small'}></MapWrapper>
+      </ReviewMapLock>
       <div className={'pt-8'}>
         <EditBridgeWrapper></EditBridgeWrapper>
       </div>

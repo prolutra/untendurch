@@ -16,7 +16,9 @@ export type ReportBridgeStore = ReportBridgeActions &
 
 interface ReportBridgeActions {
   setCanton: (canton: string) => void;
+  setIsReviewing: (isReviewing: boolean) => void;
   setLatLon: (latLon: LatLon | null) => void;
+  setManualPosition: (manualPosition: boolean) => void;
   setMunicipality: (municipality: string) => void;
   setPosition: (latLon: LatLon) => Promise<void>;
 }
@@ -28,7 +30,14 @@ interface ReportBridgeGetters {
 
 interface ReportBridgeState {
   canton: string;
+  /** True while the confirmation step is shown: the map must not change the position */
+  isReviewing: boolean;
   latLon: LatLon | null;
+  /**
+   * True once the user set the position by hand (typed coordinates or dragged
+   * the pin), so a late GPS fix must not overwrite it.
+   */
+  manualPosition: boolean;
   municipality: string;
 }
 
@@ -41,7 +50,9 @@ export const useReportBridgeStore = create<ReportBridgeStore>((set, get) => ({
     return null;
   },
   canton: '',
+  isReviewing: false,
   latLon: null,
+  manualPosition: false,
 
   municipality: '',
   reportedFeature: () => {
@@ -57,7 +68,11 @@ export const useReportBridgeStore = create<ReportBridgeStore>((set, get) => ({
   },
   setCanton: (canton) => set({ canton }),
 
+  setIsReviewing: (isReviewing) => set({ isReviewing }),
+
   setLatLon: (latLon) => set({ latLon }),
+
+  setManualPosition: (manualPosition) => set({ manualPosition }),
 
   setMunicipality: (municipality) => set({ municipality }),
 

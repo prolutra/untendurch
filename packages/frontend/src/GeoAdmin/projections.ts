@@ -1,6 +1,7 @@
 import { fromLonLat } from 'ol/proj';
 import proj4 from 'proj4';
 
+import type { LatLon } from '../Store/LatLon';
 import type { Lv95 } from '../Store/Lv95';
 
 // EPSG:3857 - WGS 84 / Pseudo-Mercator (Web Mercator)
@@ -10,6 +11,14 @@ const WGS84_PSEUDO_MERCATOR =
 // EPSG:2056 - CH1903+ / LV95 (Swiss coordinate system)
 const CH1903_LV95 =
   'PROJCS["CH1903+ / LV95", GEOGCS["CH1903+", DATUM["CH1903+", SPHEROID["Bessel 1841", 6377397.155, 299.1528128, AUTHORITY["EPSG","7004"]], TOWGS84[674.374, 15.056, 405.346, 0.0, 0.0, 0.0, 0.0], AUTHORITY["EPSG","6150"]], PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], UNIT["degree", 0.017453292519943295], AXIS["Geodetic longitude", EAST], AXIS["Geodetic latitude", NORTH], AUTHORITY["EPSG","4150"]], PROJECTION["Oblique_Mercator", AUTHORITY["EPSG","9815"]], PARAMETER["longitude_of_center", 7.439583333333333], PARAMETER["latitude_of_center", 46.952405555555565], PARAMETER["azimuth", 90.0], PARAMETER["scale_factor", 1.0], PARAMETER["false_easting", 2600000.0], PARAMETER["false_northing", 1200000.0], PARAMETER["rectified_grid_angle", 90.0], UNIT["m", 1.0], AXIS["Easting", EAST], AXIS["Northing", NORTH], AUTHORITY["EPSG","2056"]]';
+
+/**
+ * Transform Swiss LV95 coordinates (east, north) to WGS84 coordinates
+ */
+export function transformFromLv95(east: number, north: number): LatLon {
+  const [lon, lat] = proj4(CH1903_LV95, 'WGS84', [east, north]);
+  return { lat, lon };
+}
 
 /**
  * Transform WGS84 coordinates (lon, lat) to Swiss LV95 coordinates

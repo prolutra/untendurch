@@ -122,11 +122,20 @@
   "overview_filters_select_status_verified": {
     "defaultMessage": "Vérifié"
   },
+  "position_preview_map_show_aerial": {
+    "defaultMessage": "Vue aérienne"
+  },
+  "position_preview_map_show_map": {
+    "defaultMessage": "Carte"
+  },
   "report_bridge_button_cancel": {
     "defaultMessage": "Annuler"
   },
   "report_bridge_button_report": {
     "defaultMessage": "Saisir"
+  },
+  "report_bridge_button_review": {
+    "defaultMessage": "Continuer vers la vérification"
   },
   "report_bridge_button_save": {
     "defaultMessage": "Enregistrer"
@@ -194,6 +203,9 @@
   "report_bridge_label_images": {
     "defaultMessage": "Images"
   },
+  "report_bridge_label_isInaccessibleForHumans": {
+    "defaultMessage": "Inaccessible aux humains"
+  },
   "report_bridge_label_municipalities": {
     "defaultMessage": "Liste des municipalités (séparées par des virgules)"
   },
@@ -214,6 +226,30 @@
   },
   "report_bridge_label_traffic": {
     "defaultMessage": "volume de trafic"
+  },
+  "report_bridge_manual_coordinates_apply": {
+    "defaultMessage": "Afficher sur la carte"
+  },
+  "report_bridge_manual_coordinates_close": {
+    "defaultMessage": "Placer l’épingle sur la carte"
+  },
+  "report_bridge_manual_coordinates_error_invalid": {
+    "defaultMessage": "Coordonnées non reconnues. Veuillez saisir deux nombres, p. ex. «2600000, 1200000» (MN95) ou «46.948, 7.447» (WGS84)."
+  },
+  "report_bridge_manual_coordinates_error_outside": {
+    "defaultMessage": "Ces coordonnées ne se trouvent pas en Suisse. Veuillez vérifier la saisie."
+  },
+  "report_bridge_manual_coordinates_label": {
+    "defaultMessage": "Coordonnées (MN95, MN03 ou WGS84)"
+  },
+  "report_bridge_manual_coordinates_open": {
+    "defaultMessage": "Saisir les coordonnées manuellement"
+  },
+  "report_bridge_manual_coordinates_placeholder": {
+    "defaultMessage": "p. ex. 2600000, 1200000 ou 46.948, 7.447"
+  },
+  "report_bridge_manual_coordinates_verify": {
+    "defaultMessage": "Reconnu comme {format} : {municipality} ({canton}). Veuillez vérifier sur la carte que l’épingle se trouve exactement sur le pont. Vous pouvez déplacer l’épingle si nécessaire."
   },
   "report_bridge_option_0_30": {
     "defaultMessage": "0-30km/h"
@@ -269,8 +305,38 @@
   "report_bridge_placeholder_bridgeWidth": {
     "defaultMessage": "endroit le plus large en m"
   },
+  "report_bridge_position_required": {
+    "defaultMessage": "Veuillez d’abord déterminer la position du pont"
+  },
+  "report_bridge_review_button_back": {
+    "defaultMessage": "Retour pour corriger"
+  },
+  "report_bridge_review_heading": {
+    "defaultMessage": "Vérifier les données"
+  },
+  "report_bridge_review_images": {
+    "defaultMessage": "Images"
+  },
+  "report_bridge_review_intro": {
+    "defaultMessage": "Veuillez vérifier toutes les données, en particulier la position sur la carte. Si quelque chose ne va pas, revenez en arrière pour corriger."
+  },
+  "report_bridge_review_municipality": {
+    "defaultMessage": "Commune / Canton"
+  },
+  "report_bridge_review_no": {
+    "defaultMessage": "Non"
+  },
+  "report_bridge_review_save_error": {
+    "defaultMessage": "Une erreur est survenue lors de l’enregistrement. Veuillez réessayer."
+  },
+  "report_bridge_review_yes": {
+    "defaultMessage": "Oui"
+  },
   "report_bridge_shape_required": {
     "defaultMessage": "Veuillez choisir la forme du pont"
+  },
+  "review_map_lock_label": {
+    "defaultMessage": "Carte verrouillée pendant la vérification"
   },
   "safety_risk_HIGH_RISK": {
     "defaultMessage": "Très dangereux"

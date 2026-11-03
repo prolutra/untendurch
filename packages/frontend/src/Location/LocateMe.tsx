@@ -9,6 +9,8 @@ export const LocateMe = () => {
 
   const locateMe = async () => {
     setIsBusy(true);
+    // Explicit request for GPS position overrides a manually set one
+    store.reportBridge.setManualPosition(false);
     await store.currentPosition.locateMe();
     setIsBusy(false);
   };

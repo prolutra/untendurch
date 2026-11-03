@@ -249,6 +249,18 @@
       "value": "Verified"
     }
   ],
+  "position_preview_map_show_aerial": [
+    {
+      "type": 0,
+      "value": "Aerial"
+    }
+  ],
+  "position_preview_map_show_map": [
+    {
+      "type": 0,
+      "value": "Map"
+    }
+  ],
   "report_bridge_button_cancel": [
     {
       "type": 0,
@@ -259,6 +271,12 @@
     {
       "type": 0,
       "value": "Capture"
+    }
+  ],
+  "report_bridge_button_review": [
+    {
+      "type": 0,
+      "value": "Continue to review"
     }
   ],
   "report_bridge_button_save": [
@@ -393,6 +411,12 @@
       "value": "Images"
     }
   ],
+  "report_bridge_label_isInaccessibleForHumans": [
+    {
+      "type": 0,
+      "value": "Inaccessible to humans"
+    }
+  ],
   "report_bridge_label_municipalities": [
     {
       "type": 0,
@@ -433,6 +457,78 @@
     {
       "type": 0,
       "value": "Traffic volume"
+    }
+  ],
+  "report_bridge_manual_coordinates_apply": [
+    {
+      "type": 0,
+      "value": "Show on map"
+    }
+  ],
+  "report_bridge_manual_coordinates_close": [
+    {
+      "type": 0,
+      "value": "Place pin on the map"
+    }
+  ],
+  "report_bridge_manual_coordinates_error_invalid": [
+    {
+      "type": 0,
+      "value": "Coordinates not recognised. Please enter two numbers, e.g. \"2600000, 1200000\" (LV95) or \"46.948, 7.447\" (WGS84)."
+    }
+  ],
+  "report_bridge_manual_coordinates_error_outside": [
+    {
+      "type": 0,
+      "value": "These coordinates are not in Switzerland. Please check your input."
+    }
+  ],
+  "report_bridge_manual_coordinates_label": [
+    {
+      "type": 0,
+      "value": "Coordinates (LV95, LV03 or WGS84)"
+    }
+  ],
+  "report_bridge_manual_coordinates_open": [
+    {
+      "type": 0,
+      "value": "Enter coordinates manually"
+    }
+  ],
+  "report_bridge_manual_coordinates_placeholder": [
+    {
+      "type": 0,
+      "value": "e.g. 2600000, 1200000 or 46.948, 7.447"
+    }
+  ],
+  "report_bridge_manual_coordinates_verify": [
+    {
+      "type": 0,
+      "value": "Recognised as "
+    },
+    {
+      "type": 1,
+      "value": "format"
+    },
+    {
+      "type": 0,
+      "value": ": "
+    },
+    {
+      "type": 1,
+      "value": "municipality"
+    },
+    {
+      "type": 0,
+      "value": " ("
+    },
+    {
+      "type": 1,
+      "value": "canton"
+    },
+    {
+      "type": 0,
+      "value": "). Please check on the map that the pin is exactly at the bridge. You can move the pin if necessary."
     }
   ],
   "report_bridge_option_0_30": [
@@ -543,10 +639,70 @@
       "value": "widest point in metres"
     }
   ],
+  "report_bridge_position_required": [
+    {
+      "type": 0,
+      "value": "Please set the position of the bridge first"
+    }
+  ],
+  "report_bridge_review_button_back": [
+    {
+      "type": 0,
+      "value": "Go back and correct"
+    }
+  ],
+  "report_bridge_review_heading": [
+    {
+      "type": 0,
+      "value": "Review your details"
+    }
+  ],
+  "report_bridge_review_images": [
+    {
+      "type": 0,
+      "value": "Images"
+    }
+  ],
+  "report_bridge_review_intro": [
+    {
+      "type": 0,
+      "value": "Please check all details, especially the position on the map. If anything is wrong, go back and correct it."
+    }
+  ],
+  "report_bridge_review_municipality": [
+    {
+      "type": 0,
+      "value": "Municipality / Canton"
+    }
+  ],
+  "report_bridge_review_no": [
+    {
+      "type": 0,
+      "value": "No"
+    }
+  ],
+  "report_bridge_review_save_error": [
+    {
+      "type": 0,
+      "value": "An error occurred while saving. Please try again."
+    }
+  ],
+  "report_bridge_review_yes": [
+    {
+      "type": 0,
+      "value": "Yes"
+    }
+  ],
   "report_bridge_shape_required": [
     {
       "type": 0,
       "value": "Please select bridge shape"
+    }
+  ],
+  "review_map_lock_label": [
+    {
+      "type": 0,
+      "value": "Map locked during review"
     }
   ],
   "safety_risk_HIGH_RISK": [

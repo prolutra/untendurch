@@ -39,6 +39,10 @@ export const EditBridgeWrapper: FC = () => {
         'hasContinuousShore'
       ] as boolean;
       const hasSlopes = bridge.attributes['hasSlopes'] as boolean;
+      // Not present on bridges reported before this field existed
+      const isInaccessibleForHumans =
+        (bridge.attributes['isInaccessibleForHumans'] as boolean | undefined) ??
+        false;
       const traffic = bridge.attributes['traffic'] as string;
       const speedLimit = bridge.attributes['speedLimit'] as string;
       const barriers = bridge.attributes['barriers'] as string;
@@ -71,6 +75,7 @@ export const EditBridgeWrapper: FC = () => {
         hasSlopes: hasSlopes,
         hasStones: hasStones,
         images: images,
+        isInaccessibleForHumans,
         itemLog,
         municipalities: municipalities.join(', '),
         name: name,
@@ -90,5 +95,13 @@ export const EditBridgeWrapper: FC = () => {
 
   if (!state) return null;
 
-  return <BridgeForm bridgeFormState={state}></BridgeForm>;
+  return (
+    <BridgeForm
+      bridgeFormState={state}
+      onCenterMap={(coordinates) => {
+        store.mapSettings.setCenter(coordinates);
+        store.mapSettings.setZoom(17);
+      }}
+    />
+  );
 };

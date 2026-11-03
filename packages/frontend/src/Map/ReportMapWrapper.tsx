@@ -120,6 +120,7 @@ export const ReportMapWrapper = () => {
           const coords = geometry.getCoordinates();
           const lonLat = toLonLat(coords);
           const latLon = createLatLon(lonLat[1], lonLat[0]);
+          useReportBridgeStore.getState().setManualPosition(true);
           useReportBridgeStore.getState().setPosition(latLon);
         }
       }

@@ -1,7 +1,7 @@
 import type { Point } from 'ol/geom';
 import type { FC } from 'react';
 
-import { HelpCircle, Save, Send, X } from 'lucide-react';
+import { ClipboardCheck, HelpCircle, X } from 'lucide-react';
 import { toLonLat } from 'ol/proj';
 import Parse, { GeoPoint } from 'parse';
 import React, { useEffect, useState } from 'react';
@@ -15,6 +15,7 @@ import { fetchPointInformation } from '../GeoAdmin/FetchPointInformation';
 import { CloseChar } from '../lib/closeChar';
 import { useStore } from '../Store/Store';
 import { BridgeLegendNumber } from './BridgeLegendNumber';
+import { BridgeReview } from './BridgeReview';
 import { BridgeImages } from './form/BridgeImages';
 import { BridgeShape } from './form/BridgeShape';
 import { BridgeTraffic } from './form/BridgeTraffic';
@@ -23,11 +24,14 @@ import { uploadFiles } from './ReportBridgeImageUploader';
 
 type BridgeFormProps = {
   bridgeFormState: BridgeFormState;
+  /** Centers the map above the form, e.g. after manual coordinate entry */
+  onCenterMap?: (coordinates: number[]) => void;
   onShowHowTo?: () => void;
 };
 
 export const BridgeForm: FC<BridgeFormProps> = ({
   bridgeFormState,
+  onCenterMap,
   onShowHowTo,
 }) => {
   const store = useStore();
@@ -38,13 +42,14 @@ export const BridgeForm: FC<BridgeFormProps> = ({
     'error' | 'preparing' | 'saved' | 'saving' | undefined
   >();
   const [isBusy, setIsBusy] = useState<boolean>(false);
+  const [step, setStep] = useState<'edit' | 'review'>('edit');
 
-  const saveBridge = async (event: React.FormEvent) => {
+  /**
+   * Validates the form and shows the confirmation step. Nothing is persisted
+   * until the user confirms there.
+   */
+  const reviewBridge = (event: React.FormEvent) => {
     event.preventDefault();
-
-    // Cancel if no feature is set
-    const reportedFeature = store.reportBridge.reportedFeature();
-    if (!reportedFeature) return;
 
     // Require at least one image (either existing or new)
     const hasExistingImages = state.images && state.images.length > 0;
@@ -73,6 +78,25 @@ export const BridgeForm: FC<BridgeFormProps> = ({
       );
       return;
     }
+
+    if (!store.reportBridge.latLon) {
+      alert(
+        intl.formatMessage({
+          defaultMessage: 'Bitte zuerst die Position der Brücke bestimmen',
+          id: 'report_bridge_position_required',
+        })
+      );
+      return;
+    }
+
+    setStep('review');
+    window.scrollTo({ top: 0 });
+  };
+
+  const saveBridge = async () => {
+    // Cancel if no feature is set
+    const reportedFeature = store.reportBridge.reportedFeature();
+    if (!reportedFeature) return;
 
     setSaveStatus('preparing');
 
@@ -115,6 +139,10 @@ export const BridgeForm: FC<BridgeFormProps> = ({
     reportedBridge.set('bridgeLength', +state.bridgeLength);
     reportedBridge.set('hasContinuousShore', state.hasContinuousShore);
     reportedBridge.set('hasSlopes', state.hasSlopes);
+    reportedBridge.set(
+      'isInaccessibleForHumans',
+      state.isInaccessibleForHumans
+    );
     reportedBridge.set('traffic', state.traffic);
     reportedBridge.set('speedLimit', state.speedLimit);
     reportedBridge.set('barriers', state.barriers);
@@ -139,7 +167,12 @@ export const BridgeForm: FC<BridgeFormProps> = ({
 
     // saving the bridge first as it is the important part
     // then storing the images and referencing them afterwards
-    const persistedBridge = (await reportedBridge.save()) as Parse.Object;
+    let persistedBridge: Parse.Object | undefined;
+    try {
+      persistedBridge = (await reportedBridge.save()) as Parse.Object;
+    } catch (err) {
+      console.error(err);
+    }
     if (!persistedBridge || !persistedBridge.id) {
       setSaveStatus('error');
       console.error('Error while saving bridge');
@@ -201,11 +234,16 @@ export const BridgeForm: FC<BridgeFormProps> = ({
 
     persistedBridge.set('images', currentImages);
 
-    persistedBridge.save().then(async () => {
-      store.reportBridge.setLatLon(null);
-      await store.existingBridges.fetchExistingBridges();
-      navigate('/', { replace: true });
-    });
+    try {
+      await persistedBridge.save();
+    } catch (err) {
+      console.error(err);
+      setSaveStatus('error');
+      return;
+    }
+    store.reportBridge.setLatLon(null);
+    await store.existingBridges.fetchExistingBridges();
+    navigate('/', { replace: true });
   };
 
   /**
@@ -235,6 +273,12 @@ export const BridgeForm: FC<BridgeFormProps> = ({
     }));
   }
 
+  // Lock the map above the form while the user reviews the data
+  useEffect(() => {
+    store.reportBridge.setIsReviewing(step === 'review');
+  }, [step]);
+  useEffect(() => () => store.reportBridge.setIsReviewing(false), []);
+
   useEffect(() => {
     if (saveStatus === 'saving' || saveStatus === 'preparing') {
       setIsBusy(true);
@@ -245,7 +289,27 @@ export const BridgeForm: FC<BridgeFormProps> = ({
 
   return (
     <div className={'mx-auto mb-8 w-5/6 select-none md:w-4/5 lg:w-1/2'}>
-      <form className={'flex flex-col gap-12 p-4'} onSubmit={saveBridge}>
+      {step === 'review' && (
+        <BridgeReview
+          isBusy={isBusy}
+          isUpdate={!!state.objectId}
+          onBack={() => {
+            setSaveStatus(undefined);
+            setStep('edit');
+            window.scrollTo({ top: 0 });
+          }}
+          onConfirm={saveBridge}
+          saveStatus={saveStatus}
+          state={state}
+        />
+      )}
+      {/* Kept mounted while reviewing so all inputs keep their state */}
+      <form
+        // Tailwind's `flex` would override the plain `hidden` attribute
+        className={`${step === 'review' ? 'hidden' : 'flex'} flex-col gap-12 p-4`}
+        hidden={step === 'review'}
+        onSubmit={reviewBridge}
+      >
         <div className={'flex w-full flex-row items-center justify-between'}>
           <div className={'flex items-center gap-2'}>
             <h2>
@@ -275,7 +339,7 @@ export const BridgeForm: FC<BridgeFormProps> = ({
             {CloseChar}
           </button>
         </div>
-        <PositionInformation></PositionInformation>
+        <PositionInformation onCenterMap={onCenterMap} />
         {store.auth.sessionToken && (
           <div className={'flex flex-col gap-4'}>
             <h3>
@@ -526,6 +590,23 @@ export const BridgeForm: FC<BridgeFormProps> = ({
             <div className={'form-control w-full'}>
               <label className="label cursor-pointer justify-start gap-4 py-3">
                 <input
+                  checked={state.isInaccessibleForHumans}
+                  className="checkbox-primary checkbox flex-shrink-0"
+                  name="isInaccessibleForHumans"
+                  onChange={handleChange}
+                  type="checkbox"
+                />
+                <span className="label-text">
+                  <FormattedMessage
+                    defaultMessage={'Unzugänglich für Menschen'}
+                    id="report_bridge_label_isInaccessibleForHumans"
+                  />
+                </span>
+              </label>
+            </div>
+            <div className={'form-control w-full'}>
+              <label className="label cursor-pointer justify-start gap-4 py-3">
+                <input
                   checked={state.hasContinuousShore}
                   className="checkbox-primary checkbox flex-shrink-0"
                   name="hasContinuousShore"
@@ -678,42 +759,18 @@ export const BridgeForm: FC<BridgeFormProps> = ({
                 id="report_bridge_button_cancel"
               />
             </button>
-            {state.objectId && (
-              <button
-                className={'btn btn-lg btn-primary w-full md:btn-md md:w-auto'}
-                disabled={isBusy}
-                type={'submit'}
-              >
-                <Save className="h-5 w-5" />
-                <FormattedMessage
-                  defaultMessage={'Speichern'}
-                  id="report_bridge_button_save"
-                />
-              </button>
-            )}
-            {!state.objectId && (
-              <button
-                className={'btn btn-lg btn-primary w-full md:btn-md md:w-auto'}
-                disabled={isBusy}
-                type={'submit'}
-              >
-                <Send className="h-5 w-5" />
-                <FormattedMessage
-                  defaultMessage={'Erfassen'}
-                  id="report_bridge_button_report"
-                />
-              </button>
-            )}
-          </div>
-          {isBusy && (
-            <div
-              className={
-                'absolute inset-0 flex items-center justify-center bg-white/50'
-              }
+            <button
+              className={'btn btn-lg btn-primary w-full md:btn-md md:w-auto'}
+              disabled={isBusy}
+              type={'submit'}
             >
-              <div className={'loading loading-spinner loading-lg'}></div>
-            </div>
-          )}
+              <ClipboardCheck className="h-5 w-5" />
+              <FormattedMessage
+                defaultMessage={'Weiter zur Kontrolle'}
+                id="report_bridge_button_review"
+              />
+            </button>
+          </div>
         </div>
       </form>
     </div>

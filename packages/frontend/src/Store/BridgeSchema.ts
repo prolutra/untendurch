@@ -21,6 +21,7 @@ export interface BridgeSchema {
   hasSlopes: boolean;
   hasStones: boolean;
   images: [{ name: string; url: string }];
+  isInaccessibleForHumans?: boolean;
   isManualOverride: boolean;
   itemLog?: BridgeLogItem[];
   municipalities: string[];
@@ -51,6 +52,7 @@ export const BridgeSchemaFields: (keyof BridgeSchema)[] = [
   'bridgeLength',
   'hasContinuousShore',
   'hasSlopes',
+  'isInaccessibleForHumans',
   'traffic',
   'speedLimit',
   'barriers',

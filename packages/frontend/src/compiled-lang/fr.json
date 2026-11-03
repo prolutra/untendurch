@@ -249,6 +249,18 @@
       "value": "Vérifié"
     }
   ],
+  "position_preview_map_show_aerial": [
+    {
+      "type": 0,
+      "value": "Vue aérienne"
+    }
+  ],
+  "position_preview_map_show_map": [
+    {
+      "type": 0,
+      "value": "Carte"
+    }
+  ],
   "report_bridge_button_cancel": [
     {
       "type": 0,
@@ -259,6 +271,12 @@
     {
       "type": 0,
       "value": "Saisir"
+    }
+  ],
+  "report_bridge_button_review": [
+    {
+      "type": 0,
+      "value": "Continuer vers la vérification"
     }
   ],
   "report_bridge_button_save": [
@@ -393,6 +411,12 @@
       "value": "Images"
     }
   ],
+  "report_bridge_label_isInaccessibleForHumans": [
+    {
+      "type": 0,
+      "value": "Inaccessible aux humains"
+    }
+  ],
   "report_bridge_label_municipalities": [
     {
       "type": 0,
@@ -433,6 +457,78 @@
     {
       "type": 0,
       "value": "volume de trafic"
+    }
+  ],
+  "report_bridge_manual_coordinates_apply": [
+    {
+      "type": 0,
+      "value": "Afficher sur la carte"
+    }
+  ],
+  "report_bridge_manual_coordinates_close": [
+    {
+      "type": 0,
+      "value": "Placer l’épingle sur la carte"
+    }
+  ],
+  "report_bridge_manual_coordinates_error_invalid": [
+    {
+      "type": 0,
+      "value": "Coordonnées non reconnues. Veuillez saisir deux nombres, p. ex. «2600000, 1200000» (MN95) ou «46.948, 7.447» (WGS84)."
+    }
+  ],
+  "report_bridge_manual_coordinates_error_outside": [
+    {
+      "type": 0,
+      "value": "Ces coordonnées ne se trouvent pas en Suisse. Veuillez vérifier la saisie."
+    }
+  ],
+  "report_bridge_manual_coordinates_label": [
+    {
+      "type": 0,
+      "value": "Coordonnées (MN95, MN03 ou WGS84)"
+    }
+  ],
+  "report_bridge_manual_coordinates_open": [
+    {
+      "type": 0,
+      "value": "Saisir les coordonnées manuellement"
+    }
+  ],
+  "report_bridge_manual_coordinates_placeholder": [
+    {
+      "type": 0,
+      "value": "p. ex. 2600000, 1200000 ou 46.948, 7.447"
+    }
+  ],
+  "report_bridge_manual_coordinates_verify": [
+    {
+      "type": 0,
+      "value": "Reconnu comme "
+    },
+    {
+      "type": 1,
+      "value": "format"
+    },
+    {
+      "type": 0,
+      "value": " : "
+    },
+    {
+      "type": 1,
+      "value": "municipality"
+    },
+    {
+      "type": 0,
+      "value": " ("
+    },
+    {
+      "type": 1,
+      "value": "canton"
+    },
+    {
+      "type": 0,
+      "value": "). Veuillez vérifier sur la carte que l’épingle se trouve exactement sur le pont. Vous pouvez déplacer l’épingle si nécessaire."
     }
   ],
   "report_bridge_option_0_30": [
@@ -543,10 +639,70 @@
       "value": "endroit le plus large en m"
     }
   ],
+  "report_bridge_position_required": [
+    {
+      "type": 0,
+      "value": "Veuillez d’abord déterminer la position du pont"
+    }
+  ],
+  "report_bridge_review_button_back": [
+    {
+      "type": 0,
+      "value": "Retour pour corriger"
+    }
+  ],
+  "report_bridge_review_heading": [
+    {
+      "type": 0,
+      "value": "Vérifier les données"
+    }
+  ],
+  "report_bridge_review_images": [
+    {
+      "type": 0,
+      "value": "Images"
+    }
+  ],
+  "report_bridge_review_intro": [
+    {
+      "type": 0,
+      "value": "Veuillez vérifier toutes les données, en particulier la position sur la carte. Si quelque chose ne va pas, revenez en arrière pour corriger."
+    }
+  ],
+  "report_bridge_review_municipality": [
+    {
+      "type": 0,
+      "value": "Commune / Canton"
+    }
+  ],
+  "report_bridge_review_no": [
+    {
+      "type": 0,
+      "value": "Non"
+    }
+  ],
+  "report_bridge_review_save_error": [
+    {
+      "type": 0,
+      "value": "Une erreur est survenue lors de l’enregistrement. Veuillez réessayer."
+    }
+  ],
+  "report_bridge_review_yes": [
+    {
+      "type": 0,
+      "value": "Oui"
+    }
+  ],
   "report_bridge_shape_required": [
     {
       "type": 0,
       "value": "Veuillez choisir la forme du pont"
+    }
+  ],
+  "review_map_lock_label": [
+    {
+      "type": 0,
+      "value": "Carte verrouillée pendant la vérification"
     }
   ],
   "safety_risk_HIGH_RISK": [

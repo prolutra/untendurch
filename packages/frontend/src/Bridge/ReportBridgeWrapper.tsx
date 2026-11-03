@@ -34,6 +34,7 @@ export const ReportBridgeWrapper: FC = () => {
     hasSlopes: false,
     hasStones: false,
     images: [],
+    isInaccessibleForHumans: false,
     itemLog: [],
     municipalities: '',
     name: '',
@@ -47,12 +48,14 @@ export const ReportBridgeWrapper: FC = () => {
   // Reset report map state on mount and start geolocation
   useEffect(() => {
     resetReportMap();
+    store.reportBridge.setManualPosition(false);
     store.currentPosition.locateMe();
   }, []);
 
   // When user location is acquired, center the report map (not the main map)
   useEffect(() => {
-    if (store.currentPosition.latLon) {
+    // Don't let a (late) GPS fix overwrite a position the user set by hand
+    if (store.currentPosition.latLon && !store.reportBridge.manualPosition) {
       store.reportBridge
         .setPosition(
           createLatLon(
@@ -73,7 +76,10 @@ export const ReportBridgeWrapper: FC = () => {
 
   // Fallback if geolocation not supported
   useEffect(() => {
-    if (store.currentPosition.navigatorWithoutLocationSupport) {
+    if (
+      store.currentPosition.navigatorWithoutLocationSupport &&
+      !store.reportBridge.manualPosition
+    ) {
       store.reportBridge.setPosition(createLatLon(46.79871, 8.23176));
     }
   }, [store.currentPosition.navigatorWithoutLocationSupport]);
@@ -83,6 +89,10 @@ export const ReportBridgeWrapper: FC = () => {
       <HowToModal forceOpen={showHowTo} onClose={() => setShowHowTo(false)} />
       <BridgeForm
         bridgeFormState={defaultState}
+        onCenterMap={(coordinates) => {
+          setReportMapCenter(coordinates);
+          setReportMapZoom(17);
+        }}
         onShowHowTo={() => setShowHowTo(true)}
       />
     </>

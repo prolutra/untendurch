@@ -249,6 +249,18 @@
       "value": "Verifiziert"
     }
   ],
+  "position_preview_map_show_aerial": [
+    {
+      "type": 0,
+      "value": "Luftbild"
+    }
+  ],
+  "position_preview_map_show_map": [
+    {
+      "type": 0,
+      "value": "Karte"
+    }
+  ],
   "report_bridge_button_cancel": [
     {
       "type": 0,
@@ -259,6 +271,12 @@
     {
       "type": 0,
       "value": "Erfassen"
+    }
+  ],
+  "report_bridge_button_review": [
+    {
+      "type": 0,
+      "value": "Weiter zur Kontrolle"
     }
   ],
   "report_bridge_button_save": [
@@ -393,6 +411,12 @@
       "value": "Bilder"
     }
   ],
+  "report_bridge_label_isInaccessibleForHumans": [
+    {
+      "type": 0,
+      "value": "Unzugänglich für Menschen"
+    }
+  ],
   "report_bridge_label_municipalities": [
     {
       "type": 0,
@@ -433,6 +457,78 @@
     {
       "type": 0,
       "value": "Verkehrsaufkommen"
+    }
+  ],
+  "report_bridge_manual_coordinates_apply": [
+    {
+      "type": 0,
+      "value": "Auf Karte anzeigen"
+    }
+  ],
+  "report_bridge_manual_coordinates_close": [
+    {
+      "type": 0,
+      "value": "Pin auf der Karte setzen"
+    }
+  ],
+  "report_bridge_manual_coordinates_error_invalid": [
+    {
+      "type": 0,
+      "value": "Koordinaten nicht erkannt. Bitte zwei Zahlen eingeben, z.B. «2600000, 1200000» (LV95) oder «46.948, 7.447» (WGS84)."
+    }
+  ],
+  "report_bridge_manual_coordinates_error_outside": [
+    {
+      "type": 0,
+      "value": "Diese Koordinaten liegen nicht in der Schweiz. Bitte Eingabe prüfen."
+    }
+  ],
+  "report_bridge_manual_coordinates_label": [
+    {
+      "type": 0,
+      "value": "Koordinaten (LV95, LV03 oder WGS84)"
+    }
+  ],
+  "report_bridge_manual_coordinates_open": [
+    {
+      "type": 0,
+      "value": "Koordinaten manuell eingeben"
+    }
+  ],
+  "report_bridge_manual_coordinates_placeholder": [
+    {
+      "type": 0,
+      "value": "z.B. 2600000, 1200000 oder 46.948, 7.447"
+    }
+  ],
+  "report_bridge_manual_coordinates_verify": [
+    {
+      "type": 0,
+      "value": "Erkannt als "
+    },
+    {
+      "type": 1,
+      "value": "format"
+    },
+    {
+      "type": 0,
+      "value": ": "
+    },
+    {
+      "type": 1,
+      "value": "municipality"
+    },
+    {
+      "type": 0,
+      "value": " ("
+    },
+    {
+      "type": 1,
+      "value": "canton"
+    },
+    {
+      "type": 0,
+      "value": "). Bitte prüfen Sie auf der Karte, ob der Pin genau bei der Brücke liegt. Bei Bedarf können Sie den Pin verschieben."
     }
   ],
   "report_bridge_option_0_30": [
@@ -543,10 +639,70 @@
       "value": "breiteste Stelle in m"
     }
   ],
+  "report_bridge_position_required": [
+    {
+      "type": 0,
+      "value": "Bitte zuerst die Position der Brücke bestimmen"
+    }
+  ],
+  "report_bridge_review_button_back": [
+    {
+      "type": 0,
+      "value": "Zurück und korrigieren"
+    }
+  ],
+  "report_bridge_review_heading": [
+    {
+      "type": 0,
+      "value": "Angaben kontrollieren"
+    }
+  ],
+  "report_bridge_review_images": [
+    {
+      "type": 0,
+      "value": "Bilder"
+    }
+  ],
+  "report_bridge_review_intro": [
+    {
+      "type": 0,
+      "value": "Bitte prüfen Sie alle Angaben, insbesondere die Position auf der Karte. Wenn etwas nicht stimmt, gehen Sie zurück und korrigieren Sie es."
+    }
+  ],
+  "report_bridge_review_municipality": [
+    {
+      "type": 0,
+      "value": "Gemeinde / Kanton"
+    }
+  ],
+  "report_bridge_review_no": [
+    {
+      "type": 0,
+      "value": "Nein"
+    }
+  ],
+  "report_bridge_review_save_error": [
+    {
+      "type": 0,
+      "value": "Beim Speichern ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+    }
+  ],
+  "report_bridge_review_yes": [
+    {
+      "type": 0,
+      "value": "Ja"
+    }
+  ],
   "report_bridge_shape_required": [
     {
       "type": 0,
       "value": "Bitte Brückenform wählen"
+    }
+  ],
+  "review_map_lock_label": [
+    {
+      "type": 0,
+      "value": "Karte während der Kontrolle gesperrt"
     }
   ],
   "safety_risk_HIGH_RISK": [

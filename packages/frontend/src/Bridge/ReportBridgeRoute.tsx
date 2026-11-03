@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 
 import { Layout } from '../Layout';
 import { ReportMapWrapper } from '../Map/ReportMapWrapper';
+import { ReviewMapLock } from '../Map/ReviewMapLock';
 import { useStore } from '../Store/Store';
 import { ReportBridgeWrapper } from './ReportBridgeWrapper';
 
@@ -17,7 +18,9 @@ export const ReportBridgeRoute: FC = () => {
 
   return (
     <Layout>
-      <ReportMapWrapper />
+      <ReviewMapLock>
+        <ReportMapWrapper />
+      </ReviewMapLock>
       <div className={'pt-8'}>
         <ReportBridgeWrapper></ReportBridgeWrapper>
       </div>

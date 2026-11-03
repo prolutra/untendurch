@@ -122,11 +122,20 @@
   "overview_filters_select_status_verified": {
     "defaultMessage": "Verified"
   },
+  "position_preview_map_show_aerial": {
+    "defaultMessage": "Aerial"
+  },
+  "position_preview_map_show_map": {
+    "defaultMessage": "Map"
+  },
   "report_bridge_button_cancel": {
     "defaultMessage": "Cancel"
   },
   "report_bridge_button_report": {
     "defaultMessage": "Capture"
+  },
+  "report_bridge_button_review": {
+    "defaultMessage": "Continue to review"
   },
   "report_bridge_button_save": {
     "defaultMessage": "Save"
@@ -194,6 +203,9 @@
   "report_bridge_label_images": {
     "defaultMessage": "Images"
   },
+  "report_bridge_label_isInaccessibleForHumans": {
+    "defaultMessage": "Inaccessible to humans"
+  },
   "report_bridge_label_municipalities": {
     "defaultMessage": "List of municipalities (comma separated)"
   },
@@ -214,6 +226,30 @@
   },
   "report_bridge_label_traffic": {
     "defaultMessage": "Traffic volume"
+  },
+  "report_bridge_manual_coordinates_apply": {
+    "defaultMessage": "Show on map"
+  },
+  "report_bridge_manual_coordinates_close": {
+    "defaultMessage": "Place pin on the map"
+  },
+  "report_bridge_manual_coordinates_error_invalid": {
+    "defaultMessage": "Coordinates not recognised. Please enter two numbers, e.g. \"2600000, 1200000\" (LV95) or \"46.948, 7.447\" (WGS84)."
+  },
+  "report_bridge_manual_coordinates_error_outside": {
+    "defaultMessage": "These coordinates are not in Switzerland. Please check your input."
+  },
+  "report_bridge_manual_coordinates_label": {
+    "defaultMessage": "Coordinates (LV95, LV03 or WGS84)"
+  },
+  "report_bridge_manual_coordinates_open": {
+    "defaultMessage": "Enter coordinates manually"
+  },
+  "report_bridge_manual_coordinates_placeholder": {
+    "defaultMessage": "e.g. 2600000, 1200000 or 46.948, 7.447"
+  },
+  "report_bridge_manual_coordinates_verify": {
+    "defaultMessage": "Recognised as {format}: {municipality} ({canton}). Please check on the map that the pin is exactly at the bridge. You can move the pin if necessary."
   },
   "report_bridge_option_0_30": {
     "defaultMessage": "0-30km/h"
@@ -269,8 +305,38 @@
   "report_bridge_placeholder_bridgeWidth": {
     "defaultMessage": "widest point in metres"
   },
+  "report_bridge_position_required": {
+    "defaultMessage": "Please set the position of the bridge first"
+  },
+  "report_bridge_review_button_back": {
+    "defaultMessage": "Go back and correct"
+  },
+  "report_bridge_review_heading": {
+    "defaultMessage": "Review your details"
+  },
+  "report_bridge_review_images": {
+    "defaultMessage": "Images"
+  },
+  "report_bridge_review_intro": {
+    "defaultMessage": "Please check all details, especially the position on the map. If anything is wrong, go back and correct it."
+  },
+  "report_bridge_review_municipality": {
+    "defaultMessage": "Municipality / Canton"
+  },
+  "report_bridge_review_no": {
+    "defaultMessage": "No"
+  },
+  "report_bridge_review_save_error": {
+    "defaultMessage": "An error occurred while saving. Please try again."
+  },
+  "report_bridge_review_yes": {
+    "defaultMessage": "Yes"
+  },
   "report_bridge_shape_required": {
     "defaultMessage": "Please select bridge shape"
+  },
+  "review_map_lock_label": {
+    "defaultMessage": "Map locked during review"
   },
   "safety_risk_HIGH_RISK": {
     "defaultMessage": "Very dangerous"
