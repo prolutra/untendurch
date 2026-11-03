@@ -18,6 +18,7 @@ import {
   PARSE_SERVER_URL,
 } from './config.js';
 import { uploadsDirectory } from './directories.js';
+import { ensureSchema } from './parse/ensure-schema.js';
 import { thumbnailRoute } from './routes/thumbnail.js';
 import { uploadRoute } from './routes/upload.js';
 
@@ -128,4 +129,8 @@ app.use(
 
 app.listen(PARSE_SERVER_PORT, function () {
   console.log(`localhost:${PARSE_SERVER_PORT}`);
+  // Schema API calls go through the REST endpoint, so run once listening
+  ensureSchema().catch((err) => {
+    console.error('[ensureSchema] Failed', err);
+  });
 });
