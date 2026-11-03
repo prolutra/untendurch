@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import { resetHowToSeen } from '../components/HowToModal';
 import { resetWelcomeSeen } from '../components/WelcomeModal';
+import { getClusterDistance } from '../Layers/VectorLayers';
 import { clearPersistedMapState } from '../Store/MapSettingsStore';
 import { MapContext } from './MapContext';
 
@@ -37,23 +38,7 @@ export const MapDebugInfo: FC = () => {
       setCenter(currentCenter ?? [0, 0]);
       setResolution(currentResolution);
 
-      // Calculate cluster distance based on zoom
-      const ZOOM_THRESHOLD_LOW = 8;
-      const ZOOM_THRESHOLD_HIGH = 14;
-      const DISTANCE_BASE = 60;
-      const DISTANCE_MIN = 25;
-
-      let distance: number;
-      if (currentZoom <= ZOOM_THRESHOLD_LOW) {
-        distance = DISTANCE_BASE;
-      } else if (currentZoom >= ZOOM_THRESHOLD_HIGH) {
-        distance = DISTANCE_MIN;
-      } else {
-        const ratio =
-          (currentZoom - ZOOM_THRESHOLD_LOW) /
-          (ZOOM_THRESHOLD_HIGH - ZOOM_THRESHOLD_LOW);
-        distance = DISTANCE_BASE - ratio * (DISTANCE_BASE - DISTANCE_MIN);
-      }
+      const distance = getClusterDistance(currentZoom);
       setClusterDistance(Math.round(distance));
     };
 

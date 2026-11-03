@@ -28,7 +28,16 @@ const RISKY_SAFETY_LEVELS: SafetyRisk[] = [
 export const Map: FC = () => {
   // Use individual selectors to avoid unnecessary re-renders
   const filteredBridges = useExistingBridgesStore((s) => s.filteredBridges);
-  const reportedFeature = useReportBridgeStore((s) => s.reportedFeature);
+  const reportedLatLon = useReportBridgeStore((s) => s.latLon);
+  // Memoized: a new array on every render would rebuild the draggable layer
+  // (and its Modify interaction) each time, interrupting drags
+  const reportedFeatures = useMemo(
+    () =>
+      reportedLatLon
+        ? [new Feature({ geometry: latLonToPoint(reportedLatLon) })]
+        : [],
+    [reportedLatLon]
+  );
   const showRiskyUnclustered = useMapSettingsStore(
     (s) => s.showRiskyPinsUnclustered
   );
@@ -41,35 +50,36 @@ export const Map: FC = () => {
   const filterAdmin = useMapSettingsStore((s) => s.filterAdmin);
   const bridgePins = useExistingBridgesStore((s) => s.bridgePins);
 
-  const vectorLayersBySafety = useMemo((): [
-    Feature<Point>[],
-    string,
-    number,
-    SafetyRisk | undefined,
-  ][] => {
-    const result =
-      Array.of<[Feature<Point>[], string, number, SafetyRisk | undefined]>();
+  /**
+   * All bridges go into ONE clustered layer so that bubbles are computed across
+   * all safety risks (one cluster source per risk produced stacked, partially
+   * counted bubbles). Each feature carries its own icon and z-order instead.
+   * Risky bridges can optionally be kept out of the clusters.
+   */
+  const [clusteredFeatures, unclusteredFeatures] = useMemo(() => {
+    const clustered: Feature<Point>[] = [];
+    const unclustered: Feature<Point>[] = [];
+    const riskOrder = Object.keys(SafetyRiskEnum);
 
-    filteredBridges()
-      .groupBy((b: BridgePin) => b.safetyRisk)
-      .forEach((bridges: BridgePin[], safetyRisk: SafetyRisk | undefined) => {
-        const iconSrc = safetyRisk
+    filteredBridges().forEach((bridge: BridgePin) => {
+      const safetyRisk = bridge.safetyRisk as SafetyRisk | undefined;
+      const feature = new Feature({
+        bridgePinObjectId: bridge.objectId,
+        geometry: latLonToPoint(bridge.latLon),
+        iconSrc: safetyRisk
           ? `/bridge_pin_${safetyRisk.toLowerCase()}.svg`
-          : 'bridge_pin.svg';
-        const features = bridges.map(
-          (bridge: BridgePin) =>
-            new Feature({
-              bridgePinObjectId: bridge.objectId,
-              geometry: latLonToPoint(bridge.latLon),
-            })
-        );
-        // the higher the safety risk the higher up in zIndex
-        const zIndex =
-          10 +
-          (safetyRisk ? Object.keys(SafetyRiskEnum).indexOf(safetyRisk) : 0);
-        result.push([features, iconSrc, zIndex, safetyRisk]);
+          : '/bridge_pin.svg',
+        // the higher the safety risk the higher up
+        zIndex: safetyRisk ? riskOrder.indexOf(safetyRisk) + 1 : 0,
       });
-    return result;
+      const keepUnclustered =
+        showRiskyUnclustered &&
+        safetyRisk !== undefined &&
+        RISKY_SAFETY_LEVELS.includes(safetyRisk);
+      (keepUnclustered ? unclustered : clustered).push(feature);
+    });
+
+    return [clustered, unclustered];
   }, [
     bridgePins,
     filterCanton,
@@ -77,35 +87,31 @@ export const Map: FC = () => {
     filterStatus,
     filterOtterFriendly,
     filterSafetyRisk,
-    filterAdmin, // Added missing dependency
+    filterAdmin,
     filteredBridges,
+    showRiskyUnclustered,
   ]);
+  const clusteringEnabled = useMapSettingsStore((s) => s.clusteringEnabled);
 
   return (
     <Layers>
       <TileLayer zIndex={0} />
-      {vectorLayersBySafety.map(([features, iconSrc, zIndex, safetyRisk]) => {
-        // Exclude risky pins from clustering if the option is enabled
-        const excludeFromClustering =
-          showRiskyUnclustered &&
-          safetyRisk !== undefined &&
-          RISKY_SAFETY_LEVELS.includes(safetyRisk);
-
-        return (
-          <VectorLayer
-            draggable={false}
-            excludeFromClustering={excludeFromClustering}
-            features={features}
-            iconSrc={iconSrc}
-            key={iconSrc}
-            zIndex={zIndex}
-          />
-        );
-      })}
-      {reportedFeature() && (
+      <VectorLayer
+        clustered={clusteringEnabled}
+        draggable={false}
+        features={clusteredFeatures}
+        zIndex={10}
+      />
+      {/* Kept out of clusters and always above the bubbles */}
+      <VectorLayer
+        draggable={false}
+        features={unclusteredFeatures}
+        zIndex={20}
+      />
+      {reportedFeatures.length > 0 && (
         <VectorLayer
           draggable={true}
-          features={[reportedFeature()!]}
+          features={reportedFeatures}
           iconSrc={'/bridge_pin_new.svg'}
           zIndex={99}
         />

@@ -12,6 +12,7 @@ import { Select } from 'ol/interaction';
 import VectorLayer from 'ol/layer/Vector';
 import React, { useEffect, useRef, useState } from 'react';
 
+import { CLUSTER_DISABLE_ZOOM } from '../Layers/VectorLayers';
 import { useMapSettingsStore } from '../Store/Store';
 import { BridgeSidebar } from './BridgeSidebar';
 import { Map } from './Map';
@@ -89,7 +90,9 @@ export const MapWrapper = ({ children, variant }: Props) => {
   }, []);
 
   // Zoom threshold at which we show overlapping picker instead of zooming further
-  const OVERLAP_ZOOM_THRESHOLD = 17;
+  // Once pins are no longer clustered, a remaining group can only be bridges
+  // at (nearly) the same position: show the picker instead of zooming
+  const OVERLAP_ZOOM_THRESHOLD = CLUSTER_DISABLE_ZOOM;
 
   useEffect(() => {
     if (!mapContext) return;

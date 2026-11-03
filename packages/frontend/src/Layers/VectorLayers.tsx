@@ -17,11 +17,11 @@ import {
   Style,
   Text,
 } from 'ol/style';
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 
 import { MapContext } from '../Map/MapContext';
 import { createLatLon } from '../Store/LatLon';
-import { useStore } from '../Store/Store';
+import { useMapSettingsStore, useStore } from '../Store/Store';
 
 /**
  * Pin icon dimensions and styling constants
@@ -53,51 +53,6 @@ const SELECTED_INDICATOR = {
 } as const;
 
 /**
- * Cluster configuration constants
- * Distance decreases as zoom increases, so clusters break apart when zooming in
- */
-const CLUSTER_CONFIG = {
-  // Base distance in pixels for clustering at low zoom levels
-  DISTANCE_BASE: 80,
-  // Minimum distance in pixels for clustering at high zoom levels
-  DISTANCE_MIN: 40,
-  // Minimum distance between cluster centers (should be >= 2 * max cluster radius to prevent overlap)
-  MIN_DISTANCE: 65,
-  // Zoom level at which clustering is disabled completely
-  ZOOM_THRESHOLD_DISABLE: 14,
-  // Zoom level at which clustering reaches minimum
-  ZOOM_THRESHOLD_HIGH: 14,
-  // Zoom level at which clustering starts to decrease
-  ZOOM_THRESHOLD_LOW: 8,
-} as const;
-
-/**
- * Calculate cluster distance based on zoom level
- * Higher zoom = smaller distance = clusters break apart sooner
- * At zoom 15+, clustering is disabled completely (distance = 0)
- */
-function getClusterDistance(zoom: number): number {
-  // Disable clustering at high zoom levels
-  if (zoom >= CLUSTER_CONFIG.ZOOM_THRESHOLD_DISABLE) {
-    return 0;
-  }
-  if (zoom <= CLUSTER_CONFIG.ZOOM_THRESHOLD_LOW) {
-    return CLUSTER_CONFIG.DISTANCE_BASE;
-  }
-  if (zoom >= CLUSTER_CONFIG.ZOOM_THRESHOLD_HIGH) {
-    return CLUSTER_CONFIG.DISTANCE_MIN;
-  }
-  // Linear interpolation between thresholds
-  const ratio =
-    (zoom - CLUSTER_CONFIG.ZOOM_THRESHOLD_LOW) /
-    (CLUSTER_CONFIG.ZOOM_THRESHOLD_HIGH - CLUSTER_CONFIG.ZOOM_THRESHOLD_LOW);
-  return (
-    CLUSTER_CONFIG.DISTANCE_BASE -
-    ratio * (CLUSTER_CONFIG.DISTANCE_BASE - CLUSTER_CONFIG.DISTANCE_MIN)
-  );
-}
-
-/**
  * Cluster styling constants
  */
 const CLUSTER_STYLE = {
@@ -107,12 +62,14 @@ const CLUSTER_STYLE = {
   FILL_COLOR_HOVERED: 'rgba(59, 130, 246, 1)',
   // Font for cluster count
   FONT: 'bold 12px sans-serif',
-  // Base radius for cluster circles
+  // Radius of a 2-bridge cluster; grows logarithmically with the count
   RADIUS_BASE: 14,
-  // Maximum radius
-  RADIUS_MAX: 30,
-  // Additional radius per feature (for scaling based on count)
-  RADIUS_PER_FEATURE: 0.5,
+  // Extra radius when hovered
+  RADIUS_HOVER_EXTRA: 2,
+  // Maximum radius (reached at ~1000 bridges)
+  RADIUS_MAX: 24,
+  // Additional radius per order of magnitude of the count
+  RADIUS_PER_DECADE: 3.3,
   // Stroke color for cluster circles
   STROKE_COLOR: '#fff',
   // Stroke width
@@ -123,171 +80,222 @@ const CLUSTER_STYLE = {
   TEXT_COLOR: '#fff',
 } as const;
 
+/**
+ * Cluster configuration constants
+ * Distance decreases as zoom increases, so clusters break apart when zooming in
+ */
+const CLUSTER_CONFIG = {
+  // Distance in pixels for clustering at low zoom levels
+  DISTANCE_BASE: 80,
+  // Distance in pixels right before clustering is disabled. Cluster centers
+  // are kept at least this far apart, so it must be larger than the largest
+  // possible bubble diameter (incl. hover and stroke) to prevent overlap.
+  DISTANCE_MIN:
+    2 *
+      (CLUSTER_STYLE.RADIUS_MAX +
+        CLUSTER_STYLE.RADIUS_HOVER_EXTRA +
+        CLUSTER_STYLE.STROKE_WIDTH_HOVERED) +
+    4,
+  // Zoom level at which clustering is disabled completely; only bridges at
+  // identical positions are still grouped (handled by the overlap picker)
+  ZOOM_THRESHOLD_DISABLE: 12,
+  // Zoom level at which clustering starts to decrease
+  ZOOM_THRESHOLD_LOW: 8,
+} as const;
+
 type VectorLayerProps = {
+  /** Cluster nearby pins into bubbles (ignored for draggable layers) */
+  clustered?: boolean;
   draggable: boolean;
-  excludeFromClustering?: boolean;
+  /**
+   * Features may carry their own `iconSrc` and `zIndex` properties (e.g. per
+   * safety risk); otherwise the layer's `iconSrc` is used.
+   */
   features: Feature<Geometry>[];
-  iconSrc: string;
+  iconSrc?: string;
   zIndex: number;
 };
 
+/** From this zoom on, all pins are shown individually */
+export const CLUSTER_DISABLE_ZOOM = CLUSTER_CONFIG.ZOOM_THRESHOLD_DISABLE;
+
+/**
+ * Calculate cluster distance based on zoom level
+ * Higher zoom = smaller distance = clusters break apart sooner
+ * At ZOOM_THRESHOLD_DISABLE and above, clustering is disabled (distance = 0)
+ */
+export function getClusterDistance(zoom: number): number {
+  if (zoom >= CLUSTER_CONFIG.ZOOM_THRESHOLD_DISABLE) {
+    return 0;
+  }
+  if (zoom <= CLUSTER_CONFIG.ZOOM_THRESHOLD_LOW) {
+    return CLUSTER_CONFIG.DISTANCE_BASE;
+  }
+  // Linear interpolation between thresholds
+  const ratio =
+    (zoom - CLUSTER_CONFIG.ZOOM_THRESHOLD_LOW) /
+    (CLUSTER_CONFIG.ZOOM_THRESHOLD_DISABLE - CLUSTER_CONFIG.ZOOM_THRESHOLD_LOW);
+  return (
+    CLUSTER_CONFIG.DISTANCE_BASE -
+    ratio * (CLUSTER_CONFIG.DISTANCE_BASE - CLUSTER_CONFIG.DISTANCE_MIN)
+  );
+}
+
+const pinIcon = (src: string, scale: number) =>
+  new Icon({
+    anchor: [PIN_ICON.ANCHOR_X, PIN_ICON.ANCHOR_Y],
+    anchorXUnits: 'fraction',
+    anchorYUnits: 'fraction',
+    scale,
+    src,
+  });
+
+const selectedIndicatorStyle = new Style({
+  image: new CircleStyle({
+    fill: new Fill({ color: SELECTED_INDICATOR.FILL_COLOR }),
+    radius: SELECTED_INDICATOR.RADIUS,
+    stroke: new Stroke({
+      color: SELECTED_INDICATOR.STROKE_COLOR,
+      width: SELECTED_INDICATOR.STROKE_WIDTH,
+    }),
+  }),
+});
+
+const pinStyleCache: Record<string, Style | Style[]> = {};
+
+/**
+ * Pin style for a single bridge. Within a layer, the style zIndex keeps
+ * higher-risk pins above lower-risk ones.
+ */
+function getPinStyle(
+  src: string,
+  baseZIndex: number,
+  selected: boolean,
+  hovered: boolean
+): Style | Style[] {
+  const key = `${src}|${baseZIndex}|${selected}|${hovered}`;
+  if (!pinStyleCache[key]) {
+    const pin = new Style({
+      image: pinIcon(
+        src,
+        hovered ? PIN_ICON.SCALE_HOVERED : PIN_ICON.SCALE_DEFAULT
+      ),
+      zIndex: hovered
+        ? PIN_ICON.Z_INDEX_HOVERED
+        : selected
+          ? PIN_ICON.Z_INDEX_SELECTED
+          : baseZIndex,
+    });
+    pinStyleCache[key] = selected ? [selectedIndicatorStyle, pin] : pin;
+  }
+  return pinStyleCache[key];
+}
+
+const clusterStyleCache: Record<string, Style> = {};
+
+function getClusterStyle(size: number, hovered: boolean): Style {
+  const key = `${size}|${hovered}`;
+  if (!clusterStyleCache[key]) {
+    const radius = Math.min(
+      CLUSTER_STYLE.RADIUS_BASE +
+        CLUSTER_STYLE.RADIUS_PER_DECADE * Math.log10(size / 2),
+      CLUSTER_STYLE.RADIUS_MAX
+    );
+    clusterStyleCache[key] = new Style({
+      image: new CircleStyle({
+        fill: new Fill({
+          color: hovered
+            ? CLUSTER_STYLE.FILL_COLOR_HOVERED
+            : CLUSTER_STYLE.FILL_COLOR,
+        }),
+        radius: hovered ? radius + CLUSTER_STYLE.RADIUS_HOVER_EXTRA : radius,
+        stroke: new Stroke({
+          color: CLUSTER_STYLE.STROKE_COLOR,
+          width: hovered
+            ? CLUSTER_STYLE.STROKE_WIDTH_HOVERED
+            : CLUSTER_STYLE.STROKE_WIDTH,
+        }),
+      }),
+      text: new Text({
+        fill: new Fill({ color: CLUSTER_STYLE.TEXT_COLOR }),
+        font: CLUSTER_STYLE.FONT,
+        text: size.toString(),
+      }),
+      // Bubbles always above single pins of the same layer
+      zIndex: PIN_ICON.Z_INDEX_SELECTED - 1,
+    });
+  }
+  return clusterStyleCache[key];
+}
+
 export const VectorLayer: FC<VectorLayerProps> = ({
+  clustered = false,
   draggable,
-  excludeFromClustering = false,
   features,
-  iconSrc,
+  iconSrc = '/bridge_pin.svg',
   zIndex,
 }) => {
   const store = useStore();
-
   const mapContext = useContext(MapContext);
+  const selectedBridgePinObjectId = useMapSettingsStore(
+    (s) => s.selectedBridgePinObjectId
+  );
+  const layerRef = useRef<null | OLVectorLayer<Feature<Geometry>>>(null);
 
-  const addFeaturesToMap = useCallback((): [
-    OLVectorLayer<Feature<Geometry>> | undefined,
-    Modify | undefined,
-  ] => {
-    if (!mapContext) return [undefined, undefined];
+  useEffect(() => {
+    const currentPoint = store.currentPosition.currentPoint();
+    if (currentPoint) {
+      store.mapSettings.setCenter(currentPoint.getCoordinates());
+      store.mapSettings.setZoom(17);
+    }
+  }, [store.currentPosition.latLon]);
 
-    const vectorSource = new VectorSource({
-      features: features,
-    });
+  // Selection only changes styling: restyle instead of rebuilding the layer
+  // (rebuilding would recompute all clusters on every click)
+  useEffect(() => {
+    layerRef.current?.changed();
+  }, [selectedBridgePinObjectId]);
 
-    // Single pin styles (for non-clustered or single-feature clusters)
-    const singlePinStyle = new Style({
-      image: new Icon({
-        anchor: [PIN_ICON.ANCHOR_X, PIN_ICON.ANCHOR_Y],
-        anchorXUnits: 'fraction',
-        anchorYUnits: 'fraction',
-        scale: PIN_ICON.SCALE_DEFAULT,
-        src: iconSrc,
-      }),
-    });
+  useEffect(() => {
+    if (!mapContext || features.length === 0) return;
 
-    const singlePinStyleHovered = new Style({
-      image: new Icon({
-        anchor: [PIN_ICON.ANCHOR_X, PIN_ICON.ANCHOR_Y],
-        anchorXUnits: 'fraction',
-        anchorYUnits: 'fraction',
-        scale: PIN_ICON.SCALE_HOVERED,
-        src: iconSrc,
-      }),
-      zIndex: PIN_ICON.Z_INDEX_HOVERED,
-    });
+    const vectorSource = new VectorSource({ features });
 
-    // Selected indicator circle (rendered below the pin)
-    const selectedIndicatorStyle = new Style({
-      image: new CircleStyle({
-        fill: new Fill({ color: SELECTED_INDICATOR.FILL_COLOR }),
-        radius: SELECTED_INDICATOR.RADIUS,
-        stroke: new Stroke({
-          color: SELECTED_INDICATOR.STROKE_COLOR,
-          width: SELECTED_INDICATOR.STROKE_WIDTH,
-        }),
-      }),
-    });
-
-    // Combined styles for selected pins (indicator circle + pin icon)
-    const singlePinStyleSelected = [
-      selectedIndicatorStyle,
-      new Style({
-        image: new Icon({
-          anchor: [PIN_ICON.ANCHOR_X, PIN_ICON.ANCHOR_Y],
-          anchorXUnits: 'fraction',
-          anchorYUnits: 'fraction',
-          scale: PIN_ICON.SCALE_DEFAULT,
-          src: iconSrc,
-        }),
-        zIndex: PIN_ICON.Z_INDEX_SELECTED,
-      }),
-    ];
-
-    const singlePinStyleSelectedHovered = [
-      selectedIndicatorStyle,
-      new Style({
-        image: new Icon({
-          anchor: [PIN_ICON.ANCHOR_X, PIN_ICON.ANCHOR_Y],
-          anchorXUnits: 'fraction',
-          anchorYUnits: 'fraction',
-          scale: PIN_ICON.SCALE_HOVERED,
-          src: iconSrc,
-        }),
-        zIndex: PIN_ICON.Z_INDEX_HOVERED,
-      }),
-    ];
-
-    // Helper to check if a feature (or any feature in a cluster) is selected
-    const isFeatureSelected = (feature: FeatureLike): boolean => {
-      const selectedId = store.mapSettings.selectedBridgePinObjectId;
-      if (!selectedId) return false;
-
-      // Check if this is a cluster
-      const clusteredFeatures = feature.get('features') as
-        | Feature<Geometry>[]
-        | undefined;
-      if (clusteredFeatures) {
-        return clusteredFeatures.some(
-          (f) => f.get('bridgePinObjectId') === selectedId
-        );
-      }
-      // Single feature
-      return feature.get('bridgePinObjectId') === selectedId;
+    // Read at render time so selection changes don't require a rebuild
+    const isSelected = (bridgeFeature: FeatureLike) => {
+      const selectedId =
+        useMapSettingsStore.getState().selectedBridgePinObjectId;
+      return (
+        !!selectedId && bridgeFeature.get('bridgePinObjectId') === selectedId
+      );
     };
 
-    // Cache for cluster styles to avoid recreating them
-    const clusterStyleCache: Record<string, Style> = {};
-
-    // Create cluster style based on feature count and hover state
-    const getClusterStyle = (size: number, hovered: boolean = false): Style => {
-      const cacheKey = `${size}-${hovered}`;
-      if (!clusterStyleCache[cacheKey]) {
-        const radius = Math.min(
-          CLUSTER_STYLE.RADIUS_BASE + size * CLUSTER_STYLE.RADIUS_PER_FEATURE,
-          CLUSTER_STYLE.RADIUS_MAX
-        );
-        clusterStyleCache[cacheKey] = new Style({
-          image: new CircleStyle({
-            fill: new Fill({
-              color: hovered
-                ? CLUSTER_STYLE.FILL_COLOR_HOVERED
-                : CLUSTER_STYLE.FILL_COLOR,
-            }),
-            radius: hovered ? radius + 2 : radius,
-            stroke: new Stroke({
-              color: CLUSTER_STYLE.STROKE_COLOR,
-              width: hovered
-                ? CLUSTER_STYLE.STROKE_WIDTH_HOVERED
-                : CLUSTER_STYLE.STROKE_WIDTH,
-            }),
-          }),
-          text: new Text({
-            fill: new Fill({ color: CLUSTER_STYLE.TEXT_COLOR }),
-            font: CLUSTER_STYLE.FONT,
-            text: size.toString(),
-          }),
-        });
-      }
-      return clusterStyleCache[cacheKey];
-    };
+    const singlePinStyle = (
+      bridgeFeature: FeatureLike,
+      hovered: boolean,
+      selected = isSelected(bridgeFeature)
+    ) =>
+      getPinStyle(
+        (bridgeFeature.get('iconSrc') as string | undefined) ?? iconSrc,
+        (bridgeFeature.get('zIndex') as number | undefined) ?? 0,
+        selected,
+        hovered
+      );
 
     // For draggable pins (new bridge marker), don't use clustering
     if (draggable) {
-      const styleFunction: StyleFunction = (feature) => {
-        return feature.get('hovered') ? singlePinStyleHovered : singlePinStyle;
-      };
-
       const layer = new OLVectorLayer({
         source: vectorSource,
-        style: styleFunction,
+        style: (feature) =>
+          singlePinStyle(feature, feature.get('hovered') === true, false),
         zIndex,
       });
-
       mapContext.addLayer(layer);
 
       const interaction = new Modify({
         hitDetection: layer,
         source: vectorSource,
       });
-
       interaction.on('modifyend', (event) => {
         event.features.forEach((feature) => {
           const point = (feature.getGeometry() as Point).getCoordinates();
@@ -298,161 +306,96 @@ export const VectorLayer: FC<VectorLayerProps> = ({
               store.mapSettings.setCenter(point);
             });
         });
-
         store.mapSettings.setZoom(17);
       });
-
       mapContext.addInteraction(interaction);
 
-      return [layer, interaction];
+      return () => {
+        mapContext.removeLayer(layer);
+        mapContext.removeInteraction(interaction);
+      };
     }
 
-    // Check if clustering is enabled and this layer should be clustered
-    const clusteringEnabled = store.mapSettings.clusteringEnabled;
-    const shouldCluster = clusteringEnabled && !excludeFromClustering;
-
-    if (!shouldCluster) {
-      // Non-clustered mode: just show individual pins
-      const styleFunction: StyleFunction = (feature) => {
-        const selected = isFeatureSelected(feature);
-        const hovered = feature.get('hovered');
-        if (selected) {
-          return hovered
-            ? singlePinStyleSelectedHovered
-            : singlePinStyleSelected;
-        }
-        return hovered ? singlePinStyleHovered : singlePinStyle;
-      };
-
+    if (!clustered) {
       const layer = new OLVectorLayer({
         source: vectorSource,
-        style: styleFunction,
+        style: (feature) =>
+          singlePinStyle(feature, feature.get('hovered') === true),
         zIndex,
       });
-
+      layerRef.current = layer;
       mapContext.addLayer(layer);
-      return [layer, undefined];
+      return () => {
+        mapContext.removeLayer(layer);
+        layerRef.current = null;
+      };
     }
 
-    // For non-draggable pins, use clustering with zoom-dependent distance
-    const initialZoom = mapContext.getView().getZoom() ?? 9;
-    const initialDistance = getClusterDistance(initialZoom);
+    const view = mapContext.getView();
+    const initialDistance = getClusterDistance(view.getZoom() ?? 9);
     const clusterSource = new Cluster({
       distance: initialDistance,
-      minDistance: CLUSTER_CONFIG.MIN_DISTANCE,
+      // OpenLayers caps minDistance at the current distance, so this keeps
+      // cluster centers at least `distance` apart at every zoom level, which
+      // (see DISTANCE_MIN) is enough to prevent bubbles from overlapping
+      minDistance: CLUSTER_CONFIG.DISTANCE_BASE,
       source: vectorSource,
     });
 
-    // Track whether clustering was visually disabled to detect threshold crossings
-    let wasClusteringDisabled =
-      initialZoom >= CLUSTER_CONFIG.ZOOM_THRESHOLD_DISABLE;
-    let layer: null | OLVectorLayer<Feature<Geometry>> = null;
-
-    // Update cluster distance and refresh styles when zoom changes
-    const onZoomChange = () => {
-      const zoom = mapContext.getView().getZoom() ?? 9;
-      const newDistance = getClusterDistance(zoom);
-      const isClusteringDisabled =
-        zoom >= CLUSTER_CONFIG.ZOOM_THRESHOLD_DISABLE;
-
-      // Update cluster distance
-      clusterSource.setDistance(newDistance);
-
-      // Force style refresh when crossing the zoom threshold
-      if (isClusteringDisabled !== wasClusteringDisabled && layer) {
-        wasClusteringDisabled = isClusteringDisabled;
-        layer.changed();
-      }
-    };
-
-    mapContext.getView().on('change:resolution', onZoomChange);
-
     const clusterStyleFunction: StyleFunction = (feature) => {
-      const clusteredFeatures = feature.get('features') as Feature<Geometry>[];
-      const size = clusteredFeatures.length;
-
-      // Get current zoom level to determine if clustering should be visually disabled
-      const zoom = mapContext.getView().getZoom() ?? 9;
+      const members = feature.get('features') as Feature<Geometry>[];
+      const hovered = feature.get('hovered') === true;
       const clusteringDisabledByZoom =
-        zoom >= CLUSTER_CONFIG.ZOOM_THRESHOLD_DISABLE;
+        (view.getZoom() ?? 9) >= CLUSTER_CONFIG.ZOOM_THRESHOLD_DISABLE;
 
-      // Single feature or clustering disabled at high zoom - show pin icon
-      if (size === 1 || clusteringDisabledByZoom) {
-        const selected = isFeatureSelected(feature);
-        const hovered = feature.get('hovered');
-        if (selected) {
-          return hovered
-            ? singlePinStyleSelectedHovered
-            : singlePinStyleSelected;
-        }
-        return hovered ? singlePinStyleHovered : singlePinStyle;
+      // Single bridge, or bridges at the same position at high zoom: show the
+      // pin of the highest-risk member (click opens the overlap picker)
+      if (members.length === 1 || clusteringDisabledByZoom) {
+        const top = members.reduce((a, b) =>
+          ((b.get('zIndex') as number) ?? 0) >
+          ((a.get('zIndex') as number) ?? 0)
+            ? b
+            : a
+        );
+        return singlePinStyle(
+          top,
+          hovered,
+          members.some((m) => isSelected(m))
+        );
       }
 
-      // Multiple features at low zoom - show cluster circle with count
-      const isHovered = feature.get('hovered') === true;
-      return getClusterStyle(size, isHovered);
+      return getClusterStyle(members.length, hovered);
     };
 
-    layer = new OLVectorLayer({
+    const layer = new OLVectorLayer({
       source: clusterSource,
       style: clusterStyleFunction,
       zIndex,
     });
-
+    layerRef.current = layer;
     mapContext.addLayer(layer);
 
-    // Store the cleanup function reference
-    (
-      layer as OLVectorLayer<Feature<Geometry>> & { _zoomListener?: () => void }
-    )._zoomListener = onZoomChange;
+    let wasClusteringDisabled = initialDistance === 0;
+    const onZoomChange = () => {
+      const distance = getClusterDistance(view.getZoom() ?? 9);
+      clusterSource.setDistance(distance);
 
-    return [layer, undefined];
-  }, [
-    mapContext,
-    features,
-    store.mapSettings.clusteringEnabled,
-    store.mapSettings.selectedBridgePinObjectId,
-    excludeFromClustering,
-  ]);
-
-  useEffect(() => {
-    const currentPoint = store.currentPosition.currentPoint();
-    if (currentPoint) {
-      store.mapSettings.setCenter(currentPoint.getCoordinates());
-      store.mapSettings.setZoom(17);
-    }
-  }, [store.currentPosition.latLon]);
-
-  useEffect(() => {
-    if (!mapContext) return;
-
-    let layerAndInteraction: [
-      OLVectorLayer<Feature<Geometry>> | undefined,
-      Modify | undefined,
-    ];
-
-    if (features.length > 0) {
-      layerAndInteraction = addFeaturesToMap();
-    }
-
-    return () => {
-      if (layerAndInteraction) {
-        if (layerAndInteraction[0]) {
-          mapContext.removeLayer(layerAndInteraction[0]);
-        }
-
-        if (layerAndInteraction[1]) {
-          mapContext.removeInteraction(layerAndInteraction[1]);
-        }
+      // Force style refresh when crossing the zoom threshold
+      const isClusteringDisabled = distance === 0;
+      if (isClusteringDisabled !== wasClusteringDisabled) {
+        wasClusteringDisabled = isClusteringDisabled;
+        layer.changed();
       }
     };
-  }, [
-    mapContext,
-    features.length,
-    store.mapSettings.clusteringEnabled,
-    store.mapSettings.selectedBridgePinObjectId,
-    excludeFromClustering,
-  ]);
+    view.on('change:resolution', onZoomChange);
+
+    return () => {
+      view.un('change:resolution', onZoomChange);
+      mapContext.removeLayer(layer);
+      layerRef.current = null;
+    };
+    // `features` is memoized by the caller, so a new array means new data
+  }, [mapContext, features, clustered, draggable, iconSrc, zIndex]);
 
   return <></>;
 };
