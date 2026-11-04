@@ -421,5 +421,14 @@
   },
   "welcome_modal_title": {
     "defaultMessage": "Welcome to Untendurch"
+  },
+  "report_bridge_manual_coordinates_pending": {
+    "defaultMessage": "You chose “Enter coordinates manually” but have not applied them yet. Please enter the coordinates and click “Show on map”, or choose “Place pin on the map”."
+  },
+  "report_bridge_no_edit_notice": {
+    "defaultMessage": "Important: a report cannot be edited after it has been submitted. Please make sure all details – especially the position of the bridge – are complete and correct."
+  },
+  "report_bridge_position_fallback": {
+    "defaultMessage": "Your position could not be determined. Please drag the pin on the map onto the bridge or enter the coordinates manually."
   }
 }

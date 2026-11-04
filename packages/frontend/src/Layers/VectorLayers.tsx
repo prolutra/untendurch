@@ -300,8 +300,10 @@ export const VectorLayer: FC<VectorLayerProps> = ({
         event.features.forEach((feature) => {
           const point = (feature.getGeometry() as Point).getCoordinates();
           const lonLat = toLonLat(point);
+          store.reportBridge.setManualPosition(true);
+          store.reportBridge.setManualEntryPending(false);
           store.reportBridge
-            .setPosition(createLatLon(lonLat[1], lonLat[0]))
+            .setPosition(createLatLon(lonLat[1], lonLat[0]), 'drag')
             .then(() => {
               store.mapSettings.setCenter(point);
             });

@@ -4,6 +4,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { LocateMe } from '../Location/LocateMe';
+import { isNearFallback } from '../Store/FallbackPosition';
 import { getAsLv95 } from '../Store/LatLon';
 import { useStore } from '../Store/Store';
 import { ManualCoordinates } from './ManualCoordinates';
@@ -66,6 +67,18 @@ export const PositionInformation: FC<Props> = ({ onCenterMap }) => {
           </div>
         </div>
       )}
+      {reportedBridge.latLon &&
+        reportedBridge.positionSource !== 'existing' &&
+        isNearFallback(reportedBridge.latLon) && (
+          <div className={'alert alert-warning text-sm'} role="status">
+            <FormattedMessage
+              defaultMessage={
+                'Ihre Position konnte nicht bestimmt werden. Bitte ziehen Sie den Pin auf der Karte auf die Brücke oder geben Sie die Koordinaten manuell ein.'
+              }
+              id="report_bridge_position_fallback"
+            />
+          </div>
+        )}
       {/* Rendered once in both states so it keeps its verification notice
           when the first position gets set */}
       <ManualCoordinates onCenterMap={onCenterMap} />

@@ -495,6 +495,12 @@
       "value": "Inserire le coordinate manualmente"
     }
   ],
+  "report_bridge_manual_coordinates_pending": [
+    {
+      "type": 0,
+      "value": "Ha scelto «Inserire le coordinate manualmente», ma non le ha ancora applicate. Inserisca le coordinate e clicchi su «Mostra sulla mappa», oppure scelga «Posiziona il segnaposto sulla mappa»."
+    }
+  ],
   "report_bridge_manual_coordinates_placeholder": [
     {
       "type": 0,
@@ -529,6 +535,12 @@
     {
       "type": 0,
       "value": "). Verificare sulla mappa che il segnaposto si trovi esattamente sul ponte. Se necessario, è possibile spostarlo."
+    }
+  ],
+  "report_bridge_no_edit_notice": [
+    {
+      "type": 0,
+      "value": "Importante: una segnalazione non può più essere modificata dopo l’invio. Si assicuri che tutti i dati – in particolare la posizione del ponte – siano completi e corretti."
     }
   ],
   "report_bridge_option_0_30": [
@@ -637,6 +649,12 @@
     {
       "type": 0,
       "value": "punto più largo in m"
+    }
+  ],
+  "report_bridge_position_fallback": [
+    {
+      "type": 0,
+      "value": "Non è stato possibile determinare la sua posizione. Trascini il segnaposto sul ponte nella mappa oppure inserisca le coordinate manualmente."
     }
   ],
   "report_bridge_position_required": [

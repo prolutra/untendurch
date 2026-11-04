@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import { Keyboard, MapPin, MousePointer2 } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import type { CoordinateFormat } from '../GeoAdmin/ParseCoordinates';
@@ -35,6 +35,16 @@ export const ManualCoordinates: FC<Props> = ({ onCenterMap }) => {
   >();
   const [appliedFormat, setAppliedFormat] = useState<CoordinateFormat>();
   const [isBusy, setIsBusy] = useState(false);
+  /** Input text that was last applied successfully */
+  const [appliedInput, setAppliedInput] = useState<null | string>(null);
+
+  // Open panel with unapplied input blocks submitting the form: otherwise the
+  // old (GPS/fallback) position would be saved silently
+  const setManualEntryPending = store.reportBridge.setManualEntryPending;
+  useEffect(() => {
+    setManualEntryPending(isOpen && input.trim() !== appliedInput);
+  }, [isOpen, input, appliedInput]);
+  useEffect(() => () => setManualEntryPending(false), []);
 
   const apply = async () => {
     const result = parseCoordinates(input);
@@ -47,15 +57,16 @@ export const ManualCoordinates: FC<Props> = ({ onCenterMap }) => {
     setIsBusy(true);
     store.reportBridge.setManualPosition(true);
     try {
-      await store.reportBridge.setPosition(result.latLon);
+      await store.reportBridge.setPosition(result.latLon, 'manual');
     } catch (err) {
       // Municipality lookup failed: still place the pin
       console.error(err);
-      store.reportBridge.setLatLon(result.latLon);
+      store.reportBridge.setLatLon(result.latLon, 'manual');
     } finally {
       setIsBusy(false);
     }
     setAppliedFormat(result.format);
+    setAppliedInput(input.trim());
     onCenterMap?.(latLonToPoint(result.latLon).getCoordinates());
     // The map is at the top of the page: bring it into view for verification
     window.scrollTo({ behavior: 'smooth', top: 0 });
@@ -70,6 +81,7 @@ export const ManualCoordinates: FC<Props> = ({ onCenterMap }) => {
     setInput('');
     setError(undefined);
     setAppliedFormat(undefined);
+    setAppliedInput(null);
     window.scrollTo({ behavior: 'smooth', top: 0 });
   };
 

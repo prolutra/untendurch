@@ -495,6 +495,12 @@
       "value": "Enter coordinates manually"
     }
   ],
+  "report_bridge_manual_coordinates_pending": [
+    {
+      "type": 0,
+      "value": "You chose “Enter coordinates manually” but have not applied them yet. Please enter the coordinates and click “Show on map”, or choose “Place pin on the map”."
+    }
+  ],
   "report_bridge_manual_coordinates_placeholder": [
     {
       "type": 0,
@@ -529,6 +535,12 @@
     {
       "type": 0,
       "value": "). Please check on the map that the pin is exactly at the bridge. You can move the pin if necessary."
+    }
+  ],
+  "report_bridge_no_edit_notice": [
+    {
+      "type": 0,
+      "value": "Important: a report cannot be edited after it has been submitted. Please make sure all details – especially the position of the bridge – are complete and correct."
     }
   ],
   "report_bridge_option_0_30": [
@@ -637,6 +649,12 @@
     {
       "type": 0,
       "value": "widest point in metres"
+    }
+  ],
+  "report_bridge_position_fallback": [
+    {
+      "type": 0,
+      "value": "Your position could not be determined. Please drag the pin on the map onto the bridge or enter the coordinates manually."
     }
   ],
   "report_bridge_position_required": [

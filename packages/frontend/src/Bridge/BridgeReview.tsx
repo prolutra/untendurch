@@ -149,6 +149,16 @@ export const BridgeReview: FC<Props> = ({
             id="report_bridge_review_intro"
           />
         </p>
+        {!isUpdate && (
+          <div className={'alert alert-warning text-sm'} role="note">
+            <FormattedMessage
+              defaultMessage={
+                'Wichtig: Eine Meldung kann nach dem Absenden nicht mehr bearbeitet werden. Bitte stellen Sie sicher, dass alle Angaben – insbesondere die Position der Brücke – vollständig und korrekt sind.'
+              }
+              id="report_bridge_no_edit_notice"
+            />
+          </div>
+        )}
       </div>
 
       <Section

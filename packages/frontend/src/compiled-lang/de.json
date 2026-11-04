@@ -495,6 +495,12 @@
       "value": "Koordinaten manuell eingeben"
     }
   ],
+  "report_bridge_manual_coordinates_pending": [
+    {
+      "type": 0,
+      "value": "Sie haben «Koordinaten manuell eingeben» gewählt, die Koordinaten aber noch nicht übernommen. Bitte Koordinaten eingeben und auf «Auf Karte anzeigen» klicken – oder «Pin auf der Karte setzen» wählen."
+    }
+  ],
   "report_bridge_manual_coordinates_placeholder": [
     {
       "type": 0,
@@ -529,6 +535,12 @@
     {
       "type": 0,
       "value": "). Bitte prüfen Sie auf der Karte, ob der Pin genau bei der Brücke liegt. Bei Bedarf können Sie den Pin verschieben."
+    }
+  ],
+  "report_bridge_no_edit_notice": [
+    {
+      "type": 0,
+      "value": "Wichtig: Eine Meldung kann nach dem Absenden nicht mehr bearbeitet werden. Bitte stellen Sie sicher, dass alle Angaben – insbesondere die Position der Brücke – vollständig und korrekt sind."
     }
   ],
   "report_bridge_option_0_30": [
@@ -637,6 +649,12 @@
     {
       "type": 0,
       "value": "breiteste Stelle in m"
+    }
+  ],
+  "report_bridge_position_fallback": [
+    {
+      "type": 0,
+      "value": "Ihre Position konnte nicht bestimmt werden. Bitte ziehen Sie den Pin auf der Karte auf die Brücke oder geben Sie die Koordinaten manuell ein."
     }
   ],
   "report_bridge_position_required": [

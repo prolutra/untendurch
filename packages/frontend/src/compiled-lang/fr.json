@@ -495,6 +495,12 @@
       "value": "Saisir les coordonnées manuellement"
     }
   ],
+  "report_bridge_manual_coordinates_pending": [
+    {
+      "type": 0,
+      "value": "Vous avez choisi de saisir les coordonnées manuellement, mais vous ne les avez pas encore appliquées. Veuillez saisir les coordonnées et cliquer sur « Afficher sur la carte », ou choisir « Placer l’épingle sur la carte »."
+    }
+  ],
   "report_bridge_manual_coordinates_placeholder": [
     {
       "type": 0,
@@ -529,6 +535,12 @@
     {
       "type": 0,
       "value": "). Veuillez vérifier sur la carte que l’épingle se trouve exactement sur le pont. Vous pouvez déplacer l’épingle si nécessaire."
+    }
+  ],
+  "report_bridge_no_edit_notice": [
+    {
+      "type": 0,
+      "value": "Important : un signalement ne peut plus être modifié après son envoi. Veuillez vous assurer que toutes les indications – en particulier la position du pont – sont complètes et correctes."
     }
   ],
   "report_bridge_option_0_30": [
@@ -637,6 +649,12 @@
     {
       "type": 0,
       "value": "endroit le plus large en m"
+    }
+  ],
+  "report_bridge_position_fallback": [
+    {
+      "type": 0,
+      "value": "Votre position n’a pas pu être déterminée. Veuillez déplacer l’épingle sur le pont sur la carte ou saisir les coordonnées manuellement."
     }
   ],
   "report_bridge_position_required": [

@@ -120,8 +120,11 @@ export const ReportMapWrapper = () => {
           const coords = geometry.getCoordinates();
           const lonLat = toLonLat(coords);
           const latLon = createLatLon(lonLat[1], lonLat[0]);
-          useReportBridgeStore.getState().setManualPosition(true);
-          useReportBridgeStore.getState().setPosition(latLon);
+          const reportBridge = useReportBridgeStore.getState();
+          reportBridge.setManualPosition(true);
+          // Dragging the pin is an explicit position choice as well
+          reportBridge.setManualEntryPending(false);
+          reportBridge.setPosition(latLon, 'drag');
         }
       }
     });

@@ -57,7 +57,8 @@ export const EditBridgeWrapper: FC = () => {
       const images = bridge.attributes['images'] as Parse.File[];
 
       store.reportBridge.setPosition(
-        createLatLon(position.latitude, position.longitude)
+        createLatLon(position.latitude, position.longitude),
+        'existing'
       );
 
       setState({

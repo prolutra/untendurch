@@ -421,5 +421,14 @@
   },
   "welcome_modal_title": {
     "defaultMessage": "Bienvenue sur Untendurch"
+  },
+  "report_bridge_manual_coordinates_pending": {
+    "defaultMessage": "Vous avez choisi de saisir les coordonnées manuellement, mais vous ne les avez pas encore appliquées. Veuillez saisir les coordonnées et cliquer sur « Afficher sur la carte », ou choisir « Placer l’épingle sur la carte »."
+  },
+  "report_bridge_no_edit_notice": {
+    "defaultMessage": "Important : un signalement ne peut plus être modifié après son envoi. Veuillez vous assurer que toutes les indications – en particulier la position du pont – sont complètes et correctes."
+  },
+  "report_bridge_position_fallback": {
+    "defaultMessage": "Votre position n’a pas pu être déterminée. Veuillez déplacer l’épingle sur le pont sur la carte ou saisir les coordonnées manuellement."
   }
 }

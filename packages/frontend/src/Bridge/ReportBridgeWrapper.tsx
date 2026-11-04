@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import type { BridgeFormState } from './BridgeFormState';
 
 import { HowToModal } from '../components/HowToModal';
+import { FALLBACK_LAT_LON } from '../Store/FallbackPosition';
 import { createLatLon } from '../Store/LatLon';
 import { useReportMapStore } from '../Store/ReportMapStore';
 import { useStore } from '../Store/Store';
@@ -49,6 +50,7 @@ export const ReportBridgeWrapper: FC = () => {
   useEffect(() => {
     resetReportMap();
     store.reportBridge.setManualPosition(false);
+    store.reportBridge.setManualEntryPending(false);
     store.currentPosition.locateMe();
   }, []);
 
@@ -61,7 +63,8 @@ export const ReportBridgeWrapper: FC = () => {
           createLatLon(
             store.currentPosition.latLon.lat,
             store.currentPosition.latLon.lon
-          )
+          ),
+          'gps'
         )
         .then(() => {
           const currentPoint = store.currentPosition.currentPoint();
@@ -80,7 +83,7 @@ export const ReportBridgeWrapper: FC = () => {
       store.currentPosition.navigatorWithoutLocationSupport &&
       !store.reportBridge.manualPosition
     ) {
-      store.reportBridge.setPosition(createLatLon(46.79871, 8.23176));
+      store.reportBridge.setPosition(FALLBACK_LAT_LON, 'fallback');
     }
   }, [store.currentPosition.navigatorWithoutLocationSupport]);
 

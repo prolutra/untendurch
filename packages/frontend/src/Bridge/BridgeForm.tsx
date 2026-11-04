@@ -13,6 +13,7 @@ import type { BridgeFormState } from './BridgeFormState';
 
 import { fetchPointInformation } from '../GeoAdmin/FetchPointInformation';
 import { CloseChar } from '../lib/closeChar';
+import { isNearFallback } from '../Store/FallbackPosition';
 import { useStore } from '../Store/Store';
 import { BridgeLegendNumber } from './BridgeLegendNumber';
 import { BridgeReview } from './BridgeReview';
@@ -86,6 +87,39 @@ export const BridgeForm: FC<BridgeFormProps> = ({
           id: 'report_bridge_position_required',
         })
       );
+      return;
+    }
+
+    // Manual coordinates panel open, but its input was never applied: the pin
+    // still shows the old GPS/fallback position
+    if (store.reportBridge.manualEntryPending) {
+      alert(
+        intl.formatMessage({
+          defaultMessage:
+            'Sie haben «Koordinaten manuell eingeben» gewählt, die Koordinaten aber noch nicht übernommen. Bitte Koordinaten eingeben und auf «Auf Karte anzeigen» klicken – oder «Pin auf der Karte setzen» wählen.',
+          id: 'report_bridge_manual_coordinates_pending',
+        })
+      );
+      document.getElementById('manualCoordinates')?.focus();
+      return;
+    }
+
+    // GPS was unavailable: the pin sits on the default point in the centre of
+    // Switzerland, which is never the bridge's position
+    // (also if the pin was only nudged off it)
+    const { latLon, positionSource } = store.reportBridge;
+    if (
+      positionSource === 'fallback' ||
+      (positionSource !== 'existing' && isNearFallback(latLon))
+    ) {
+      alert(
+        intl.formatMessage({
+          defaultMessage:
+            'Ihre Position konnte nicht bestimmt werden. Bitte ziehen Sie den Pin auf der Karte auf die Brücke oder geben Sie die Koordinaten manuell ein.',
+          id: 'report_bridge_position_fallback',
+        })
+      );
+      window.scrollTo({ behavior: 'smooth', top: 0 });
       return;
     }
 
@@ -339,6 +373,16 @@ export const BridgeForm: FC<BridgeFormProps> = ({
             {CloseChar}
           </button>
         </div>
+        {!state.objectId && (
+          <div className={'alert alert-warning text-sm'} role="note">
+            <FormattedMessage
+              defaultMessage={
+                'Wichtig: Eine Meldung kann nach dem Absenden nicht mehr bearbeitet werden. Bitte stellen Sie sicher, dass alle Angaben – insbesondere die Position der Brücke – vollständig und korrekt sind.'
+              }
+              id="report_bridge_no_edit_notice"
+            />
+          </div>
+        )}
         <PositionInformation onCenterMap={onCenterMap} />
         {store.auth.sessionToken && (
           <div className={'flex flex-col gap-4'}>

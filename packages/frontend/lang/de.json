@@ -421,5 +421,14 @@
   },
   "welcome_modal_title": {
     "defaultMessage": "Willkommen bei Untendurch"
+  },
+  "report_bridge_manual_coordinates_pending": {
+    "defaultMessage": "Sie haben «Koordinaten manuell eingeben» gewählt, die Koordinaten aber noch nicht übernommen. Bitte Koordinaten eingeben und auf «Auf Karte anzeigen» klicken – oder «Pin auf der Karte setzen» wählen."
+  },
+  "report_bridge_no_edit_notice": {
+    "defaultMessage": "Wichtig: Eine Meldung kann nach dem Absenden nicht mehr bearbeitet werden. Bitte stellen Sie sicher, dass alle Angaben – insbesondere die Position der Brücke – vollständig und korrekt sind."
+  },
+  "report_bridge_position_fallback": {
+    "defaultMessage": "Ihre Position konnte nicht bestimmt werden. Bitte ziehen Sie den Pin auf der Karte auf die Brücke oder geben Sie die Koordinaten manuell ein."
   }
 }
